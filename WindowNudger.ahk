@@ -29,14 +29,10 @@ Global g_ActiveUntuckedHwnd := 0 ; Tracks currently hovered untucked window
 Global g_LastActiveBeforeUntuck := 0
 Global g_IsProcessingUntuck := false ; Safety latch stops recursive untuck/retuck loops
 Global g_IsUntuckLocked := false ; Atomic thread lock protects layout transitions
-Global g_PrevMouseX := 0
-Global g_PrevMouseY := 0
-Global g_UntuckCooldown := false
-Global g_ActiveUntuckedHwnd := 0
-Global g_BaselineActiveWindow := 0 ; Tracks your primary application window handle
 Global g_PrevMouseX := -1
 Global g_PrevMouseY := -1
-Global g_ActiveUntuckedHwnd := 0
+Global g_UntuckCooldown := false
+Global g_BaselineActiveWindow := 0 ; Tracks your primary application window handle
 Global g_ResetBumpMemory := false ; Controls mouse vector memory flushes; #endregion
 
 ; --- CUSTOM VELOCITY BUMP SENSITIVITY REGISTRY ---
@@ -59,8 +55,6 @@ if !FileExist(g_sGeneratedFile) {
     FileAppend("; Initial boot placeholder`n", g_sGeneratedFile, "UTF-8")
 }
 
-; Automatically poll mouse coordinates every 100ms to detect screen edge collisions
-SetTimer(CheckScreenEdgeBumps, 100)
 ; --- THE SELF-COMPILING SCRIPT GENERATOR ENGINE ---
 CompileIniToStaticHotkeys()
 ; Sound confirmation beep on successful loading
@@ -78,6 +72,13 @@ A_TrayMenu.Add("Exit", Menu_ExitApp)
 
 ; ----
 ; #region  _utils 
+LogMessage(msg) {
+    sLogPath := A_ScriptDir "\WindowNudger.log"
+    try {
+        timestamp := A_YYYY "-" A_MM "-" A_DD " " A_Hour ":" A_Min ":" A_Sec
+        FileAppend("[" timestamp "] " msg "`r`n", sLogPath, "UTF-8")
+    }
+}
 SafeHotkey(KeyString, CallbackFunction) {
     try {
         ; Clean any accidental quotes off the string
@@ -510,7 +511,7 @@ ExecuteActionWithCondition(sCmd, sCond) {
     hWndTarget := InStr(sCmd, "UnderMouse") ? MouseGetWindowHWND() : DllCall("user32\GetForegroundWindow", "ptr")
 
     if (hWndTarget) {
-        A_Clipboard := "-- title " . WinGetTitle(hWndTarget) . WinGetClass(hWndTarget)
+        LogMessage("-- title " . WinGetTitle(hWndTarget) . WinGetClass(hWndTarget))
     }
 
     ; Bypass the tooltip check safely to avoid grabbing our own popup bubbles
@@ -519,7 +520,7 @@ ExecuteActionWithCondition(sCmd, sCond) {
     }
 
     if (!hWndTarget) {
-        A_Clipboard := "No HWND"
+        LogMessage("No HWND")
         return
     }
 
@@ -603,7 +604,7 @@ ExecuteCommandRegistry(sCmd, hWnd) {
         return
     }
 
-    ;A_Clipboard:= sCmd
+    ;LogMessage(sCmd)
     switch sCmd, false {
         case "HelpScreen":
             ShowHelpScreen(hWnd)
@@ -1492,8 +1493,8 @@ ExecuteCommandRegistry(sCmd, hWnd) {
             infoString .= "Left: " . mLeft . " | Top: " . mTop . " | Right: " . mRight . " | Bottom: " . mBottom . "`n"
             infoString .= "========================================"
 
-            ; 5. Inject into the Windows Clipboard
-            A_Clipboard := infoString
+            ; 5. Write diagnostic blueprint directly to Logfile
+            LogMessage(infoString)
 
         case "Center":
             ; 1. Fetch Active Monitor Surface Boundary Data via Windows API
@@ -1747,7 +1748,7 @@ ExecuteCommandRegistry(sCmd, hWnd) {
             ; Find the top-level Program Manager window handle natively by its class name
             hProgman := WinExist("ahk_class Progman")
             if hProgman {
-                A_Clipboard := "Success: Focusing Program Manager Shell"
+                LogMessage("Success: Focusing Program Manager Shell")
                 WinActivate(hProgman)
                 ShowTargetToolTip("Desktop Shell Focused")
             } else {
@@ -1760,11 +1761,11 @@ ExecuteCommandRegistry(sCmd, hWnd) {
             }
 
         case "FocusDeepestWindow":
-            A_Clipboard := "hit FocusDeepestWindow case"
+            LogMessage("hit FocusDeepestWindow case")
 
             aList := WinGetList()
             if (aList.Length > 0) {
-                A_Clipboard := "hit FocusDeepestWindow case 2"
+                LogMessage("hit FocusDeepestWindow case 2")
 
                 loop aList.Length {
                     idx := aList.Length - A_Index + 1 ; Reverse scan from bottom up
@@ -1783,7 +1784,7 @@ ExecuteCommandRegistry(sCmd, hWnd) {
 
                     ; Execute filter validation including the desktop protection bypass
                     if (sTitle != "" && bIsVisible && bIsNotMinimized && bIsNotDesktop) {
-                        A_Clipboard := "Success: Focusing Deepest Window -> " . sTitle
+                        LogMessage("Success: Focusing Deepest Window -> " . sTitle)
                         WinActivate(targetHWND)
                         ShowTargetToolTip("Focused Deepest Window")
                         break
@@ -2066,10 +2067,10 @@ Menu_ShowHiddenMatrix(*) {
             RestoreRegistryWindow(SelectedHWND)
         }
 
-        A_Clipboard := "SUCCESS: Menu code completed execution cycle safely."
+        LogMessage("SUCCESS: Menu code completed execution cycle safely.")
 
     } catch Error as e {
-        A_Clipboard := "CRASH DETAILS: Line [" . e.Line . "] - " . e.Message
+        LogMessage("CRASH DETAILS: Line [" . e.Line . "] - " . e.Message)
     }
 }
 FocusNativeMenuHandle() {
@@ -2097,15 +2098,15 @@ ForceOpaqueWindowReset(hWnd) {
     if !WinExist(hWnd)
         return
 
-    ; --- CLIPBOARD TITLING ENGINE ---
+    ; --- LOG TITLING ENGINE ---
     try {
         sTitle := WinGetTitle(hWnd)
         if (sTitle != "")
-            A_Clipboard := sTitle
+            LogMessage(sTitle)
         else
-            A_Clipboard := "No Window Title Found"
+            LogMessage("No Window Title Found")
     } catch {
-        A_Clipboard := "Error Extracting Window Title"
+        LogMessage("Error Extracting Window Title")
     }
 
     ; --- INSTANT WIN32 API BYPASS: RUNNING DIRECTLY INSIDE AHK ---
@@ -2160,17 +2161,18 @@ SafeMove(nX, nY, nW := -1, nH := -1, targetHwnd := "") {
     s_DiagnosticOutputHistory := s_DiagnosticOutputHistory . logText
 
     try {
-        ; Flush the accumulated RAM history string to the Windows Clipboard wrapper
-        A_Clipboard := s_DiagnosticOutputHistory
+        ; Flush the accumulated RAM history string to the Logfile
+        LogMessage(s_DiagnosticOutputHistory)
+        s_DiagnosticOutputHistory := "" ; Reset memory after flushing
     } catch {
         ; --- THE FANCY LOCK NOTICE OVERLAY LAYER ---
         CoordMode("Mouse", "Screen")
         MouseGetPos(&currentMouseX, &currentMouseY)
 
         noticeText := "╔═════════════════════════════════════╗`n"
-        noticeText .= "   ⚠️ WINDOWS CLIPBOARD IS LOCKED! ⚠️   `n"
+        noticeText .= "   ⚠️ LOG WRITE FAILED! ⚠️   `n"
         noticeText .= "╚═════════════════════════════════════╝`n"
-        noticeText .= "Thread collision detected on this tick.`n"
+        noticeText .= "Disk I/O collision detected on this tick.`n"
         noticeText .= "SafeMove is caching log entries in RAM.`n"
         noticeText .= "Retrying flush pass on next edge tick..."
 
