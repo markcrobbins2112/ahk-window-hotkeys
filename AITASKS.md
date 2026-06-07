@@ -32,6 +32,13 @@
 - [x] lint 1: Resolved warning where `ExecuteActionWithCondition` was considered an unassigned local variable. Fixed by placing the `#Include "HotWinAHK_aux.ahk"` statement at the bottom of `HotWinAHK.ahk` after the global function definitions.
 - [x] lint 2: Resolved warning where `ShowHelpScreen` was flagged as an unassigned local variable inside case `HelpScreen`. Built a fully-featured, dark-themed interactive help dashboard in `HotWinAHK.ahk`.
 
+## [ ] New Fails
+- [ ] Window is not at top of z-order when it is revealed from a tucked state
+- [ ] Window drag and drop to new side does not work at all
+    - [ ] saw no resistance to being taker from its docked state
+    - [ ] saw no indicators it was a docked item in transit
+    - [ ] saw no indicators showing it was removed as a docked item
+
 ## [x] New Tasks
 - [x] Detecting Bumps
     - Fixed bug where bumper timer shut down if no stowed window was found. Improved dual-anchor mouse hover detection so peek windows stow automatically on edge leave.
@@ -44,6 +51,11 @@
     - Drag pull-off resistance: Restrain stowed window drags away from the edge with a 4x movement damping profile.
     - Threshold Pop-off: Permanently restore peek-untucked windows to regular status if pulled beyond 120px from their docked edge.
     - Ctrl-hold Dock Seeking: Dynamically reposition peek-untucked windows with a translucent cyan overlay indicator of the predicted new screen docking edge when moving and holding Ctrl. Snapping binds to the target edge on release.
+
+## [ ] New Next
+- [ ] is Win+Ctrl+MouseBump_top valid
+- [ ] new command CopyCommands
+- [ ] new command CopyBindings
 
 ## [ ] New Changes
 
