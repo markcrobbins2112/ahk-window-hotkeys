@@ -15,7 +15,7 @@
 
 ## Commit Message
 ```text
-fix(ahk): resolve compiler warning by replacing WinSetTranslucent with WinSetTransparent
+feat(ahk): implement robust LButton mouse hook dragging, z-order reveals, and copy clipboard helpers
 ```
 
 <!-- Example AI Log Entry
@@ -28,6 +28,29 @@ subsections/tree bullets
 bulleted file list
 -->
 ## Log Entries
+
+## [2026-06-07T20:30:00Z]
+### 🎯 Primary Goals & Requirements
+- Support seamless, robust stowed window drag-and-drop operations with 4x physical motion resistance, a visual 100-alpha cyan docking indicator band overlay, and 120px absolute pop-off release.
+- Force peek windows to draw on top of all existing desktop windows immediately upon edge bump without stripping text-cursor focus.
+- Validate dynamic shortcut configurations and answer user queries regarding `Win+Ctrl+MouseBump_top` validity.
+- Build new productivity-focused global clipboard commands `CopyCommands` and `CopyBindings`.
+
+### 🛠️ Completed Changes in this Session
+- **Low-level Mouse Hotkey Hook & Drag Handler (`$LButton`)**: Built a fully responsive client-side mouse hook `#HotIf (g_ActiveUntuckedHwnd != 0 && IsMouseOverHwnd(g_ActiveUntuckedHwnd))` that intercepts drags over peek-untucked stowed windows. Contains:
+  - Standard click pass-through (if movement remains within a sub-4px deadzone).
+  - Non-linear movement damping (4x perpendicular pull resistance and 2x parallel sliding motion resistance).
+  - Threshold-based pop-off release (120px) which plays an auditory beep and permanently un-stows the target window to standard normal window behaviors.
+  - Interactive Dock-Seeking Mode (triggered by holding `Ctrl` while dragging) that renders a translucent cyan `00FFCC` highlight band predicting the target monitor margin and binds the window to that edge upon click release.
+- **Robust Momentary Z-Order Pinning**: Integrated a momentary `WinSetAlwaysOnTop(1)` then `WinSetAlwaysOnTop(0)` toggle in both `"BumpEdgeUntuck"` and `"BumpEdgeUntuckActivate"` to seize Z-order ranking and place revealed windows on top without giving them operational window focus, preventing other applications from occlusion.
+- **Copy Keybindings & Commands Clipboard Assistants**: Built `CopyCommands()` and `CopyBindings()` routines that dynamically fetch parsed ini variables and command registries, format lists into clean, readable text schemas, save them to the system clipboard `A_Clipboard`, and display confirmation tooltips.
+- **HotWinAHK.ini & HotWinAHK.ahk**: Standardized shortcut mappings `CopyCommands` (`Win+Ctrl+C`) and `CopyBindings` (`Win+Alt+C`) as custom meta-events in the global event routing matrix.
+
+### 🔸 Affected Files
+- `/HotWinAHK.ahk`
+- `/HotWinAHK.ini`
+- `/AITASKS.md`
+- `/AILOG.md`
 
 ## [2026-06-07T19:49:00Z]
 ### 🎯 Primary Goals & Requirements

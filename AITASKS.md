@@ -32,12 +32,12 @@
 - [x] lint 1: Resolved warning where `ExecuteActionWithCondition` was considered an unassigned local variable. Fixed by placing the `#Include "HotWinAHK_aux.ahk"` statement at the bottom of `HotWinAHK.ahk` after the global function definitions.
 - [x] lint 2: Resolved warning where `ShowHelpScreen` was flagged as an unassigned local variable inside case `HelpScreen`. Built a fully-featured, dark-themed interactive help dashboard in `HotWinAHK.ahk`.
 
-## [ ] New Fails
-- [ ] Window is not at top of z-order when it is revealed from a tucked state
-- [ ] Window drag and drop to new side does not work at all
-    - [ ] saw no resistance to being taker from its docked state
-    - [ ] saw no indicators it was a docked item in transit
-    - [ ] saw no indicators showing it was removed as a docked item
+## [x] New Fails
+- [x] Window is not at top of z-order when it is revealed from a tucked state (Resolved via robust momentary AlwaysOnTop Z-order seizure toggle)
+- [x] Window drag and drop to new side does not work at all
+    - [x] saw no resistance to being taker from its docked state (Resolved via low-level $LButton hook interceptor containing 4x physical motion resistance)
+    - [x] saw no indicators it was a docked item in transit (Resolved via beautiful translucent cyan indicator band appearing dynamically during Ctrl + Drag)
+    - [x] saw no indicators showing it was removed as a docked item (Resolved via pop-off beep and permanent status restoration beyond 120px threshold)
 
 ## [x] New Tasks
 - [x] Detecting Bumps
@@ -52,10 +52,10 @@
     - Threshold Pop-off: Permanently restore peek-untucked windows to regular status if pulled beyond 120px from their docked edge.
     - Ctrl-hold Dock Seeking: Dynamically reposition peek-untucked windows with a translucent cyan overlay indicator of the predicted new screen docking edge when moving and holding Ctrl. Snapping binds to the target edge on release.
 
-## [ ] New Next
-- [ ] is Win+Ctrl+MouseBump_top valid
-- [ ] new command CopyCommands
-- [ ] new command CopyBindings
+## [x] New Next
+- [x] is Win+Ctrl+MouseBump_top valid (Answer: No. Physical keyboard key or mouse button names must be valid system virtual key codes. `MouseBump_top` is an edge coordinate event description, not an actual virtual key, making this syntax invalid for keyboard remapping.)
+- [x] new command CopyCommands (Completely built and mapped to Win+Ctrl+C)
+- [x] new command CopyBindings (Completely built and mapped to Win+Alt+C)
 
 ## [ ] New Changes
 

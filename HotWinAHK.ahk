@@ -490,7 +490,7 @@ LoadHotkeysAtRuntime() {
 ; #region  _engine 
 IsMetaCommand(sCmd) {
     ; Add your untuck commands to the meta-command bypass list
-    if (InStr(sCmd, "BumpEdgeUntuck") || InStr(sCmd, "HelpScreen") || InStr(sCmd, "ReloadConfig")) {
+    if (InStr(sCmd, "BumpEdgeUntuck") || InStr(sCmd, "HelpScreen") || InStr(sCmd, "ReloadConfig") || InStr(sCmd, "CopyCommands") || InStr(sCmd, "CopyBindings")) {
         return true
     }
 
@@ -578,6 +578,8 @@ ExecuteCommandRegistry(sCmd, hWnd) {
         case "EditConfig": EditIniConfig()
         case "ExitProgram": ShutdownEngine()
         case "RestartProgram": Reload()
+        case "CopyCommands": CopyCommands()
+        case "CopyBindings": CopyBindings()
     }
 
     ; --- DYNAMIC POSITION PIXEL SHIFT MOVEMENT MATRIX ---
@@ -783,6 +785,10 @@ ExecuteCommandRegistry(sCmd, hWnd) {
 
                             ; Slide the window open cleanly using your SafeMove engine
                             SafeMove(nX, nY, Number(activeTuckProfile.w), Number(activeTuckProfile.h), closestHwnd)
+                            
+                            ; --- HIGHLY ROBUST Z-ORDER SEIZURE (NON-ACTIVE) ---
+                            WinSetAlwaysOnTop(1, "ahk_id " . closestHwnd)
+                            WinSetAlwaysOnTop(0, "ahk_id " . closestHwnd)
                             WinMoveTop("ahk_id " . closestHwnd) ; Elevate window to top of Z-order index
 
                             ; --- NO-ACTIVATE SHOW-ON-TOP FLAG ---
@@ -821,6 +827,10 @@ ExecuteCommandRegistry(sCmd, hWnd) {
                             }
 
                             SafeMove(nX, nY, Number(activeTuckProfile.w), Number(activeTuckProfile.h), closestHwnd)
+                            
+                            ; --- HIGHLY ROBUST Z-ORDER SEIZURE (ACTIVE) ---
+                            WinSetAlwaysOnTop(1, "ahk_id " . closestHwnd)
+                            WinSetAlwaysOnTop(0, "ahk_id " . closestHwnd)
                             WinMoveTop("ahk_id " . closestHwnd) ; Elevate window to top of Z-order index
 
                             ; Draw window on top and give it full foreground focus
@@ -2410,179 +2420,6 @@ TrackUntuckedFocusLifecycle() {
         isHovered := (mHwnd == g_ActiveUntuckedHwnd || mRoot == g_ActiveUntuckedHwnd)
         isActive := (currentForeground == g_ActiveUntuckedHwnd)
 
-        ; --- STOWED WINDOW DRAG INTERCEPTOR WITH PHYSICAL RESISTANCE & DYNAMIC DOCK SEEKING ---
-        if (isHovered && GetKeyState("LButton", "P")) {
-            ; Pull down globals inside the dragging tracking loop explicitly
-            global g_PeekX, g_PeekY
-            
-            ; 1. Seed initial drag metrics
-            dragStartX := mX
-            dragStartY := mY
-            try {
-                WinGetPos(&startWinX, &startWinY, &wW, &wH, g_ActiveUntuckedHwnd)
-            } catch {
-                return
-            }
-            
-            tuckProfile := g_TuckedWindows[g_ActiveUntuckedHwnd]
-            
-            ; 2. Create the gorgeous translucent overlay edge band indicator GUI
-            dockIndicatorGui := Gui("+AlwaysOnTop -Caption +ToolWindow +E0x20") ; Click-through window
-            dockIndicatorGui.BackColor := "00FFCC" ; beautiful cyan docking color
-            WinSetTransparent(100, "ahk_id " . dockIndicatorGui.Hwnd)
-            
-            hasIndicatorShown := false
-            currentIndEdge := ""
-            
-            ; Prevent other timers from interfering during dragging tracking
-            SetTimer(TrackUntuckedFocusLifecycle, 0)
-            
-            While (GetKeyState("LButton", "P")) {
-                Sleep(15) ; high-frequency mouse response loop
-                CoordMode("Mouse", "Screen")
-                MouseGetPos(&curX, &curY)
-                
-                deltaX := curX - dragStartX
-                deltaY := curY - dragStartY
-                
-                ; Minimum drag gesture activation zone (3px)
-                if (Abs(deltaX) < 3 && Abs(deltaY) < 3) {
-                    continue
-                }
-                
-                isCtrl := GetKeyState("Ctrl", "P")
-                if (isCtrl) {
-                    ; DOCK SEEKING MODE: Follow the mouse cursor 1:1 and look for the closest screen edge of the current monitor
-                    hMon := DllCall("MonitorFromPoint", "int64", (curY << 32) | (curX & 0xFFFFFFFF), "uint", 2, "ptr")
-                    MI := Buffer(40)
-                    NumPut("uint", 40, MI, 0)
-                    if (DllCall("GetMonitorInfo", "ptr", hMon, "ptr", MI)) {
-                        mLeft   := NumGet(MI, 20, "int")
-                        mTop    := NumGet(MI, 24, "int")
-                        mRight  := NumGet(MI, 28, "int")
-                        mBottom := NumGet(MI, 32, "int")
-                        
-                        distL := Abs(curX - mLeft)
-                        distR := Abs(curX - mRight)
-                        distT := Abs(curY - mTop)
-                        distB := Abs(curY - mBottom)
-                        
-                        minD := Min(distL, distR, distT, distB)
-                        newEdge := ""
-                        if (minD == distL) {
-                            newEdge := "Left"
-                        } else if (minD == distR) {
-                            newEdge := "Right"
-                        } else if (minD == distT) {
-                            newEdge := "Top"
-                        } else if (minD == distB) {
-                            newEdge := "Bottom"
-                        }
-                        
-                        if (newEdge != currentIndEdge) {
-                            currentIndEdge := newEdge
-                            switch newEdge {
-                                case "Left":
-                                    dockIndicatorGui.Show("x" . mLeft . " y" . mTop . " w60 h" . (mBottom - mTop) . " NoActivate")
-                                case "Right":
-                                    dockIndicatorGui.Show("x" . (mRight - 60) . " y" . mTop . " w60 h" . (mBottom - mTop) . " NoActivate")
-                                case "Top":
-                                    dockIndicatorGui.Show("x" . mLeft . " y" . mTop . " w" . (mRight - mLeft) . " h60 NoActivate")
-                                case "Bottom":
-                                    dockIndicatorGui.Show("x" . mLeft . " y" . (mBottom - 60) . " w" . (mRight - mLeft) . " h60 NoActivate")
-                            }
-                            hasIndicatorShown := true
-                        }
-                    }
-                    
-                    ; Move window cleanly standard 1:1 during Dock Seeking Mode
-                    WinMove(startWinX + deltaX, startWinY + deltaY, wW, wH, g_ActiveUntuckedHwnd)
-                    
-                } else {
-                    ; RESISTED NORMAL MODE: Enforce resistance pulling-away curves
-                    if (hasIndicatorShown) {
-                        dockIndicatorGui.Hide()
-                        currentIndEdge := ""
-                        hasIndicatorShown := false
-                    }
-                    
-                    pullDist := 0
-                    switch tuckProfile.edge {
-                        case "Left":   pullDist := deltaX
-                        case "Right":  pullDist := -deltaX
-                        case "Top":    pullDist := deltaY
-                        case "Bottom": pullDist := -deltaY
-                    }
-                    
-                    ; Pop-off check: if user pulls past the 120 pixels release threshold, they break the stow docking structure!
-                    if (pullDist > 120) {
-                        ; POP OFF! De-register tucked profile, let the window be free!
-                        g_TuckedWindows.Delete(g_ActiveUntuckedHwnd)
-                        SoundBeep(980, 100) ; gorgeous audio feedback confirmation
-                        
-                        ; Final instant move to cursor location
-                        WinMove(startWinX + deltaX, startWinY + deltaY, wW, wH, g_ActiveUntuckedHwnd)
-                        
-                        ; Clean up indicator GUI and variables
-                        dockIndicatorGui.Destroy()
-                        g_ActiveUntuckedHwnd := 0
-                        g_ResetBumpMemory := true
-                        SetTimer(ExecuteCleanBumperReArm, -200)
-                        return
-                    }
-                    
-                    ; Else calculate physical resistance scaling
-                    resistedX := deltaX
-                    resistedY := deltaY
-                    switch tuckProfile.edge {
-                        case "Left":
-                            if (deltaX > 0)
-                                resistedX := deltaX * 0.25 ; 4x resistance pulling away
-                            resistedY := deltaY * 0.5   ; 2x resistance parallel
-                        case "Right":
-                            if (deltaX < 0)
-                                resistedX := deltaX * 0.25
-                            resistedY := deltaY * 0.5
-                        case "Top":
-                            if (deltaY > 0)
-                                resistedY := deltaY * 0.25
-                            resistedX := deltaX * 0.5
-                        case "Bottom":
-                            if (deltaY < 0)
-                                resistedY := deltaY * 0.25
-                            resistedX := deltaX * 0.5
-                    }
-                    
-                    WinMove(startWinX + resistedX, startWinY + resistedY, wW, wH, g_ActiveUntuckedHwnd)
-                }
-            }
-            
-            ; Release event! Clean up indicator GUI
-            dockIndicatorGui.Destroy()
-            
-            isReleaseCtrl := GetKeyState("Ctrl", "P")
-            if (isReleaseCtrl && currentIndEdge != "") {
-                ; Save the new docked edge, slide window into its new border instantly!
-                oldProfile := g_TuckedWindows[g_ActiveUntuckedHwnd]
-                g_TuckedWindows.Delete(g_ActiveUntuckedHwnd)
-                g_TuckedWindows[g_ActiveUntuckedHwnd] := { edge: currentIndEdge, x: oldProfile.x, y: oldProfile.y, w: oldProfile.w, h: oldProfile.h }
-                
-                SoundBeep(1400, 80)
-                
-                ExecuteRetuckSequence(g_ActiveUntuckedHwnd)
-                g_ActiveUntuckedHwnd := 0
-                g_ResetBumpMemory := true
-                SetTimer(ExecuteCleanBumperReArm, -200)
-                return
-            } else {
-                ; Slips back to its cached peek coordinates smoothly
-                SafeMove(g_PeekX, g_PeekY, wW, wH, g_ActiveUntuckedHwnd)
-            }
-            
-            SetTimer(TrackUntuckedFocusLifecycle, 50)
-            return
-        }
-
         ; 2. HARDENED DUAL-ANCHOR PROTECTION: Stay wide open while focus is in the untucked
         ; window, OR while the mouse is hovering over it, OR a transitional 0 state!
         if (isHovered || isActive || currentForeground == 0) {
@@ -2861,6 +2698,271 @@ ShowHelpScreen(hWnd := 0) {
     ; Render on screen
     helpGui.Show("w820 h635 Center")
 }
+; #endregion
+
+; #region _stowed_drag_and_clipboard
+IsMouseOverHwnd(targetHwnd) {
+    if (targetHwnd == 0 || !WinExist("ahk_id " . targetHwnd)) {
+        return false
+    }
+    CoordMode("Mouse", "Screen")
+    MouseGetPos(, , &mHwnd)
+    mRoot := mHwnd ? DllCall("GetAncestor", "ptr", mHwnd, "uint", 2, "ptr") : 0
+    return (mHwnd == targetHwnd || mRoot == targetHwnd)
+}
+
+HandleTuckedDrag() {
+    global g_ActiveUntuckedHwnd, g_TuckedWindows, g_ResetBumpMemory, g_TuckedVisiblePixels, g_PeekX, g_PeekY
+    
+    if (g_ActiveUntuckedHwnd == 0 || !WinExist("ahk_id " . g_ActiveUntuckedHwnd)) {
+        Click("Down")
+        KeyWait("LButton")
+        Click("Up")
+        return
+    }
+    
+    CoordMode("Mouse", "Screen")
+    MouseGetPos(&startX, &startY)
+    
+    ; Wait for either mouse release or a drag threshold of 4 pixels
+    isDrag := false
+    While (GetKeyState("LButton", "P")) {
+        MouseGetPos(&curX, &curY)
+        if (Abs(curX - startX) > 4 || Abs(curY - startY) > 4) {
+            isDrag := true
+            break
+        }
+        Sleep(10)
+    }
+    
+    if (!isDrag) {
+        ; Normal Click: Pass it through
+        Click("Down")
+        KeyWait("LButton")
+        Click("Up")
+        return
+    }
+    
+    ; User is dragging! Perform the custom dragging loop with resistance, transition indicator and pop-off
+    try {
+        WinGetPos(&startWinX, &startWinY, &wW, &wH, g_ActiveUntuckedHwnd)
+    } catch {
+        return
+    }
+    
+    tuckProfile := g_TuckedWindows[g_ActiveUntuckedHwnd]
+    
+    ; Create the translucent cyan indicator GUI
+    dockIndicatorGui := Gui("+AlwaysOnTop -Caption +ToolWindow +E0x20") ; Click-through
+    dockIndicatorGui.BackColor := "00FFCC"
+    WinSetTransparent(100, "ahk_id " . dockIndicatorGui.Hwnd)
+    
+    hasIndicatorShown := false
+    currentIndEdge := ""
+    
+    ; Turn off the untuck focus check timer during drag
+    SetTimer(TrackUntuckedFocusLifecycle, 0)
+    
+    While (GetKeyState("LButton", "P")) {
+        Sleep(15)
+        CoordMode("Mouse", "Screen")
+        MouseGetPos(&curX, &curY)
+        
+        deltaX := curX - startX
+        deltaY := curY - startY
+        
+        isCtrl := GetKeyState("Ctrl", "P")
+        if (isCtrl) {
+            ; DOCK SEEKING MODE
+            hMon := DllCall("MonitorFromPoint", "int64", (curY << 32) | (curX & 0xFFFFFFFF), "uint", 2, "ptr")
+            MI := Buffer(40)
+            NumPut("uint", 40, MI, 0)
+            if (DllCall("GetMonitorInfo", "ptr", hMon, "ptr", MI)) {
+                mLeft   := NumGet(MI, 20, "int")
+                mTop    := NumGet(MI, 24, "int")
+                mRight  := NumGet(MI, 28, "int")
+                mBottom := NumGet(MI, 32, "int")
+                
+                distL := Abs(curX - mLeft)
+                distR := Abs(curX - mRight)
+                distT := Abs(curY - mTop)
+                distB := Abs(curY - mBottom)
+                
+                minD := Min(distL, distR, distT, distB)
+                newEdge := ""
+                if (minD == distL) {
+                    newEdge := "Left"
+                } else if (minD == distR) {
+                    newEdge := "Right"
+                } else if (minD == distT) {
+                    newEdge := "Top"
+                } else if (minD == distB) {
+                    newEdge := "Bottom"
+                }
+                
+                if (newEdge != currentIndEdge) {
+                    currentIndEdge := newEdge
+                    switch newEdge {
+                        case "Left":
+                            dockIndicatorGui.Show("x" . mLeft . " y" . mTop . " w60 h" . (mBottom - mTop) . " NoActivate")
+                        case "Right":
+                            dockIndicatorGui.Show("x" . (mRight - 60) . " y" . mTop . " w60 h" . (mBottom - mTop) . " NoActivate")
+                        case "Top":
+                            dockIndicatorGui.Show("x" . mLeft . " y" . mTop . " w" . (mRight - mLeft) . " h60 NoActivate")
+                        case "Bottom":
+                            dockIndicatorGui.Show("x" . mLeft . " y" . (mBottom - 60) . " w" . (mRight - mLeft) . " h60 NoActivate")
+                    }
+                    hasIndicatorShown := true
+                }
+            }
+            
+            ; 1:1 motion
+            WinMove(startWinX + deltaX, startWinY + deltaY, wW, wH, g_ActiveUntuckedHwnd)
+            
+        } else {
+            ; NORMAL MODE WITH PHYSICAL RESISTANCE
+            if (hasIndicatorShown) {
+                dockIndicatorGui.Hide()
+                currentIndEdge := ""
+                hasIndicatorShown := false
+            }
+            
+            pullDist := 0
+            switch tuckProfile.edge {
+                case "Left":   pullDist := deltaX
+                case "Right":  pullDist := -deltaX
+                case "Top":    pullDist := deltaY
+                case "Bottom": pullDist := -deltaY
+            }
+            
+            if (pullDist > 120) {
+                ; POP OFF! De-register tucked profile, let the window be free!
+                g_TuckedWindows.Delete(g_ActiveUntuckedHwnd)
+                SoundBeep(980, 100)
+                
+                WinMove(startWinX + deltaX, startWinY + deltaY, wW, wH, g_ActiveUntuckedHwnd)
+                dockIndicatorGui.Destroy()
+                g_ActiveUntuckedHwnd := 0
+                g_ResetBumpMemory := true
+                SetTimer(ExecuteCleanBumperReArm, -200)
+                return
+            }
+            
+            resistedX := deltaX
+            resistedY := deltaY
+            switch tuckProfile.edge {
+                case "Left":
+                    if (deltaX > 0)
+                        resistedX := deltaX * 0.25
+                    resistedY := deltaY * 0.5
+                case "Right":
+                    if (deltaX < 0)
+                        resistedX := deltaX * 0.25
+                    resistedY := deltaY * 0.5
+                case "Top":
+                    if (deltaY > 0)
+                        resistedY := deltaY * 0.25
+                    resistedX := deltaX * 0.5
+                case "Bottom":
+                    if (deltaY < 0)
+                        resistedY := deltaY * 0.25
+                    resistedX := deltaX * 0.5
+            }
+            
+            WinMove(startWinX + resistedX, startWinY + resistedY, wW, wH, g_ActiveUntuckedHwnd)
+        }
+    }
+    
+    dockIndicatorGui.Destroy()
+    
+    isReleaseCtrl := GetKeyState("Ctrl", "P")
+    if (isReleaseCtrl && currentIndEdge != "") {
+        oldProfile := g_TuckedWindows[g_ActiveUntuckedHwnd]
+        g_TuckedWindows.Delete(g_ActiveUntuckedHwnd)
+        g_TuckedWindows[g_ActiveUntuckedHwnd] := { edge: currentIndEdge, x: oldProfile.x, y: oldProfile.y, w: oldProfile.w, h: oldProfile.h }
+        
+        SoundBeep(1400, 80)
+        ExecuteRetuckSequence(g_ActiveUntuckedHwnd)
+        g_ActiveUntuckedHwnd := 0
+        g_ResetBumpMemory := true
+        SetTimer(ExecuteCleanBumperReArm, -200)
+        return
+    } else {
+        SafeMove(g_PeekX, g_PeekY, wW, wH, g_ActiveUntuckedHwnd)
+    }
+    
+    SetTimer(TrackUntuckedFocusLifecycle, 50)
+}
+
+CopyCommands() {
+    commandsList := "=== HotWinAHK Available Action Commands ===`r`n`r`n"
+    commands := [
+        "HelpScreen", "WinInfo", "ToggleSuspension", "ReloadConfig", "EditConfig", 
+        "ExitProgram", "RestartProgram", "AlwaysOnTop", "SetOpacity70", "RemoveOpacity", 
+        "SendToBack", "MinimizeToTray", "PickFromTray", "PeekUnderMouse", 
+        "MoveLeft10px", "MoveRight10px", "MoveUp10px", "MoveDown10px", 
+        "MoveLeft1px", "MoveRight1px", "MoveUp1px", "MoveDown1px", 
+        "EdgeLeft", "EdgeRight", "EdgeTop", "EdgeBottom", "EdgeTopLeft", 
+        "EdgeTopRight", "EdgeBottomLeft", "EdgeBottomRight", "EdgeCenter", 
+        "ScaleExpand10px", "ScaleReduce10px", "TrimTop", "TrimBottom", 
+        "TrimLeft", "TrimRight", "AddTop", "AddBottom", "AddLeft", "AddRight", 
+        "SubtractTop", "SubtractBottom", "SubtractLeft", "SubtractRight", 
+        "MouseRelativeSize", "HalfSizeLeft", "HalfSizeRight", "HalfSizeTop", "HalfSizeBottom", 
+        "DoubleSizeLeft", "DoubleSizeRight", "DoubleSizeTop", "DoubleSizeBottom", 
+        "NextWindow", "PrevWindow", "NextClassWindow", "PrevClassWindow", 
+        "JumpGridLeft", "JumpGridRight", "JumpGridUp", "JumpGridDown", "MouseToGrid", 
+        "SnapToGridEnlarge", "SnapToGridShrink", "Center", "MoveToGridLeft", 
+        "MoveToGridRight", "MoveToGridUp", "MoveToGridDown", "StretchToGridLeft", 
+        "StretchToGridRight", "StretchToGridUp", "StretchToGridDown", "PullToGridLeft", 
+        "PullToGridRight", "PullToGridUp", "PullToGridDown", "TuckLeft", "TuckRight", 
+        "TuckUp", "TuckDown", "BumpEdgeUntuck", "BumpEdgeUntuckActivate", 
+        "FocusDeepestWindow", "CopyCommands", "CopyBindings"
+    ]
+    for cmd in commands {
+        commandsList .= cmd . "`r`n"
+    }
+    A_Clipboard := commandsList
+    ShowTargetToolTip("Copied Available Commands to Clipboard!")
+}
+
+CopyBindings() {
+    global g_sIniFile
+    if !FileExist(g_sIniFile) {
+        ShowTargetToolTip("INI File not found!")
+        return
+    }
+    
+    bindingsList := "=== HotWinAHK Active Keybindings ===`r`n`r`n"
+    sectionsText := IniRead(g_sIniFile)
+    count := 0
+    
+    loop parse, sectionsText, "`n", "`r" {
+        sCmd := Trim(A_LoopField)
+        if (sCmd == "" || SubStr(sCmd, 1, 1) == "-") {
+            continue
+        }
+        
+        loop 10 {
+            currentKeyProp := "keys" A_Index
+            keyValue := IniRead(g_sIniFile, sCmd, currentKeyProp, "")
+            if (keyValue == "") {
+                break
+            }
+            
+            bindingsList .= "[" . sCmd . "] -> " . keyValue . "`r`n"
+            count++
+        }
+    }
+    
+    A_Clipboard := bindingsList
+    ShowTargetToolTip("Copied Active Bindings to Clipboard!")
+}
+
+#HotIf (g_ActiveUntuckedHwnd != 0 && IsMouseOverHwnd(g_ActiveUntuckedHwnd))
+$LButton:: {
+    HandleTuckedDrag()
+}
+#HotIf
 ; #endregion
 
 #Include "HotWinAHK_aux.ahk"

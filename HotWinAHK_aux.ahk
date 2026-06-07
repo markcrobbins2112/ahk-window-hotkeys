@@ -11,6 +11,14 @@
     ExecuteActionWithCondition("WinInfo", "")
 }
 
+^#c:: {
+    ExecuteActionWithCondition("CopyCommands", "")
+}
+
+!#c:: {
+    ExecuteActionWithCondition("CopyBindings", "")
+}
+
 !#s:: {
     ExecuteActionWithCondition("ToggleSuspension", "")
 }
@@ -285,5 +293,17 @@ numpad2:: {
 
 ^+#left:: {
     ExecuteActionWithCondition("TuckLeft", "")
+}
+
+^+#right:: {
+    ExecuteActionWithCondition("TuckRight", "")
+}
+
+^+#up:: {
+    ExecuteActionWithCondition("TuckUp", "")
+}
+
+^+#down:: {
+    ExecuteActionWithCondition("TuckDown", "")
 }
 
