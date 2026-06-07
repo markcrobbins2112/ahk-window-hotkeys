@@ -2551,6 +2551,124 @@ ExecuteCleanBumperReArm() {
     ; Wake the core 25ms mouse-polling loop back up cleanly on a dedicated thread lane!
     SetTimer(CheckScreenEdgeBumps, 25)
 }
+
+; #region  _helpscreen
+ShowHelpScreen(hWnd := 0) {
+    static helpGui := ""
+    
+    ; If Gui already exists, just show it and bring it to front
+    if (helpGui != "" && WinExist("ahk_id " helpGui.Hwnd)) {
+        helpGui.Show()
+        WinActivate("ahk_id " helpGui.Hwnd)
+        return
+    }
+
+    ; Create a highly polished, dark themed AHK v2 GUI window
+    helpGui := Gui("+AlwaysOnTop -MaximizeBox -MinimizeBox +ToolWindow", "HotWinAHK - Commands & Gestures Reference")
+    helpGui.BackColor := "121214"
+    helpGui.SetFont("s10 cE0E0E6", "Segoe UI")
+
+    ; Header Display Heading (Visual Accent & Typography Pairing)
+    helpGui.SetFont("s16 bold c00FFCC", "Segoe UI")
+    helpGui.Add("Text", "w780 Center y15", "HotWinAHK Command Matrix & Keybindings")
+    helpGui.SetFont("s9 c8A8A93", "Segoe UI")
+    helpGui.Add("Text", "w780 Center y+4", "Precision Window Management & Gesture Edge-Docking Suite")
+
+    ; Divider Line Decorator
+    helpGui.Add("Text", "w760 h1 Background3A3A3D xm+10 y+12", "")
+
+    ; Live Dynamic Filter Box Row
+    helpGui.SetFont("s10 bold c00FFCC", "Segoe UI")
+    helpGui.Add("Text", "w100 xm+15 y+15 h24 +0x200", "Live Filter:")
+    helpGui.SetFont("s10 norm cFFFFFF", "Segoe UI")
+    searchBox := helpGui.Add("Edit", "w320 xp+85 yp Background1E1E22 cFFFFFF Border r1 h24", "")
+    
+    helpGui.SetFont("s9 c8A8A93", "Segoe UI")
+    helpGui.Add("Text", "w300 xp+330 yp h24 +0x200 Right", "Press [ESC] at any time to close")
+
+    ; Create the Main ListView
+    helpGui.SetFont("s10 cE0E0E6", "Segoe UI")
+    helpLV := helpGui.Add("ListView", "xm+10 y+15 w760 r18 Background111112 cFFFFFF +Grid -Multi -ReadOnly", ["Category", "Action Command", "Trigger Key combo", "Functional Description"])
+    
+    ; Adjust ListView column headers width to distribute elegantly
+    helpLV.ModifyCol(1, 115) ; Category
+    helpLV.ModifyCol(2, 140) ; Action
+    helpLV.ModifyCol(3, 150) ; Hotkey Combo
+    helpLV.ModifyCol(4, 330) ; Description
+
+    ; Inline Static Help Data Array
+    localHelpRows := [
+        {cat: "Administrative", cmd: "HelpScreen", key: "Win + /", desc: "Display this interactive keyboard command reference panel."},
+        {cat: "Administrative", cmd: "WinInfo", key: "Win + Ctrl + /", desc: "Display active window physical bounds, handle ID, class, and executable name."},
+        {cat: "Administrative", cmd: "ToggleSuspension", key: "Win + Alt + S", desc: "Suspend or resume all HotWinAHK modifier triggers instantly."},
+        {cat: "Administrative", cmd: "ReloadConfig", key: "Win + F12", desc: "Hot-reload preferences from HotWinAHK.ini and compile hotkeys dynamically."},
+        {cat: "Administrative", cmd: "EditConfig", key: "Win + Alt + E", desc: "Open HotWinAHK.ini configurations in system default text editor."},
+        {cat: "Administrative", cmd: "ExitProgram", key: "Win + Alt + X", desc: "Safely terminate the HotWinAHK background orchestrator process."},
+        {cat: "Administrative", cmd: "RestartProgram", key: "Win + .", desc: "Instantly reload and reboot the HotWinAHK execution engine."},
+        
+        {cat: "System Layer", cmd: "AlwaysOnTop", key: "Win + Ctrl + T", desc: "Toggle Always-On-Top focus pinning attribute on active window frame."},
+        {cat: "System Layer", cmd: "SetOpacity70", key: "Win + Shift + O", desc: "Set alpha opacity transparency level to 70% on active window frame."},
+        {cat: "System Layer", cmd: "RemoveOpacity", key: "Win + Alt + Shift + O", desc: "Restore active window opacity to full solid visibility."},
+        {cat: "System Layer", cmd: "SendToBack", key: "Win + Backspace", desc: "Push active window frame to the bottom of the active desktop stack."},
+        {cat: "System Layer", cmd: "MinimizeToTray", key: "Win + Shift + PgDn", desc: "Stow active window into an autonomous system-tray notification process."},
+        {cat: "System Layer", cmd: "PickFromTray", key: "Win + Shift + PgUp", desc: "Open stowed window tray instances via right-click contextual list."},
+        
+        {cat: "Pixel Nudges", cmd: "Fine-Move 1px", key: "Win + Shift + Arrows", desc: "Nudge active window precisely by 1 pixel in any direction."},
+        {cat: "Pixel Nudges", cmd: "Coarse-Move 10px", key: "Win + Ctrl + Arrows", desc: "Shift active window coarse-scale by 10 pixels in any direction."},
+        
+        {cat: "Sizing & Margins", cmd: "ScaleExpand10px", key: "Ctrl + NumpadAdd", desc: "Expand active window bounds by 10px symmetrically in all directions."},
+        {cat: "Sizing & Margins", cmd: "ScaleReduce10px", key: "Ctrl + NumpadSub", desc: "Shrink active window bounds by 10px symmetrically in all directions."},
+        {cat: "Sizing & Margins", cmd: "Trim Borders", key: "Win + Alt + Arrows", desc: "Trim boundaries from Left, Right, Up, or Down edge margins."},
+        {cat: "Sizing & Margins", cmd: "Add Borders", key: "Win + Alt + Shift + Arrows", desc: "Grow borders outward from Left, Right, Up, or Down edge margins."},
+        {cat: "Sizing & Margins", cmd: "Subtract Borders", key: "Win + Ctrl + Alt + Arrows", desc: "Contract margin boundaries on specific directional axes."},
+        
+        {cat: "Grid Matrix", cmd: "JumpGrid Tiles", key: "Alt + Numpad 2/4/6", desc: "Hop window positions between virtual grid aspect quadrants."},
+        {cat: "Grid Matrix", cmd: "MouseToGrid", key: "Win + RButton", desc: "Warp window beneath mouse cursor directly to closest grid block."},
+        {cat: "Grid Matrix", cmd: "SnapToGridEnlarge", key: "NumpadAdd", desc: "Grow active window boundaries to span next adjacent grid aspect cell."},
+        {cat: "Grid Matrix", cmd: "SnapToGridShrink", key: "NumpadSub", desc: "Contract active window grid spanning aspect cell size."},
+        {cat: "Grid Matrix", cmd: "MoveToGrid", key: "Numpad 4/6/2", desc: "Shift active window between virtual grid units (Left/Right/Down)."},
+        {cat: "Grid Matrix", cmd: "StretchToGrid", key: "Win + Numpad 4/6/2", desc: "Symmetrically stretch window bounds to clamp onto adjacent grid edges."},
+        {cat: "Grid Matrix", cmd: "PullToGrid", key: "Win + Alt + Numpad 2/4/6", desc: "Clamp window boundaries directly onto nearest grid coordinate matrices."},
+        
+        {cat: "Docking & Fling", cmd: "TuckLeft Dock", key: "Win + Ctrl + Shift + Left", desc: "Tuck window past left screen wall, exposing a 20px dock indicator bar."},
+        {cat: "Docking & Fling", cmd: "Edge Untuck", key: "Mouse Speed Fling", desc: "Gesture-fling cursor past monitor border to untuck stowed frames."},
+        
+        {cat: "Window Cycling", cmd: "Next/Prev Window", key: "Win + PgUp / PgDn", desc: "Cycle focus smoothly across all un-minimized open windows on desktop."},
+        {cat: "Window Cycling", cmd: "Mouse Wheel Cycle", key: "Alt + WheelUp/Down", desc: "Cycle focus across active windows via mouse scrollwheel combos."},
+        {cat: "Window Cycling", cmd: "Next/Prev Class", key: "Win + Alt + PgUp / PgDn", desc: "Cycle focus specifically between windows of the same process class."}
+    ]
+
+    ; Function to populate rows based on a search term
+    PopulateLV(searchTerm := "") {
+        helpLV.Opt("-Redraw")
+        helpLV.Delete()
+        
+        for row in localHelpRows {
+            if (searchTerm != "") {
+                if (!InStr(row.cat, searchTerm) && !InStr(row.cmd, searchTerm) && !InStr(row.key, searchTerm) && !InStr(row.desc, searchTerm)) {
+                    continue
+                }
+            }
+            helpLV.Add("", row.cat, row.cmd, row.key, row.desc)
+        }
+        helpLV.Opt("+Redraw")
+    }
+
+    ; Populate initial list with all elements
+    PopulateLV()
+
+    ; Connect search box change event to live filtering
+    searchBox.OnEvent("Change", (ctrl, *) => PopulateLV(ctrl.Value))
+
+    ; Setup closure behaviors
+    helpGui.OnEvent("Escape", (*) => helpGui.Destroy())
+    helpGui.OnEvent("Close", (*) => helpGui.Destroy())
+
+    ; Render on screen
+    helpGui.Show("w780 h520 Center")
+}
+; #endregion
+
 #Include "HotWinAHK_aux.ahk"
 ; #endregion
 
