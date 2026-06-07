@@ -2,7 +2,6 @@
 #Requires AutoHotkey v2.0
 #SingleInstance Force
 Persistent
-#Include "WindowHotkeys.ahk"
 
 if not A_IsAdmin {
     Run('*RunAs "' A_ScriptFullPath '"')
@@ -11,8 +10,8 @@ if not A_IsAdmin {
 ; #endregion
 
 ; #region _globals 
-Global g_sIniFile := A_ScriptDir "\WindowHotkeys.ini"
-Global g_sGeneratedFile := A_ScriptDir "\WindowHotkeys.ahk"
+Global g_sIniFile := A_ScriptDir "\HotWinAHK.ini"
+Global g_sGeneratedFile := A_ScriptDir "\HotWinAHK_aux.ahk"
 Global g_bSuspended := false
 ; --- ADD THIS NEW GLOBAL DICTIONARY TRACKER ---
 Global g_mActiveTrayMenus := Map() ; Tracks all minimized tray menus safely in AHK v2
@@ -73,7 +72,7 @@ A_TrayMenu.Add("Exit", Menu_ExitApp)
 ; ----
 ; #region  _utils 
 LogMessage(msg) {
-    sLogPath := A_ScriptDir "\WindowNudger.log"
+    sLogPath := A_ScriptDir "\HotWinAHK.log"
     try {
         timestamp := A_YYYY "-" A_MM "-" A_DD " " A_Hour ":" A_Min ":" A_Sec
         FileAppend("[" timestamp "] " msg "`r`n", sLogPath, "UTF-8")
@@ -1728,7 +1727,7 @@ ExecuteCommandRegistry(sCmd, hWnd) {
             WinHide(hWnd)
 
             ; 2. Launch the un-elevated tray helper child script to draw the individual icon
-            sHelperPath := A_ScriptDir "\TrayHelper.ahk"
+            sHelperPath := A_ScriptDir "\HotWinAHK_tray.ahk"
             if FileExist(sHelperPath) {
                 sArgs := '"add" "' hWnd '" "' sTitle '"'
                 ComObject("Shell.Application").ShellExecute(sHelperPath, sArgs, "", "open", 1)
@@ -1892,7 +1891,7 @@ TrayIconAdd(hWnd, TooltipText, IconPath) {
     }
 }
 TrayIconDelete(hWnd) {
-    sHelperPath := A_ScriptDir "\TrayHelper.ahk"
+    sHelperPath := A_ScriptDir "\HotWinAHK_tray.ahk"
     if FileExist(sHelperPath) {
         sArgs := '"delete" "' hWnd '" ""'
         ; FIXED: Route the deletion parameters via the safe COM shell architecture
@@ -1926,7 +1925,7 @@ RestoreRegistryWindow(hWndToRestore) {
     global g_mHiddenWindowsRegistry
 
     if WinExist(hWndToRestore) {
-        sHelperPath := A_ScriptDir "\TrayHelper.ahk"
+        sHelperPath := A_ScriptDir "\HotWinAHK_tray.ahk"
         if FileExist(sHelperPath) {
             sArgs := '"delete" "' hWndToRestore '" ""'
             ComObject("Shell.Application").ShellExecute(sHelperPath, sArgs, "", "open", 1)
@@ -2552,6 +2551,7 @@ ExecuteCleanBumperReArm() {
     ; Wake the core 25ms mouse-polling loop back up cleanly on a dedicated thread lane!
     SetTimer(CheckScreenEdgeBumps, 25)
 }
+#Include "HotWinAHK_aux.ahk"
 ; #endregion
 
-; &"C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" "C:\_ahk\WindowNudger.ahk"
+; &"C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" "C:\_ahk\HotWinAHK.ahk"

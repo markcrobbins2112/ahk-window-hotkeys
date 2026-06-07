@@ -32,7 +32,7 @@ where items are
 -->
 ## 🔵 Setup & Environment Check
 - [ ] Admin Elevation Check
-    - **Instructions**: Launch CherryPucker (`WindowNudger.ahk`).
+    - **Instructions**: Launch HotWinAHK (`HotWinAHK.ahk`).
     - **Expected Results**: Prompt for administrator privileges if not already elevated; launches correctly without errors.
 - [ ] EVENT_SYSTEM_FOREGROUND Focus Audio Listener
     - **Instructions**: Switch focus between various open application windows (e.g., NotePad, VS Code).
@@ -43,14 +43,14 @@ where items are
 
 ## 🟢 Template & Basic Copying Checks
 - [ ] Compiler Stream Rewrite Check
-    - **Instructions**: Make a minor change in `WindowHotkeys.ini` (e.g. enable a commented line) and trigger reload.
-    - **Expected Results**: File modification timestamps on `/WindowHotkeys.ahk` shift immediately; new hotkeys register.
+    - **Instructions**: Make a minor change in `HotWinAHK.ini` (e.g. enable a commented line) and trigger reload.
+    - **Expected Results**: File modification timestamps on `/HotWinAHK_aux.ahk` shift immediately; new hotkeys register.
 - [ ] Disk Collision RAM Log Cache Check
     - **Instructions**: Perform high-speed continuous movements to trigger a barrage of `SafeMove` logs.
-    - **Expected Results**: Log strings write sequentially into `WindowNudger.log`. If locked, logs cache safely in RAM and flush on the subsequent mouse polling tick.
+    - **Expected Results**: Log strings write sequentially into `HotWinAHK.log`. If locked, logs cache safely in RAM and flush on the subsequent mouse polling tick.
 - [ ] Invalid Bindings Auto-Zap Protection
     - **Instructions**: Inject an illegally formed key string into the INI file. Reload.
-    - **Expected Results**: Compiler identifies the invalid character string, automatically deletes that faulty line from `/WindowHotkeys.ini`, and reboots silently to prevent program crashes.
+    - **Expected Results**: Compiler identifies the invalid character string, automatically deletes that faulty line from `/HotWinAHK.ini`, and reboots silently to prevent program crashes.
 
 ## ⚡ Granular Property & Line Actions
 - [ ] Pixel-Precision 1px Fine-Nudges
@@ -81,9 +81,9 @@ where items are
 - [ ] Velocity Gesture Fling Bump Untuck Restorations
     - **Instructions**: Move the mouse cursor dynamically over the remaining 20px stowed indicator area. Flick the mouse aggressively against the monitor boundary at speed exceeding the threshold level.
     - **Expected Results**: Cursor vector velocities trigger the untuck action, sliding the stowed window immediately and smoothly out.
-- [ ] TrayHelper Subprocess Isolation Test
+- [ ] Tray Helper Subprocess Isolation Test
     - **Instructions**: Strike Minimize to Tray shortcut (`Win+Shift+PgDn`) on NotePad.
-    - **Expected Results**: Notepad frame vanishes from window view. A standalone subprocess tray icon (represented by NotePad's native application icon asset) registers in system workspace tray area displaying customized mouse-over tooltips.
+    - **Expected Results**: Notepad frame vanishes from window view. A standalone subprocess tray icon (represented by NotePad's native application icon asset) registers in system workspace tray area displaying customized mouse-over tooltips (driven by `HotWinAHK_tray.ahk`).
 
 
 ---

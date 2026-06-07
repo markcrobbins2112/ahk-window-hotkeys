@@ -15,6 +15,7 @@
 
 ## Commit Message
 ```text
+refactor(ahk): fix capitalization on names, change AHk to AHK across files and docs
 ```
 
 <!-- Example AI Log Entry
@@ -27,6 +28,97 @@ subsections/tree bullets
 bulleted file list
 -->
 ## Log Entries
+
+## [2026-06-07T18:41:00Z]
+### 🎯 Primary Goals & Requirements
+- Correct casing of "AHk" to uppercase "AHK" globally across files, settings, and documentation.
+- Maintain seamless internal path connections and includes.
+
+### 🛠️ Completed Changes in this Session
+- **File Renames**: Renamed `HotWinAHk.ahk`, `HotWinAHk_aux.ahk`, `HotWinAHk.ini`, and `HotWinAHk_tray.ahk` to `HotWinAHK.ahk`, `HotWinAHK_aux.ahk`, `HotWinAHK.ini`, and `HotWinAHK_tray.ahk` respectively.
+- **HotWinAHK.ahk**: Adjusted internal global variables `g_sIniFile`, `g_sGeneratedFile`, and log paths, updated `#Include "HotWinAHK_aux.ahk"`, and standardized child shell invokes pointing to `HotWinAHK_tray.ahk`.
+- **metadata.json & package.json**: Updated application identifier configurations and `displayName` values to reflect `HotWinAHK`.
+- **Markdown Documentation**: Performed search-and-replace alignments inside `README.md`, `BUILD.md`, `MANUAL.md`, `SPEC.md`, `FEATURES.md`, `TESTING.md`, and `AITASKS.md`.
+
+### 🔸 Affected Files
+- `/HotWinAHK.ahk`
+- `/HotWinAHK_aux.ahk`
+- `/HotWinAHK.ini`
+- `/HotWinAHK_tray.ahk`
+- `/metadata.json`
+- `/package.json`
+- `/README.md`
+- `/BUILD.md`
+- `/MANUAL.md`
+- `/SPEC.md`
+- `/FEATURES.md`
+- `/TESTING.md`
+- `/AITASKS.md`
+- `/AILOG.md`
+
+## [2026-06-07T18:38:00Z]
+### 🎯 Primary Goals & Requirements
+- Rename system tray delegation subprocess script to `HotWinAHK_tray.ahk` to fully align with the application `displayName` prefixing.
+- Synchronize all caller invocations inside the core orchestrator script.
+- Update structural diagrams, component listings, and manual instructions across features descriptions, specs, and builds.
+
+### 🛠️ Completed Changes in this Session
+- **HotWinAHK_tray.ahk**: Formatted and renamed from `TrayHelper.ahk`.
+- **HotWinAHK.ahk**: Re-mapped all dynamic launcher invocations (e.g. `ComObject("Shell.Application").ShellExecute(...)`) and path trackers to target `HotWinAHK_tray.ahk`.
+- **BUILD.md, FEATURES.md, SPEC.md, MANUAL.md, TESTING.md, AITASKS.md**: Updated reference documentation, build steps, executable compiler outputs, components breakdowns, and test instructions.
+
+### 🔸 Affected Files
+- `/HotWinAHK_tray.ahk`
+- `/HotWinAHK.ahk`
+- `/BUILD.md`
+- `/MANUAL.md`
+- `/FEATURES.md`
+- `/SPEC.md`
+- `/TESTING.md`
+- `/AILOG.md`
+- `/AITASKS.md`
+
+## [2026-06-07T18:36:00Z]
+### 🎯 Primary Goals & Requirements
+- Rename primary logic and config files to match displayName `HotWinAHK`.
+- Rename generated middle-layer Hotkeys code to match the scheme.
+- Maintain consistent filenames across all manuals, build scripts, test suites, and metadata configuration files.
+
+### 🛠️ Completed Changes in this Session
+- **HotWinAHK.ahk**: Refactored from `WindowNudger.ahk`. Updated global configuration path references to use `HotWinAHK.ini` and `HotWinAHK_aux.ahk`, synchronized include directives, and updated the log writing references to `HotWinAHK.log`.
+- **HotWinAHK_aux.ahk**: Refactored and renamed from `WindowHotkeys.ahk`.
+- **HotWinAHK.ini**: Refactored and renamed from `WindowHotkeys.ini`.
+- **metadata.json**: Aligned application name with `displayName` parameter as `HotWinAHK`.
+- **BUILD.md, MANUAL.md, FEATURES.md, SPEC.md, README.md, TESTING.md**: Re-mapped all references and documentation files carefully.
+- **AITASKS.md**: Documented completed status of the renaming task.
+
+### 🔸 Affected Files
+- `/HotWinAHK.ahk`
+- `/HotWinAHK_aux.ahk`
+- `/HotWinAHK.ini`
+- `/metadata.json`
+- `/BUILD.md`
+- `/MANUAL.md`
+- `/FEATURES.md`
+- `/SPEC.md`
+- `/README.md`
+- `/TESTING.md`
+- `/AILOG.md`
+- `/AITASKS.md`
+
+## [2026-06-07T18:28:00Z]
+### 🎯 Primary Goals & Requirements
+- Address compiler/linter warnings in `WindowHotkeys.ahk`.
+- Resolve the `#Warn` unassigned local variable error for `ExecuteActionWithCondition`.
+
+### 🛠️ Completed Changes in this Session
+- **WindowNudger.ahk**: Moved `#Include "WindowHotkeys.ahk"` from the top of the file to the very end of the file. This ensures that the global `ExecuteActionWithCondition` function is fully parsed and populated in AutoHotkey's symbol table before the hotkey blocks calling it are evaluated.
+- **AITASKS.md**: Updated the checklist to mark the unassigned variable issue as fully resolved.
+
+### 🔸 Affected Files
+- `/WindowNudger.ahk`
+- `/AITASKS.md`
+- `/AILOG.md`
 
 ## [2026-06-07T17:58:00Z]
 ### 🎯 Primary Goals & Requirements

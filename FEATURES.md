@@ -48,7 +48,7 @@ Pistol-tuck active screens past monitor walls, hiding them with real-time gestur
 ### 📂 5. Dedicated Subprocess Shell Minification
 <a id="z5" name="z.5"></a>
 Minimize applications into individual system-tray indicators.
-- **[TrayHelper App Solitary Execution](#trayhelper-app-solitary-execution)** - Clones active executables into lightweight standalone notifications.
+- **[Tray Helper App Solitary Execution](#tray-helper-app-solitary-execution)** - Clones active executables into lightweight standalone notifications.
 - **[Selective Subprocess Minimizing](#selective-subprocess-minimizing)** - Custom icon extraction assigns authentic icons of programs onto system tray notifications.
 - **[Right-Click Shell Menu Delegates](#right-click-shell-menu-delegates)** - Instantly restore or terminate stowed programs using a native shortcut context menu.
 
@@ -66,7 +66,7 @@ When a hidden window is pulled out via an Edge Bump, the system temporarily enga
 
 ### Configuration Matrix Compiler
 - Group: [Administrative Controls & Dynamic Compiler](#z1)
-The engine reads the flat user preference file (`WindowHotkeys.ini`), filters active elements, maps keybindings, and automatically writes native AHK Hotkey scripts on-the-fly.
+The engine reads the flat user preference file (`HotWinAHK.ini`), filters active elements, maps keybindings, and automatically writes native AHK Hotkey scripts on-the-fly.
 
 ### Grid Alignment Enlarge & Shrink
 - Group: [Proportional Grid Tiles & Sizing Utilities](#z3)
@@ -108,9 +108,9 @@ Nudges and adjusts active layouts by adding or reducing specific edges while pre
 - Group: [Boundary Docking & Mouse Fling Untuck](#z4)
 Slides window structures past physical screen walls. Leaves narrow active margin segments (e.g., 20px) visible to indicate background operation.
 
-### TrayHelper App Solitary Execution
+### Tray Helper App Solitary Execution
 - Group: [Dedicated Subprocess Shell Minification](#z5)
-Spawns individual tray notifier processes (`TrayHelper.ahk`) for each hidden handle, ensuring the main application remains responsive.
+Spawns individual tray notifier processes (`HotWinAHK_tray.ahk`) for each hidden handle, ensuring the main application remains responsive.
 
 ### Velocity Bump Restorations
 - Group: [Boundary Docking & Mouse Fling Untuck](#z4)

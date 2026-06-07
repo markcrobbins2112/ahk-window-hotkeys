@@ -14,28 +14,18 @@
 
 <!-- Ai To Maintain and work from this list -->
 ## [x] Incoming tasks from chat
-- [x] Reverse engineer CherryPucker window nudging and docking codebase
+- [x] Reverse engineer HotWinAHK window nudging and docking codebase
 - [x] Complete README.md with detailed script features and description
 - [x] Complete BUILD.md documenting compilation and asset pipelines
 - [x] Complete SPEC.md outlining requested specifications and solved technical concerns
 - [x] Complete MANUAL.md detailing structural architecture and core algorithms
 - [x] Complete FEATURES.md organizing and detailing individual feature items
 - [x] Complete TESTING.md outlining detailed testing procedures and interactive checklists
+- [x] Rename WindowNudger, WindowHotkeys.ahk, and WindowHotkeys.ini to HotWinAHK/displayName variants, and update all codebase references
+- [x] Rename helper subprocess script from TrayHelper.ahk to HotWinAHK_tray.ahk and update all reference models
 
-## [ ] Errors
-- lint 1
-```text
-Warning: This local variable appears to never be assigned a value.
-
-Specifically: ExecuteActionWithCondition
-
-	006: {
-▶	007: ExecuteActionWithCondition("HelpScreen", "")
-	008: }
-	010: {
-
-For more details, read the documentation for #Warn.
-```
+## [x] Errors
+- [x] lint 1: Resolved warning where `ExecuteActionWithCondition` was considered an unassigned local variable. Fixed by placing the `#Include "HotWinAHK_aux.ahk"` statement at the bottom of `HotWinAHK.ahk` after the global function definitions.
 
 ## [ ] New Changes
 

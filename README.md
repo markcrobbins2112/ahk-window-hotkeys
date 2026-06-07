@@ -1,7 +1,7 @@
 # Read Me
 
-## CherryPucker / WindowNudger (AHK Windows Hotkeys)
-Hotkeys to make your windows jump through hoops! CherryPucker is a highly optimized, high-performance window-management suite written in AutoHotkey v2.0. It features seamless pixel nudging, proportional grid alignment, edge tucking, and dynamic mouse bump acceleration vectors for administrative efficiency.
+## HotWinAHK (AHK Windows Hotkeys)
+Hotkeys to make your windows jump through hoops! HotWinAHK is a highly optimized, high-performance window-management suite written in AutoHotkey v2.0. It features seamless pixel nudging, proportional grid alignment, edge tucking, and dynamic mouse bump acceleration vectors for administrative efficiency.
 
 ---
 ## Go to...
@@ -21,4 +21,4 @@ Hotkeys to make your windows jump through hoops! CherryPucker is a highly optimi
 - **Proportional Grid Matrix**: Align windows to mathematically derived aspect tiles (defaulting to 15px grid pads, 418x226px tiles, and 6px gap bounds).
 - **Edge Tucking & Docking**: Tuck active frames into off-screen slots on client margins, keeping a thin tactile accent edge visible (e.g. 20px).
 - **Velocity Bump Untuck Engine**: Polls mouse movements natively at 25ms interval vectors. Sliding the cursor aggressively past screen wall thresholds pulls tucked frames back into immediate view.
-- **Dynamic Configuration Compiler**: Read direct matrices from a customized `WindowHotkeys.ini` file and compile hotkeys dynamically on-the-fly into native AutoHotkey `.ahk` scripts to maximize system execution speed.
+- **Dynamic Configuration Compiler**: Read direct matrices from a customized `HotWinAHK.ini` file and compile hotkeys dynamically on-the-fly into native AutoHotkey `HotWinAHK_aux.ahk` scripts to maximize system execution speed.

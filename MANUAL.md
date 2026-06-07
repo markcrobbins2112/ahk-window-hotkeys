@@ -19,10 +19,10 @@ AI to use a free form format with groups here
 free to add/remove/modify these sections
 -->
 ## 🏗️ 1. Architecture Overview
-CherryPucker operates as a low-overhead orchestrator for the Windows desktop environment using an event-driven and polling-hybrid design:
-- **Central Core (`WindowNudger.ahk`)**: Running with administrator authorization, this module loads global configuration matrices, locks the script's physical handle string sequence, initiates WinEvent hooks, and fires polling ticks for mouse collisions.
-- **Dynamic Key Listener Mappings (`WindowHotkeys.ahk`)**: Compiled on-the-fly, this file registers relative hotkey combos with the Windows kernel, routing them to action selectors based on state filters.
-- **Isolator Subprocesses (`TrayHelper.ahk`)**: Minimizes background locking by spawning lightweight individual handlers whenever windows are stowed away into custom system trays.
+HotWinAHK operates as a low-overhead orchestrator for the Windows desktop environment using an event-driven and polling-hybrid design:
+- **Central Core (`HotWinAHK.ahk`)**: Running with administrator authorization, this module loads global configuration matrices, locks the script's physical handle string sequence, initiates WinEvent hooks, and fires polling ticks for mouse collisions.
+- **Dynamic Key Listener Mappings (`HotWinAHK_aux.ahk`)**: Compiled on-the-fly, this file registers relative hotkey combos with the Windows kernel, routing them to action selectors based on state filters.
+- **Isolator Subprocesses (`HotWinAHK_tray.ahk`)**: Minimizes background locking by spawning lightweight individual handlers whenever windows are stowed away into custom system trays.
 
 ## 🧠 2. Core Modules & Systems
 The codebase is composed of highly specialized systems that collaborate without thread blocks:
@@ -51,9 +51,9 @@ Every action from simple moves to grid mapping is indexed inside the INI command
   - `winexeis=text` (direct executable restriction filters)
 
 ## 🔧 5. Workspace Build & Configuration
-- **Script Customization**: Changes to standard profiles are added to the `WindowHotkeys.ini` table.
+- **Script Customization**: Changes to standard profiles are added to the `HotWinAHK.ini` table.
 - **On-The-Fly Compilation**: Hotkeys automatically re-compile and reboot on save or whenever `ReloadConfig` triggers.
-- **Distribution Compile Step**: Source directories can be bundled into standard Windows binaries using compiler commands (`Ahk2Exe.exe /in WindowNudger.ahk /out WindowNudger.exe`).
+- **Distribution Compile Step**: Source directories can be bundled into standard Windows binaries using compiler commands (`Ahk2Exe.exe /in HotWinAHK.ahk /out HotWinAHK.exe`).
 
 
 ---
