@@ -3,6 +3,14 @@
 ; =======================================================================================
 #Requires AutoHotkey v2.0
 
+#/:: {
+    ExecuteActionWithCondition("HelpScreen", "")
+}
+
+^#/:: {
+    ExecuteActionWithCondition("WinInfo", "")
+}
+
 !#s:: {
     ExecuteActionWithCondition("ToggleSuspension", "")
 }
@@ -55,107 +63,71 @@
     ExecuteActionWithCondition("PickFromTray", "")
 }
 
-#numpad4:: {
+^#left:: {
     ExecuteActionWithCondition("MoveLeft10px", "")
 }
 
-#numpad6:: {
+^#right:: {
     ExecuteActionWithCondition("MoveRight10px", "")
 }
 
-#numpad8:: {
+^#up:: {
     ExecuteActionWithCondition("MoveUp10px", "")
 }
 
-#numpad2:: {
+^#down:: {
     ExecuteActionWithCondition("MoveDown10px", "")
 }
 
-#numpad1:: {
-    ExecuteActionWithCondition("MoveDownLeft10px", "")
-}
-
-#numpad3:: {
-    ExecuteActionWithCondition("MoveDownRight10px", "")
-}
-
-#numpad9:: {
-    ExecuteActionWithCondition("MoveUpRight10px", "")
-}
-
-#numpad7:: {
-    ExecuteActionWithCondition("MoveUpLeft10px", "")
-}
-
-+#numpad4:: {
++#left:: {
     ExecuteActionWithCondition("MoveLeft1px", "")
 }
 
-+#numpad6:: {
++#right:: {
     ExecuteActionWithCondition("MoveRight1px", "")
 }
 
-+#numpad8:: {
++#up:: {
     ExecuteActionWithCondition("MoveUp1px", "")
 }
 
-+#numpad2:: {
++#down:: {
     ExecuteActionWithCondition("MoveDown1px", "")
 }
 
-+#numpad1:: {
-    ExecuteActionWithCondition("MoveDownLeft1px", "")
+^numpad4:: {
+    ExecuteActionWithCondition("EdgeLeft", "")
 }
 
-+#numpad3:: {
-    ExecuteActionWithCondition("MoveDownRight1px", "")
+^numpad6:: {
+    ExecuteActionWithCondition("EdgeRight", "")
 }
 
-+#numpad7:: {
-    ExecuteActionWithCondition("MoveUpLeft1px", "")
+^numpad2:: {
+    ExecuteActionWithCondition("EdgeBottom", "")
 }
 
-+#numpad9:: {
-    ExecuteActionWithCondition("MoveUpRight1px", "")
+^numpad7:: {
+    ExecuteActionWithCondition("EdgeTopLeft", "")
 }
 
-^#numpad4:: {
-    ExecuteActionWithCondition("SnapLeft", "")
+^numpad9:: {
+    ExecuteActionWithCondition("EdgeTopRight", "")
 }
 
-^#numpad6:: {
-    ExecuteActionWithCondition("SnapRight", "")
+^numpad1:: {
+    ExecuteActionWithCondition("EdgeBottomLeft", "")
 }
 
-^#numpad8:: {
-    ExecuteActionWithCondition("SnapTop", "")
+^numpad5:: {
+    ExecuteActionWithCondition("EdgeCenter", "")
 }
 
-^#numpad2:: {
-    ExecuteActionWithCondition("SnapBottom", "")
-}
-
-^#numpad7:: {
-    ExecuteActionWithCondition("SnapTopLeft", "")
-}
-
-^#numpad9:: {
-    ExecuteActionWithCondition("SnapTopRight", "")
-}
-
-^#numpad1:: {
-    ExecuteActionWithCondition("SnapBottomLeft", "")
-}
-
-^#numpad5:: {
-    ExecuteActionWithCondition("SnapCenter", "")
-}
-
-#numpadadd:: {
+^numpadadd:: {
     ExecuteActionWithCondition("ScaleExpand10px", "")
 }
 
-#numpadsub:: {
+^numpadsub:: {
     ExecuteActionWithCondition("ScaleReduce10px", "")
 }
 
@@ -175,51 +147,51 @@
     ExecuteActionWithCondition("TrimRight", "")
 }
 
-+#up:: {
+!+#up:: {
     ExecuteActionWithCondition("AddTop", "")
 }
 
-+#down:: {
+!+#down:: {
     ExecuteActionWithCondition("AddBottom", "")
 }
 
-+#left:: {
+!+#left:: {
     ExecuteActionWithCondition("AddLeft", "")
 }
 
-+#right:: {
+!+#right:: {
     ExecuteActionWithCondition("AddRight", "")
+}
+
+^!#up:: {
+    ExecuteActionWithCondition("SubtractTop", "")
+}
+
+^!#down:: {
+    ExecuteActionWithCondition("SubtractBottom", "")
+}
+
+^!#left:: {
+    ExecuteActionWithCondition("SubtractLeft", "")
+}
+
+^!#right:: {
+    ExecuteActionWithCondition("SubtractRight", "")
 }
 
 #lbutton:: {
     ExecuteActionWithCondition("MouseRelativeSize", "")
 }
 
-^#left:: {
-    ExecuteActionWithCondition("HalfSizeLeft", "")
-}
-
-^#right:: {
-    ExecuteActionWithCondition("HalfSizeRight", "")
-}
-
-^#up:: {
-    ExecuteActionWithCondition("HalfSizeTop", "")
-}
-
-^#down:: {
-    ExecuteActionWithCondition("HalfSizeBottom", "")
-}
-
-^+#left:: {
+^!+#left:: {
     ExecuteActionWithCondition("StretchLeft", "")
 }
 
-^+#right:: {
+^!+#right:: {
     ExecuteActionWithCondition("StretchRight", "")
 }
 
-^+#up:: {
+^!+#up:: {
     ExecuteActionWithCondition("StretchTop", "")
 }
 
@@ -227,7 +199,91 @@
     ExecuteActionWithCondition("NextWindow", "")
 }
 
+!wheeldown:: {
+    ExecuteActionWithCondition("NextWindow", "")
+}
+
 #pgup:: {
     ExecuteActionWithCondition("PrevWindow", "")
+}
+
+!wheelup:: {
+    ExecuteActionWithCondition("PrevWindow", "")
+}
+
+!#pgdn:: {
+    ExecuteActionWithCondition("NextClassWindow", "")
+}
+
+!#pgup:: {
+    ExecuteActionWithCondition("PrevClassWindow", "")
+}
+
+!numpad4:: {
+    ExecuteActionWithCondition("JumpGridLeft", "")
+}
+
+!numpad6:: {
+    ExecuteActionWithCondition("JumpGridRight", "")
+}
+
+!numpad2:: {
+    ExecuteActionWithCondition("JumpGridDown", "")
+}
+
+#rbutton:: {
+    ExecuteActionWithCondition("MouseToGrid", "")
+}
+
+numpadadd:: {
+    ExecuteActionWithCondition("SnapToGridEnlarge", "")
+}
+
+numpadsub:: {
+    ExecuteActionWithCondition("SnapToGridShrink", "")
+}
+
+numpad5:: {
+    ExecuteActionWithCondition("Center", "")
+}
+
+numpad4:: {
+    ExecuteActionWithCondition("MoveToGridLeft", "")
+}
+
+numpad6:: {
+    ExecuteActionWithCondition("MoveToGridRight", "")
+}
+
+numpad2:: {
+    ExecuteActionWithCondition("MoveToGridDown", "")
+}
+
+#numpad4:: {
+    ExecuteActionWithCondition("StretchToGridLeft", "")
+}
+
+#numpad6:: {
+    ExecuteActionWithCondition("StretchToGridRight", "")
+}
+
+#numpad2:: {
+    ExecuteActionWithCondition("StretchToGridDown", "")
+}
+
+!#numpad2:: {
+    ExecuteActionWithCondition("PullToGridDown", "")
+}
+
+!#numpad4:: {
+    ExecuteActionWithCondition("PullToGridLeft", "")
+}
+
+!#numpad6:: {
+    ExecuteActionWithCondition("PullToGridRight", "")
+}
+
+^+#left:: {
+    ExecuteActionWithCondition("TuckLeft", "")
 }
 
