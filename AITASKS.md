@@ -28,6 +28,14 @@
 - [x] lint 1: Resolved warning where `ExecuteActionWithCondition` was considered an unassigned local variable. Fixed by placing the `#Include "HotWinAHK_aux.ahk"` statement at the bottom of `HotWinAHK.ahk` after the global function definitions.
 - [x] lint 2: Resolved warning where `ShowHelpScreen` was flagged as an unassigned local variable inside case `HelpScreen`. Built a fully-featured, dark-themed interactive help dashboard in `HotWinAHK.ahk`.
 
+## [x] New Tasks
+- [x] Detecting Bumps
+    - Fixed bug where bumper timer shut down if no stowed window was found. Improved dual-anchor mouse hover detection so peek windows stow automatically on edge leave.
+- [x] Untuck, window should reveal itself without activation
+    - Resolved `0x0014` coord/size jumping issue by utilizing native `0x0053` (`SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW`) drawing to pin without changing bounds or activating.
+- [x] Enhance the help screen
+    - Implemented a gorgeous, highly structured 3-column color coded keybinding reference matrix above the live filter and commands table.
+
 ## [ ] New Changes
 
 ## [ ] New Settings

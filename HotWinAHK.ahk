@@ -757,6 +757,9 @@ ExecuteCommandRegistry(sCmd, hWnd) {
                     activeTuckProfile := g_TuckedWindows[closestHwnd]
                     if (sCmd == "BumpEdgeUntuck") {
                         try {
+                            ; Capture currently active editor window handle
+                            global g_BaselineActiveWindow := DllCall("GetForegroundWindow", "ptr")
+
                             WinGetPos(&tX, &tY, &tW, &tH, closestHwnd)
 
                             nX := tX
@@ -778,19 +781,19 @@ ExecuteCommandRegistry(sCmd, hWnd) {
                             ; Slide the window open cleanly using your SafeMove engine
                             SafeMove(nX, nY, Number(activeTuckProfile.w), Number(activeTuckProfile.h), closestHwnd)
 
-                            ; Force focus activation natively via user32 API bitmask properties
-                            ;;DllCall("SetWindowPos", "ptr", closestHwnd, "ptr", 0, "int", 0, "int", 0, "int", 0, "int", 0, "uint", 0x0040)
-                            ;;WinActivate("ahk_id " . closestHwnd)
+                            ; --- NO-ACTIVATE SHOW-ON-TOP FLAG ---
+                            ; 0x0053 = SWP_NOMOVE (0x02) | SWP_NOSIZE (0x01) | SWP_NOACTIVATE (0x10) | SWP_SHOWWINDOW (0x40)
+                            ; Ensures the window draws on top of stack without stealing baseline text cursor focus
+                            DllCall("SetWindowPos", "ptr", closestHwnd, "ptr", 0, "int", 0, "int", 0, "int", 0, "int", 0, "uint", 0x0053)
 
                             g_ActiveUntuckedHwnd := closestHwnd
 
-                            ; Launch a highly reactive focus monitor loop ticking every 50ms
+                            ; Launch a highly reactive focus and hover monitor loop ticking every 50ms
                             SetTimer(TrackUntuckedFocusLifecycle, 0)
                             SetTimer(TrackUntuckedFocusLifecycle, 50)
                         }
                     }
-
-                    if (sCmd == "_BumpEdgeUntuck") {
+                    else if (sCmd == "BumpEdgeUntuckActivate") {
                         try {
                             WinGetPos(&tX, &tY, &tW, &tH, closestHwnd)
 
@@ -810,112 +813,22 @@ ExecuteCommandRegistry(sCmd, hWnd) {
                                     nY := mBottom - Number(activeTuckProfile.h)
                             }
 
-                            ; Slide the window open cleanly using your SafeMove engine
                             SafeMove(nX, nY, Number(activeTuckProfile.w), Number(activeTuckProfile.h), closestHwnd)
 
-                            ; --- ACTIVATED BITMASK INTERCEPTOR ---
-                            ; 0x0040 = SWP_SHOWWINDOW. This forces the Windows operating system
-                            ; to draw the frame on top and give it full foreground text focus!
+                            ; Draw window on top and give it full foreground focus
                             DllCall("SetWindowPos", "ptr", closestHwnd, "ptr", 0, "int", 0, "int", 0, "int", 0, "int", 0, "uint", 0x0040)
-
-                            ; Double-check focus assignment via explicit activation handle call
                             WinActivate("ahk_id " . closestHwnd)
 
                             g_ActiveUntuckedHwnd := closestHwnd
 
-                            ; Launch the non-timer WinWaitNotActive thread lock immediately once
                             SetTimer(TrackUntuckedFocusLifecycle, 0)
-                            SetTimer(TrackUntuckedFocusLifecycle, -10)
-                        }
-                    }
-                    if (sCmd == "_BumpEdgeUntuck") {
-                        try {
-                            WinGetPos(&tX, &tY, &tW, &tH, closestHwnd)
-
-                            nX := tX
-                            nY := tY
-                            switch targetEdge {
-                                case "Left":
-                                    nX := mLeft
-
-                                case "Right":
-                                    nX := mRight - Number(activeTuckProfile.w)
-
-                                case "Top":
-                                    nY := mTop
-
-                                case "Bottom":
-                                    nY := mBottom - Number(activeTuckProfile.h)
-                            }
-
-                            ; ANCHOR CAPTURE: Save your true typing application handle right before moving anything!
-                            global g_BaselineActiveWindow := DllCall("GetForegroundWindow", "ptr")
-
-                            ; Slide the window open cleanly using your SafeMove engine
-                            SafeMove(nX, nY, Number(activeTuckProfile.w), Number(activeTuckProfile.h), closestHwnd)
-
-                            ; Pin the window to the top of the stack WITHOUT stealing active keyboard focus
-                            ; 0x0014 = SWP_NOSIZE | SWP_NOACTIVATE
-                            DllCall("SetWindowPos", "ptr", closestHwnd, "ptr", 0, "int", 0, "int", 0, "int", 0, "int", 0, "uint", 0x0014)
-
-                            ; Update the tracking pointers so your mouse loop sleeps
-                            g_ActiveUntuckedHwnd := closestHwnd
-
-                            ; Launch the synchronized background focus monitor loop thread
-                            SetTimer(TrackUntuckedFocusLifecycle, 0)
-                            SetTimer(TrackUntuckedFocusLifecycle, 100)
-                        }
-                    }
-
-                    if (sCmd == "_BumpEdgeUntuck") {
-                        try {
-                            WinGetPos(&tX, &tY, &tW, &tH, closestHwnd)
-
-                            nX := tX
-                            nY := tY
-                            switch targetEdge {
-                                case "Left":
-                                    {
-                                        nX := mLeft
-                                    }
-                                case "Right":
-                                    {
-                                        nX := mRight - Number(activeTuckProfile.w)
-                                    }
-                                case "Top":
-                                    {
-                                        nY := mTop
-                                    }
-                                case "Bottom":
-                                    {
-                                        nY := mBottom - Number(activeTuckProfile.h)
-                                    }
-                            }
-
-                            ; Slide the window open cleanly using your SafeMove engine
-                            SafeMove(nX, nY, Number(activeTuckProfile.w), Number(activeTuckProfile.h), closestHwnd)
-
-                            ; Bring the window to the absolute front and give it active foreground focus
-                            WinActivate("ahk_id " . closestHwnd)
-
-                            ; Update the tracking pointers so your mouse loop sleeps
-                            g_ActiveUntuckedHwnd := closestHwnd
-
-                            ; Launch the independent focus-wait monitoring thread safely
-                            SetTimer(TrackUntuckedFocusLifecycle, 0)
-                            SetTimer(TrackUntuckedFocusLifecycle, -10)
+                            SetTimer(TrackUntuckedFocusLifecycle, 50)
                         }
                     }
                 }
-                else if (sCmd == "BumpEdgeUntuckActivate") {
-                    SetTimer(TrackUntuckedFocusLifecycle, 0)
-                    g_ActiveUntuckedHwnd := 0
 
-                    SafeMove(activeTuckProfile.x, activeTuckProfile.y, activeTuckProfile.w, activeTuckProfile.h, closestHwnd)
-                    WinActivate(closestHwnd)
-                    g_TuckedWindows.Delete(closestHwnd)
-
-                    ; Re-arm mouse loop safely: the clean array flush latch will handle the rest!
+                ; ALWAYS re-arm the edge bump mouse-monitoring loop if no window is actively untucked!
+                if (g_ActiveUntuckedHwnd == 0) {
                     SetTimer(CheckScreenEdgeBumps, 25)
                 }
 
@@ -2476,9 +2389,19 @@ TrackUntuckedFocusLifecycle() {
         ; Query the Win32 kernel directly for the true active foreground window handle
         currentForeground := DllCall("GetForegroundWindow", "ptr")
         
-        ; 2. HARDENED DUAL-ANCHOR PROTECTION: Stay wide open while focus remains inside 
-        ; your original text editor, OR inside the untucked window, OR a transitional 0 state!
-        if (currentForeground == 0 || currentForeground == g_BaselineActiveWindow || currentForeground == g_ActiveUntuckedHwnd) {
+        ; Query mouse coordinates and the window handle beneath cursor
+        CoordMode("Mouse", "Screen")
+        MouseGetPos(&mX, &mY, &mHwnd)
+
+        ; Retrieve top-level root window ancestor of the hovered window to handle child controls
+        mRoot := mHwnd ? DllCall("GetAncestor", "ptr", mHwnd, "uint", 2, "ptr") : 0
+
+        isHovered := (mHwnd == g_ActiveUntuckedHwnd || mRoot == g_ActiveUntuckedHwnd)
+        isActive := (currentForeground == g_ActiveUntuckedHwnd)
+
+        ; 2. HARDENED DUAL-ANCHOR PROTECTION: Stay wide open while focus is in the untucked
+        ; window, OR while the mouse is hovering over it, OR a transitional 0 state!
+        if (isHovered || isActive || currentForeground == 0) {
             return
         }
         
@@ -2563,7 +2486,7 @@ ShowHelpScreen(hWnd := 0) {
         return
     }
 
-    ; Create a highly polished, dark themed AHK v2 GUI window
+    ; Create a highly polished, dark themed AHK v2 GUI window conforming exactly to user color scheme and dimensions
     helpGui := Gui("+AlwaysOnTop -MaximizeBox -MinimizeBox +ToolWindow", "HotWinAHK - Commands & Gestures Reference")
     helpGui.BackColor := "121214"
     helpGui.SetFont("s10 cE0E0E6", "Segoe UI")
@@ -2574,21 +2497,108 @@ ShowHelpScreen(hWnd := 0) {
     helpGui.SetFont("s9 c8A8A93", "Segoe UI")
     helpGui.Add("Text", "w780 Center y+4", "Precision Window Management & Gesture Edge-Docking Suite")
 
+    ; --- 3-COLUMN REFERENCE MATRIX (ABOVE THE LOOKUP GRID) ---
+    ; Column backgrounds (subtle dark cards for each category)
+    helpGui.Add("GroupBox", "x20 y60 w310 h170 c55555C", "NUMPAD MATRIX")
+    helpGui.Add("GroupBox", "x345 y60 w220 h170 c55555C", "ARROW MOVEMENT")
+    helpGui.Add("GroupBox", "x580 y60 w220 h170 c55555C", "MOUSE ACTIONS")
+
+    ; --- COLUMN 1: NUMPAD ---
+    ; Row 1: MoveToGrid -
+    helpGui.SetFont("s9 norm cE0E0E6", "Segoe UI")
+    helpGui.Add("Text", "x35 y80 w120", "MoveToGrid")
+    helpGui.Add("Text", "x165 y80 w140", "Numpad 1-9")
+
+    ; Row 2: JumpGrid (Blue) -> Alt
+    helpGui.SetFont("s9 bold c00FFFF", "Segoe UI") ; blue/cyan
+    helpGui.Add("Text", "x35 y98 w120", "JumpGrid")
+    helpGui.Add("Text", "x165 y98 w140", "Alt + Numpad 1-9")
+
+    ; Row 3: Edge (Red) -> Ctrl
+    helpGui.SetFont("s9 bold cFF4444", "Segoe UI") ; red
+    helpGui.Add("Text", "x35 y116 w120", "Edge")
+    helpGui.Add("Text", "x165 y116 w140", "Ctrl + Numpad 1-9")
+
+    ; Row 4: StretchToGrid (Cyan) -> Win
+    helpGui.SetFont("s9 bold c00FFCC", "Segoe UI") ; cyan
+    helpGui.Add("Text", "x35 y134 w120", "StretchToGrid")
+    helpGui.Add("Text", "x165 y134 w140", "Win + Numpad 1-9")
+
+    ; Row 5: PullToGrid (Blue) -> Win+Alt
+    helpGui.SetFont("s9 bold c00FFFF", "Segoe UI") ; blue/cyan
+    helpGui.Add("Text", "x35 y152 w120", "PullToGrid")
+    helpGui.Add("Text", "x165 y152 w140", "Win + Alt + Numpad")
+
+    ; Row 6: Stretch (Red) -> Win+Ctrl
+    helpGui.SetFont("s9 bold cFF4444", "Segoe UI") ; red
+    helpGui.Add("Text", "x35 y170 w120", "Stretch")
+    helpGui.Add("Text", "x165 y170 w140", "Win + Ctrl + Numpad")
+
+    ; Row 7: SnapToGridEnlarge Add / SnapToGridShrink Subtract
+    helpGui.SetFont("s9 norm cE0E0E6", "Segoe UI")
+    helpGui.Add("Text", "x35 y188 w120", "SnapToGridEnlarge/Shrink")
+    helpGui.Add("Text", "x165 y188 w140", "Add / Subtract")
+
+    ; Row 8: ScaleExpand10px / ScaleReduce10px
+    helpGui.SetFont("s9 bold cFF4444", "Segoe UI") ; red
+    helpGui.Add("Text", "x35 y206 w120", "ScaleExpand/Reduce")
+    helpGui.Add("Text", "x165 y206 w140", "Ctrl + Add / Subtract")
+
+
+    ; --- COLUMN 2: ARROW MOVEMENT ---
+    ; Row 1: Move10px (Red) -> Win + Ctrl
+    helpGui.SetFont("s9 bold cFF4444", "Segoe UI") ; red
+    helpGui.Add("Text", "x360 y80 w100", "Move10px")
+    helpGui.Add("Text", "x465 y80 w90", "Win + Ctrl + Arrows")
+
+    ; Row 2: Move1px (Yellow) -> Win + Shift
+    helpGui.SetFont("s9 bold cFFCC00", "Segoe UI") ; yellow
+    helpGui.Add("Text", "x360 y98 w100", "Move1px")
+    helpGui.Add("Text", "x465 y98 w90", "Win + Shift + Arrows")
+
+    ; Row 3: Add (Green) -> Win + Alt + Shift
+    helpGui.SetFont("s9 bold c44FF44", "Segoe UI") ; green
+    helpGui.Add("Text", "x360 y116 w100", "Add (Grow)")
+    helpGui.Add("Text", "x465 y116 w90", "Win+Alt+Shift+Arrows")
+
+    ; Row 4: Sub (Purple) -> Win + Ctrl + Alt
+    helpGui.SetFont("s9 bold cCC66FF", "Segoe UI") ; purple
+    helpGui.Add("Text", "x360 y134 w100", "Sub (Shrink)")
+    helpGui.Add("Text", "x465 y134 w90", "Win+Ctrl+Alt+Arrows")
+
+    ; Row 5: Trim -> Win + Alt
+    helpGui.SetFont("s9 norm cE0E0E6", "Segoe UI") ; default high-contrast white
+    helpGui.Add("Text", "x360 y152 w100", "Trim")
+    helpGui.Add("Text", "x465 y152 w90", "Win + Alt + Arrows")
+
+
+    ; --- COLUMN 3: MOUSE ACTIONS ---
+    ; Row 1: ToGrid Win + MButton
+    helpGui.SetFont("s9 norm cE0E0E6", "Segoe UI")
+    helpGui.Add("Text", "x595 y80 w100", "ToGrid")
+    helpGui.Add("Text", "x700 y80 w90", "Win + MButton")
+
+    ; Row 2: RelativeSize Win + LButton
+    helpGui.Add("Text", "x595 y98 w100", "RelativeSize")
+    helpGui.Add("Text", "x700 y98 w90", "Win + LButton")
+
+
+    ; --- INTERACTION SEPARATOR ---
     ; Divider Line Decorator
-    helpGui.Add("Text", "w760 h1 Background3A3A3D xm+10 y+12", "")
+    helpGui.Add("Text", "w780 h1 Background3A3A3D x20 y242", "")
 
     ; Live Dynamic Filter Box Row
     helpGui.SetFont("s10 bold c00FFCC", "Segoe UI")
-    helpGui.Add("Text", "w100 xm+15 y+15 h24 +0x200", "Live Filter:")
+    helpGui.Add("Text", "w100 x20 y255 h24 +0x200", "Live Filter:")
     helpGui.SetFont("s10 norm cFFFFFF", "Segoe UI")
-    searchBox := helpGui.Add("Edit", "w320 xp+85 yp Background1E1E22 cFFFFFF Border r1 h24", "")
+    searchBox := helpGui.Add("Edit", "w320 x105 y255 Background1E1E22 cFFFFFF Border r1 h24", "")
     
     helpGui.SetFont("s9 c8A8A93", "Segoe UI")
-    helpGui.Add("Text", "w300 xp+330 yp h24 +0x200 Right", "Press [ESC] at any time to close")
+    helpGui.Add("Text", "w300 x500 y255 h24 +0x200 Right", "Press [ESC] at any time to close")
 
     ; Create the Main ListView
     helpGui.SetFont("s10 cE0E0E6", "Segoe UI")
-    helpLV := helpGui.Add("ListView", "xm+10 y+15 w760 r18 Background111112 cFFFFFF +Grid -Multi -ReadOnly", ["Category", "Action Command", "Trigger Key combo", "Functional Description"])
+    helpLV := helpGui.Add("ListView", "x20 y290 w780 h320 Background111112 cFFFFFF +Grid -Multi -ReadOnly", ["Category", "Action Command", "Trigger Key combo", "Functional Description"])
     
     ; Adjust ListView column headers width to distribute elegantly
     helpLV.ModifyCol(1, 115) ; Category
@@ -2665,7 +2675,7 @@ ShowHelpScreen(hWnd := 0) {
     helpGui.OnEvent("Close", (*) => helpGui.Destroy())
 
     ; Render on screen
-    helpGui.Show("w780 h520 Center")
+    helpGui.Show("w820 h635 Center")
 }
 ; #endregion
 
