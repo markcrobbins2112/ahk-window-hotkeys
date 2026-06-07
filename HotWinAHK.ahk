@@ -2429,7 +2429,7 @@ TrackUntuckedFocusLifecycle() {
             ; 2. Create the gorgeous translucent overlay edge band indicator GUI
             dockIndicatorGui := Gui("+AlwaysOnTop -Caption +ToolWindow +E0x20") ; Click-through window
             dockIndicatorGui.BackColor := "00FFCC" ; beautiful cyan docking color
-            WinSetTranslucent(100, dockIndicatorGui)
+            WinSetTransparent(100, "ahk_id " . dockIndicatorGui.Hwnd)
             
             hasIndicatorShown := false
             currentIndEdge := ""

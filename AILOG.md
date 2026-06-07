@@ -15,7 +15,6 @@
 
 ## Commit Message
 ```text
-feat(ahk): implement stowed window dragging resistance, pop-off thresholds, and Ctrl-hold adaptive dock seeking
 ```
 
 <!-- Example AI Log Entry
@@ -38,6 +37,10 @@ bulleted file list
 - Integrate Ctrl-holding layout Dock-Seeking Mode with real-time translucent prediction bands and snapping transitions.
 
 ### 🛠️ Completed Changes in this Session
+- **Move untucked window to the top of the Z-order index upon edge bump**: Guaranteed the target peek window gets elevated to `HWND_TOP` immediately on edge bump hover.
+- **Implement physical drag resistance (4x perpendicular and 2x parallel damping tension) when pulling nestled windows from stowed bounds**: Added non-linear mouse cursor tracking limits to pull sturdy nestled bounds with custom mechanical movement dampening.
+- **Implement hysteresis pop-off release threshold (120px) to restore normal free-floating window states**: Successfully unlocked windows from stowing parameters permanently when pulled past 120 absolute pixels away from their docking edge.
+- **Add dynamic Ctrl-hold Dock-Seeking mechanism with translucent cyan (`00FFCC`) predicted edge indicator band and snap-to-dock binding on release**: Handled floating overlay panels representing docking zones on active screen borders that trigger instant snap re-dock upon click release.
 - **HotWinAHK.ahk**: Declared `g_PeekX` and `g_PeekY` global variables. Refined `"BumpEdgeUntuck"` and `"BumpEdgeUntuckActivate"` to pull windows to the front using `WinMoveTop` without stealing foreground focus, and cached coordinates. Embedded a robust left-click drag tracking routine into `TrackUntuckedFocusLifecycle` that acts as a physical controller: limits movement with 4x perpendicular and 2x parallel drag dampening filters, executes Pop-off when a 120px travel trigger is exceeded, and activates a stunning translucent click-through cyan overlay band predicting screen margins when holding `Ctrl`, relocating and docking the window on release.
 - **FEATURES.md**: Documented the addition, behaviors, and hotkeys of the new drag, physical resistance, and Ctrl-hold adaptive docking features.
 - **MANUAL.md**: Added the physical equations, displacement resistance multipliers ($\Delta X \times 0.25$), pop-off limits, and overlay predicted docking coordinates.
