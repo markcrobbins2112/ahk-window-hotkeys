@@ -3,39 +3,48 @@
 ; =======================================================================================
 #Requires AutoHotkey v2.0
 
-#/:: {
+$#/:: {
+    Suspend("Permit")
     ExecuteActionWithCondition("HelpScreen", "")
 }
 
-^#/:: {
+$^#/:: {
+    Suspend("Permit")
     ExecuteActionWithCondition("WinInfo", "")
 }
 
-^#c:: {
+$^#c:: {
+    Suspend("Permit")
     ExecuteActionWithCondition("CopyCommands", "")
 }
 
-!#c:: {
+$!#c:: {
+    Suspend("Permit")
     ExecuteActionWithCondition("CopyBindings", "")
 }
 
-!#s:: {
+$!#s:: {
+    Suspend("Permit")
     ExecuteActionWithCondition("ToggleSuspension", "")
 }
 
-#f12:: {
+$#f12:: {
+    Suspend("Permit")
     ExecuteActionWithCondition("ReloadConfig", "")
 }
 
-!#e:: {
+$!#e:: {
+    Suspend("Permit")
     ExecuteActionWithCondition("EditConfig", "")
 }
 
-!#x:: {
+$!#x:: {
+    Suspend("Permit")
     ExecuteActionWithCondition("ExitProgram", "")
 }
 
-#.:: {
+$#.:: {
+    Suspend("Permit")
     ExecuteActionWithCondition("RestartProgram", "")
 }
 
@@ -47,163 +56,163 @@
     ExecuteActionWithCondition("MouseRelativeSize", "")
 }
 
-^#t:: {
+$^#t:: {
     ExecuteActionWithCondition("AlwaysOnTop", "")
 }
 
-+#o:: {
+$+#o:: {
     ExecuteActionWithCondition("SetOpacity70", "")
 }
 
-!+#o:: {
+$!+#o:: {
     ExecuteActionWithCondition("RemoveOpacity", "")
 }
 
-#backspace:: {
+$#backspace:: {
     ExecuteActionWithCondition("SendToBack", "")
 }
 
-+#backspace:: {
+$+#backspace:: {
     ExecuteActionWithCondition("FocusLastActiveWindow", "")
 }
 
-^#backspace:: {
+$^#backspace:: {
     ExecuteActionWithCondition("FocusDeepestWindow", "")
 }
 
-+#pgdn:: {
+$+#pgdn:: {
     ExecuteActionWithCondition("MinimizeToTray", "")
 }
 
-+#pgup:: {
+$+#pgup:: {
     ExecuteActionWithCondition("PickFromTray", "")
 }
 
-!#left:: {
+$!#left:: {
     ExecuteActionWithCondition("MoveLeft10px", "")
 }
 
-!#right:: {
+$!#right:: {
     ExecuteActionWithCondition("MoveRight10px", "")
 }
 
-!#up:: {
+$!#up:: {
     ExecuteActionWithCondition("MoveUp10px", "")
 }
 
-!#down:: {
+$!#down:: {
     ExecuteActionWithCondition("MoveDown10px", "")
 }
 
-+#left:: {
+$+#left:: {
     ExecuteActionWithCondition("MoveLeft1px", "")
 }
 
-+#right:: {
+$+#right:: {
     ExecuteActionWithCondition("MoveRight1px", "")
 }
 
-+#up:: {
+$+#up:: {
     ExecuteActionWithCondition("MoveUp1px", "")
 }
 
-+#down:: {
+$+#down:: {
     ExecuteActionWithCondition("MoveDown1px", "")
 }
 
-^numpad4:: {
+$^numpad4:: {
     ExecuteActionWithCondition("EdgeLeft", "")
 }
 
-^numpad6:: {
+$^numpad6:: {
     ExecuteActionWithCondition("EdgeRight", "")
 }
 
-^numpad2:: {
+$^numpad2:: {
     ExecuteActionWithCondition("EdgeBottom", "")
 }
 
-^numpad7:: {
+$^numpad7:: {
     ExecuteActionWithCondition("EdgeTopLeft", "")
 }
 
-^numpad9:: {
+$^numpad9:: {
     ExecuteActionWithCondition("EdgeTopRight", "")
 }
 
-^numpad1:: {
+$^numpad1:: {
     ExecuteActionWithCondition("EdgeBottomLeft", "")
 }
 
-^numpad5:: {
+$^numpad5:: {
     ExecuteActionWithCondition("EdgeCenter", "")
 }
 
-^numpadadd:: {
+$^numpadadd:: {
     ExecuteActionWithCondition("ScaleExpand10px", "")
 }
 
-^numpadsub:: {
+$^numpadsub:: {
     ExecuteActionWithCondition("ScaleReduce10px", "")
 }
 
-!#numpad2:: {
+$!#numpad2:: {
     ExecuteActionWithCondition("TrimBottom", "")
 }
 
-!#numpad6:: {
+$!#numpad6:: {
     ExecuteActionWithCondition("TrimLeft", "")
 }
 
-!#numpad4:: {
+$!#numpad4:: {
     ExecuteActionWithCondition("TrimRight", "")
 }
 
-!+#up:: {
+$!+#up:: {
     ExecuteActionWithCondition("AddTop", "")
 }
 
-!+#down:: {
+$!+#down:: {
     ExecuteActionWithCondition("AddBottom", "")
 }
 
-!+#left:: {
+$!+#left:: {
     ExecuteActionWithCondition("AddLeft", "")
 }
 
-!+#right:: {
+$!+#right:: {
     ExecuteActionWithCondition("AddRight", "")
 }
 
-^!#up:: {
+$^!#up:: {
     ExecuteActionWithCondition("SubtractTop", "")
 }
 
-^!#down:: {
+$^!#down:: {
     ExecuteActionWithCondition("SubtractBottom", "")
 }
 
-^!#left:: {
+$^!#left:: {
     ExecuteActionWithCondition("SubtractLeft", "")
 }
 
-^!#right:: {
+$^!#right:: {
     ExecuteActionWithCondition("SubtractRight", "")
 }
 
-^!+#left:: {
+$^!+#left:: {
     ExecuteActionWithCondition("StretchLeft", "")
 }
 
-^!+#right:: {
+$^!+#right:: {
     ExecuteActionWithCondition("StretchRight", "")
 }
 
-^!+#up:: {
+$^!+#up:: {
     ExecuteActionWithCondition("StretchTop", "")
 }
 
-#pgdn:: {
+$#pgdn:: {
     ExecuteActionWithCondition("NextWindow", "")
 }
 
@@ -211,7 +220,7 @@
     ExecuteActionWithCondition("NextWindow", "")
 }
 
-#pgup:: {
+$#pgup:: {
     ExecuteActionWithCondition("PrevWindow", "")
 }
 
@@ -219,75 +228,75 @@
     ExecuteActionWithCondition("PrevWindow", "")
 }
 
-!#pgdn:: {
+$!#pgdn:: {
     ExecuteActionWithCondition("NextClassWindow", "")
 }
 
-!#pgup:: {
+$!#pgup:: {
     ExecuteActionWithCondition("PrevClassWindow", "")
 }
 
-!numpad4:: {
+$!numpad4:: {
     ExecuteActionWithCondition("JumpGridLeft", "")
 }
 
-!numpad6:: {
+$!numpad6:: {
     ExecuteActionWithCondition("JumpGridRight", "")
 }
 
-!numpad2:: {
+$!numpad2:: {
     ExecuteActionWithCondition("JumpGridDown", "")
 }
 
-numpadadd:: {
+$numpadadd:: {
     ExecuteActionWithCondition("SnapToGridEnlarge", "")
 }
 
-numpadsub:: {
+$numpadsub:: {
     ExecuteActionWithCondition("SnapToGridShrink", "")
 }
 
-numpad5:: {
+$numpad5:: {
     ExecuteActionWithCondition("Center", "")
 }
 
-numpad4:: {
+$numpad4:: {
     ExecuteActionWithCondition("MoveToGridLeft", "")
 }
 
-numpad6:: {
+$numpad6:: {
     ExecuteActionWithCondition("MoveToGridRight", "")
 }
 
-numpad2:: {
+$numpad2:: {
     ExecuteActionWithCondition("MoveToGridDown", "")
 }
 
-#numpad4:: {
+$#numpad4:: {
     ExecuteActionWithCondition("StretchToGridLeft", "")
 }
 
-#numpad6:: {
+$#numpad6:: {
     ExecuteActionWithCondition("StretchToGridRight", "")
 }
 
-#numpad2:: {
+$#numpad2:: {
     ExecuteActionWithCondition("StretchToGridDown", "")
 }
 
-^+#left:: {
+$^+#left:: {
     ExecuteActionWithCondition("TuckLeft", "")
 }
 
-^+#right:: {
+$^+#right:: {
     ExecuteActionWithCondition("TuckRight", "")
 }
 
-^+#up:: {
+$^+#up:: {
     ExecuteActionWithCondition("TuckUp", "")
 }
 
-^+#down:: {
+$^+#down:: {
     ExecuteActionWithCondition("TuckDown", "")
 }
 

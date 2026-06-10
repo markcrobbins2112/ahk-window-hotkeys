@@ -63,6 +63,31 @@
 - [x] Resolve tuck-revealed window drag deadlock issue via immediate focus-lifecycle timer suspension and atomic state locking
 - [x] Resolve key non-responsiveness and keyboard hook/child script release issues upon engine suspension or shutdown
 
+## [ ] New Features
+- [ ] Peek Tucked
+    - [ ] Offers a menu of all tucked windows listing their titles and the side they are tucked to
+    - [ ] selection causes window to reveal in the same way as a cursor bumping that edge
+- [ ] Untuck
+    - [ ] offers a menu of all tucked and removes the selected from its tuck
+- [ ] paint a dot at top left of active window
+    - [ ] green when program is not suspended, otherwise yellow
+
+
+
+## [ ] New Fails
+- [ ] when pulling a window from its tucked state do not do a resistence
+    - [ ] use an indicator of how far I can pull before it is free
+    - [ ] use a sound to indicate pop off
+    - [ ] if I am dragging a popped off window around, show indicators when I am in range of having it dock to another edge should I release the window
+- [ ] widen and clean up the help dialog
+    - [ ] do not include commands in the list that are arrows or numpad numbers
+
+
+
+
+
+
+
 ## [ ] New Settings
 
 ## [ ] New Commands
