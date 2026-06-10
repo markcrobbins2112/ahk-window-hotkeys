@@ -15,7 +15,7 @@
 
 ## Commit Message
 ```text
-fix(drag): resolve tuck-revealed window drag exceptions including deadlock and "target window not found" GUI failures
+fix(input): resolve keyboard hook interception issues on suspension/exit and add explicit Help GUI exit button
 ```
 
 <!-- Example AI Log Entry
@@ -28,6 +28,29 @@ subsections/tree bullets
 bulleted file list
 -->
 ## Log Entries
+
+## [2026-06-10T22:00:00Z]
+### 🎯 Primary Goals & Requirements
+- Resolve the critical keyboard non-responsiveness and hotkey interception issue where keys like Numpad2 and Numpad4 (or standard keys mapped to them) remain swallowed by the script even after suspension or perceived program shutdown.
+- Safeguard standard keyboard entry against swallow/block operations during hotkey suspension, ensuring all inputs are perfectly passed through to the OS when suspended.
+- Eliminate collision/cross-talk where standard keyboard row keys (specifically standard 2 and 4) are swallowed or blocked by Numpad2 and Numpad4 registrations.
+- Build a robust hook cleanup routine to properly release system-level hooks and terminate stowed helper scripts on shutdown.
+- Implement an explicit user-facing completely exit lane within the Help GUI to prevent background process confusion.
+
+### 🛠️ Completed Changes in this Session
+- **Keyboard Hook Prefix Forced Registration**: Upgraded the compiler function `CompileIniToStaticHotkeys()` to output the AutoHotkey precise keyboard hook prefix (`$`) to all generated hotkeys. This bypasses the buggy modifier-sensitive Windows `RegisterHotkey` API, guaranteeing standard number-row keys 2 and 4 are never misidentified or intercepted as Numpad inputs.
+- **Aggressive Process and Hook Cleanup on Startup**: Added an active process and hook cleanup routine at script startup (`_startups`) that terminates any previous zombie/dangling instances of our script or subprocesses, instantly releasing any unreleased keyboard hook allocations.
+- **Clean OS Hooks release on Shutdown**: Upgraded `ShutdownEngine()` to target and release the active focus event hooks `g_DiagnosticFocusHook` and `g_OsFocusHookHandle` via `UnhookWinEvent` DLL calls.
+- **Dangling Tray helper cleanup**: Enhanced `ShutdownEngine()` to query, target, and cleanly close running child tray processes (`HotWinAHK_tray.ahk`) using a `DetectHiddenWindows(true)` loop prior to exit, releasing their keyboard resource allocations.
+- **Physical Input release on Suspension**: Rewrote `ToggleSuspension()` to natively interface with the built-in AutoHotkey `Suspend` API toggler. This releases keyboard hooks and allows the unmodified keystrokes to pass directly and naturally to the foreground application.
+- **Administrative Exemption Compiler**: Patched `CompileIniToStaticHotkeys()` to output the `Suspend("Permit")` directive for administrative and meta-hotkeys (`ToggleSuspension`, `ExitProgram`, `RestartProgram`, `ReloadConfig`, `EditConfig`, `HelpScreen`, `WinInfo`, etc.), guaranteeing they can be used even while hotkeys are globally suspended.
+- **Suspension Edge Checks Bypassing**: Injected a `g_bSuspended` check inside the continuous cursor edge bump monitoring callback `CheckScreenEdgeBumps()` to instantly disable edge docking behaviors when suspended.
+- **User-Friendly Help GUI Exit and Warn Panel**: Expanded the Help GUI workspace (`w820 h680`) and added a prominent red "Exit HotWinAHK Completely" button at `y630`. Added high-contrast instruction text explaining that the background listeners are running and how to cleanly unload them with a single click.
+
+### 🔸 Affected Files
+- `/HotWinAHK.ahk`
+- `/AITASKS.md`
+- `/AILOG.md`
 
 ## [2026-06-10T21:44:00Z]
 ### 🎯 Primary Goals & Requirements

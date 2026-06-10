@@ -59,7 +59,9 @@
 - [x] new command CopyBindings (Completely built and mapped to Win+Alt+C)
 
 ## [x] New Changes
+- [x] Prevent standard keys 2 and 4 row collision via precise keyboard hook prefix compilation and aggressive multi-instance zombie process terminator
 - [x] Resolve tuck-revealed window drag deadlock issue via immediate focus-lifecycle timer suspension and atomic state locking
+- [x] Resolve key non-responsiveness and keyboard hook/child script release issues upon engine suspension or shutdown
 
 ## [ ] New Settings
 

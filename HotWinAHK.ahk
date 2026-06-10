@@ -34,6 +34,7 @@ Global g_UntuckCooldown := false
 Global g_BaselineActiveWindow := 0 ; Tracks your primary application window handle
 Global g_ResetBumpMemory := false ; Controls mouse vector memory flushes
 Global g_UntuckGraceTicks := 0 ; Grace period countdown latch for untucking; #endregion
+Global g_DiagnosticFocusHook := 0 ; Global focus monitoring hook handle
 Global g_PeekX := 0 ; Tracks peek position X
 Global g_PeekY := 0 ; Tracks peek position Y
 
@@ -50,6 +51,27 @@ Global g_TuckedVisiblePixels := 20
 ; #endregion _globals 
 
 ; #region  _startups 
+; Cleanly terminate any prior crashed/dangling zombie/helper threads on startup.
+; This releases their keyboard resource allocations and hooks before we register our own!
+try {
+    DetectHiddenWindows(true)
+    currentPID := DllCall("GetCurrentProcessId")
+    existingAhkWins := WinGetList("ahk_class AutoHotkey")
+    for hAhk in existingAhkWins {
+        try {
+            thisTitle := WinGetTitle("ahk_id " hAhk)
+            thisPID := WinGetPID("ahk_id " hAhk)
+            if (thisPID != currentPID && InStr(thisTitle, "HotWinAHK")) {
+                WinClose("ahk_id " hAhk)
+                Sleep(50) ; Give it a brief moment of grace to unload
+                if WinExist("ahk_id " hAhk) {
+                    ProcessClose(thisPID)
+                }
+            }
+        }
+    }
+}
+
 SetTimer(CheckScreenEdgeBumps, 25)
 ; Execute the initializer hook immediately on script launch
 InitializeGlobalFocusBeeper()
@@ -421,8 +443,19 @@ CompileIniToStaticHotkeys() {
             WrittenKeysRegistry .= "|" sAHKStroke "|"
 
             ; Writes your raw native code formatting blocks
-            ScriptBuffer .= sAHKStroke ":: {`n"
-            ScriptBuffer .= "    ExecuteActionWithCondition(`"" sCmd "`", `"" sCond "`")`n"
+            ; Use the "$" prefix on keyboard keys to force AutoHotkey's precise low-level hook.
+            ; This prevents the buggy Windows RegisterHotkey API from misinterpreting standard number keys (like 2 and 4)
+            ; as their Numpad equivalents (Numpad2 and Numpad4).
+            sPrefix := "$"
+            ; Skip hook prefix for mouse buttons, wheels, or hotkeys that already have hook/wildcard/passthrough flags
+            if (InStr(sAHKStroke, "$") || InStr(sAHKStroke, "~") || InStr(sAHKStroke, "*") || RegExMatch(sAHKStroke, "i)(lbutton|rbutton|mbutton|xbutton|wheel)")) {
+                sPrefix := ""
+            }
+            ScriptBuffer .= sPrefix sAHKStroke ":: {`n"
+            if (sCmd == "ToggleSuspension" || sCmd == "ExitProgram" || sCmd == "RestartProgram" || sCmd == "ReloadConfig" || sCmd == "EditConfig" || sCmd == "HelpScreen" || sCmd == "WinInfo" || sCmd == "CopyCommands" || sCmd == "CopyBindings") {
+                ScriptBuffer .= '    Suspend("Permit")`n'
+            }
+            ScriptBuffer .= '    ExecuteActionWithCondition("' sCmd '", "' sCond '")`n'
             ScriptBuffer .= "}`n`n"
         }
     }
@@ -1764,6 +1797,38 @@ ShutdownEngine() {
     ; Clear any lingering tooltips on the screen instantly
     ToolTip()
 
+    ; Release WinEvent focus tracking hooks safely
+    global g_DiagnosticFocusHook, g_OsFocusHookHandle
+    if (g_DiagnosticFocusHook) {
+        try DllCall("UnhookWinEvent", "ptr", g_DiagnosticFocusHook)
+        g_DiagnosticFocusHook := 0
+    }
+    if (g_OsFocusHookHandle) {
+        try DllCall("UnhookWinEvent", "ptr", g_OsFocusHookHandle)
+        g_OsFocusHookHandle := 0
+    }
+
+    ; Cleanly close any stowed helper sub-scripts and other process instances to release keyboard hook processes
+    try {
+        DetectHiddenWindows(true)
+        currentPID := DllCall("GetCurrentProcessId")
+        existingAhkWins := WinGetList("ahk_class AutoHotkey")
+        for hAhk in existingAhkWins {
+            try {
+                thisTitle := WinGetTitle("ahk_id " hAhk)
+                thisPID := WinGetPID("ahk_id " hAhk)
+                ; Forcefully release and close other instances of any script in our toolkit
+                if (thisPID != currentPID && InStr(thisTitle, "HotWinAHK")) {
+                    WinClose("ahk_id " hAhk)
+                    Sleep(50) ; Give it a brief moment of grace to unload
+                    if WinExist("ahk_id " hAhk) {
+                        ProcessClose(thisPID)
+                    }
+                }
+            }
+        }
+    }
+
     ; Display the modern Windows system tray toast notification
     try TrayTip("Window Nudger", "Engine Shutdown - Hotkeys Released", 2)
 
@@ -1778,6 +1843,7 @@ ShutdownEngine() {
 }
 ToggleSuspension() {
     global g_bSuspended := !g_bSuspended
+    try Suspend(g_bSuspended ? 1 : 0)
     SoundBeep(g_bSuspended ? 400 : 900, 200)
     ShowTargetToolTip(g_bSuspended ? "Suspended" : "Active")
 }
@@ -2164,7 +2230,11 @@ MouseGetWindowHWND() {
 
 ; #region  _events
 CheckScreenEdgeBumps() {
-    global g_ActiveUntuckedHwnd, g_BumpVelocityThreshold, g_BumpEdgeZonePixels, g_ResetBumpMemory
+    global g_ActiveUntuckedHwnd, g_BumpVelocityThreshold, g_BumpEdgeZonePixels, g_ResetBumpMemory, g_bSuspended
+    
+    if (g_bSuspended) {
+        return
+    }
     
     ; --- THE STATIC MEMORY ANCHORS ---
     ; Using static primitive numbers completely eliminates array type crashes!
@@ -2691,12 +2761,20 @@ ShowHelpScreen(hWnd := 0) {
     ; Connect search box change event to live filtering
     searchBox.OnEvent("Change", (ctrl, *) => PopulateLV(ctrl.Value))
 
+    ; Setup footer button and label
+    helpGui.SetFont("s9 bold cFF4444", "Segoe UI")
+    exitBtn := helpGui.Add("Button", "x20 y630 w240 h30", "Exit HotWinAHK Completely")
+    exitBtn.OnEvent("Click", (*) => ShutdownEngine())
+    
+    helpGui.SetFont("s9 c8A8A93", "Segoe UI")
+    helpGui.Add("Text", "x280 y630 w520 h30 +0x200", "Note: Window Nudger runs continuously in the background. Press Win+Alt+X or click Exit to unload.")
+
     ; Setup closure behaviors
     helpGui.OnEvent("Escape", (*) => helpGui.Destroy())
     helpGui.OnEvent("Close", (*) => helpGui.Destroy())
 
     ; Render on screen
-    helpGui.Show("w820 h635 Center")
+    helpGui.Show("w820 h680 Center")
 }
 ; #endregion
 
