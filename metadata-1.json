@@ -1,6 +1,0 @@
-{
-  "name": "HotWinAHK",
-  "description": "An elegant, high-performance window-management and edge-docking suite written in AutoHotkey v2.0.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}

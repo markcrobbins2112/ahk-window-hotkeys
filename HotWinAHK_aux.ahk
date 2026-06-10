@@ -39,6 +39,14 @@
     ExecuteActionWithCondition("RestartProgram", "")
 }
 
+#rbutton:: {
+    ExecuteActionWithCondition("MouseToGrid", "")
+}
+
+#lbutton:: {
+    ExecuteActionWithCondition("MouseRelativeSize", "")
+}
+
 ^#t:: {
     ExecuteActionWithCondition("AlwaysOnTop", "")
 }
@@ -71,19 +79,19 @@
     ExecuteActionWithCondition("PickFromTray", "")
 }
 
-^#left:: {
+!#left:: {
     ExecuteActionWithCondition("MoveLeft10px", "")
 }
 
-^#right:: {
+!#right:: {
     ExecuteActionWithCondition("MoveRight10px", "")
 }
 
-^#up:: {
+!#up:: {
     ExecuteActionWithCondition("MoveUp10px", "")
 }
 
-^#down:: {
+!#down:: {
     ExecuteActionWithCondition("MoveDown10px", "")
 }
 
@@ -139,19 +147,15 @@
     ExecuteActionWithCondition("ScaleReduce10px", "")
 }
 
-!#down:: {
-    ExecuteActionWithCondition("TrimTop", "")
-}
-
-!#up:: {
+!#numpad2:: {
     ExecuteActionWithCondition("TrimBottom", "")
 }
 
-!#right:: {
+!#numpad6:: {
     ExecuteActionWithCondition("TrimLeft", "")
 }
 
-!#left:: {
+!#numpad4:: {
     ExecuteActionWithCondition("TrimRight", "")
 }
 
@@ -185,10 +189,6 @@
 
 ^!#right:: {
     ExecuteActionWithCondition("SubtractRight", "")
-}
-
-#lbutton:: {
-    ExecuteActionWithCondition("MouseRelativeSize", "")
 }
 
 ^!+#left:: {
@@ -239,10 +239,6 @@
     ExecuteActionWithCondition("JumpGridDown", "")
 }
 
-#rbutton:: {
-    ExecuteActionWithCondition("MouseToGrid", "")
-}
-
 numpadadd:: {
     ExecuteActionWithCondition("SnapToGridEnlarge", "")
 }
@@ -277,18 +273,6 @@ numpad2:: {
 
 #numpad2:: {
     ExecuteActionWithCondition("StretchToGridDown", "")
-}
-
-!#numpad2:: {
-    ExecuteActionWithCondition("PullToGridDown", "")
-}
-
-!#numpad4:: {
-    ExecuteActionWithCondition("PullToGridLeft", "")
-}
-
-!#numpad6:: {
-    ExecuteActionWithCondition("PullToGridRight", "")
 }
 
 ^+#left:: {

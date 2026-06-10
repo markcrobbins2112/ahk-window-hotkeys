@@ -2567,10 +2567,10 @@ ShowHelpScreen(hWnd := 0) {
 
 
     ; --- COLUMN 2: ARROW MOVEMENT ---
-    ; Row 1: Move10px (Red) -> Win + Ctrl
-    helpGui.SetFont("s9 bold cFF4444", "Segoe UI") ; red
+    ; Row 1: Move10px (Blue) -> Win + Alt
+    helpGui.SetFont("s9 bold c4476ff", "Segoe UI") ; red
     helpGui.Add("Text", "x360 y80 w100", "Move10px")
-    helpGui.Add("Text", "x465 y80 w90", "Win + Ctrl + Arrows")
+    helpGui.Add("Text", "x465 y80 w90", "Win + Alt + Arrows")
 
     ; Row 2: Move1px (Yellow) -> Win + Shift
     helpGui.SetFont("s9 bold cFFCC00", "Segoe UI") ; yellow
@@ -2968,4 +2968,4 @@ $LButton:: {
 #Include "HotWinAHK_aux.ahk"
 ; #endregion
 
-; &"C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" "C:\_ahk\HotWinAHK.ahk"
+; &"C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" "C:\_\ahk-window-hotkeys\HotWinAHK.ahk"
