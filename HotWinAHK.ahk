@@ -39,6 +39,8 @@ Global g_PeekX := 0 ; Tracks peek position X
 Global g_PeekY := 0 ; Tracks peek position Y
 Global g_DotGui := "" ; Early declared active window top-left indicator dot GUI hook
 Global g_OsFocusHookHandle := 0
+Global g_SavedHomesList := []
+Global g_HomeIndicators := Map()
 
 ; --- CUSTOM VELOCITY BUMP SENSITIVITY REGISTRY ---
 ; Lower numbers make the flick speed more sensitive (5 is ultra-sensitive, 10 is moderate, 20 is heavy wrist snap)
@@ -76,6 +78,7 @@ try {
 
 SetTimer(CheckScreenEdgeBumps, 25)
 SetTimer(UpdateActiveWindowDot, 100)
+SetTimer(UpdateHomeIndicators, 250)
 OnMessage(0x004A, ReceiveCopyData)
 ; Execute the initializer hook immediately on script launch
 InitializeGlobalFocusBeeper()
@@ -84,6 +87,7 @@ if !FileExist(g_sGeneratedFile) {
 }
 
 ; --- THE SELF-COMPILING SCRIPT GENERATOR ENGINE ---
+UpdateSavedHomesCache()
 CompileIniToStaticHotkeys()
 ; Sound confirmation beep on successful loading
 SoundBeep(1000, 300)
@@ -2868,7 +2872,7 @@ GetGlobalCommandList() {
         {cat: "Administrative", cmd: "ReloadConfig", key: "Win + F12", desc: "Hot-reload preferences from HotWinAHK.ini and compile hotkeys dynamically."},
         {cat: "Administrative", cmd: "EditConfig", key: "Win + Alt + E", desc: "Open HotWinAHK.ini configurations in system default text editor."},
         {cat: "Administrative", cmd: "ExitProgram", key: "Win + Alt + X", desc: "Safely terminate the HotWinAHK background orchestrator process."},
-        {cat: "Administrative", cmd: "RestartProgram", key: "Win + .", desc: "Instantly reload and reboot the HotWinAHK execution engine."},
+        {cat: "Administrative", cmd: "RestartProgram", key: "Win + Ctrl + F12", desc: "Instantly reload and reboot the HotWinAHK execution engine."},
         {cat: "Administrative", cmd: "Active Window Dot", key: "Auto Indicator", desc: "Draws green dot at active window's top-left (yellow when program is suspended)."},
         
         {cat: "System Layer", cmd: "AlwaysOnTop", key: "Win + Ctrl + T", desc: "Toggle Always-On-Top focus pinning attribute on active window frame."},
@@ -2891,16 +2895,16 @@ GetGlobalCommandList() {
         {cat: "Sizing & Margins", cmd: "ScaleReduceGridPart", key: "Ctrl + NumpadSub", desc: "Shrink active window bounds symmetrically matching half-grid step parts."},
         {cat: "Sizing & Margins", cmd: "ScaleExpand10px", key: "Alt + NumpadAdd", desc: "Expand active window bounds by 10px symmetrically in all directions."},
         {cat: "Sizing & Margins", cmd: "ScaleReduce10px", key: "Alt + NumpadSub", desc: "Shrink active window bounds by 10px symmetrically in all directions."},
-        {cat: "Sizing & Margins", cmd: "TrimLeft", key: "Win + Alt + Left", desc: "Trim left boundary from active window margin."},
-        {cat: "Sizing & Margins", cmd: "TrimRight", key: "Win + Alt + Right", desc: "Trim right boundary from active window margin."},
-        {cat: "Sizing & Margins", cmd: "TrimTop", key: "Win + Alt + Up", desc: "Trim top boundary from active window margin."},
-        {cat: "Sizing & Margins", cmd: "TrimBottom", key: "Win + Alt + Down", desc: "Trim bottom boundary from active window margin."},
+        {cat: "Sizing & Margins", cmd: "TrimLeft", key: "Win + Alt + Shift + Numpad 6", desc: "Trim left boundary from active window margin."},
+        {cat: "Sizing & Margins", cmd: "TrimRight", key: "Win + Alt + Shift + Numpad 4", desc: "Trim right boundary from active window margin."},
+        {cat: "Sizing & Margins", cmd: "TrimTop", key: "Win + Alt + Shift + Numpad 8", desc: "Trim top boundary from active window margin."},
+        {cat: "Sizing & Margins", cmd: "TrimBottom", key: "Win + Alt + Shift + Numpad 2", desc: "Trim bottom boundary from active window margin."},
         {cat: "Sizing & Margins", cmd: "TrimAll", key: "Win + Alt + Numpad 5", desc: "Symmetrically trim all 4 sides of the active window margin."},
-        {cat: "Sizing & Margins", cmd: "GrowLeft", key: "Win + Alt + Shift + Left", desc: "Grow left boundary outward from active window margin by step width."},
-        {cat: "Sizing & Margins", cmd: "GrowRight", key: "Win + Alt + Shift + Right", desc: "Grow right boundary outward from active window margin by step width."},
-        {cat: "Sizing & Margins", cmd: "GrowTop", key: "Win + Alt + Shift + Up", desc: "Grow top boundary outward from active window margin by step width."},
-        {cat: "Sizing & Margins", cmd: "GrowBottom", key: "Win + Alt + Shift + Down", desc: "Grow bottom boundary outward from active window margin by step width."},
-        {cat: "Sizing & Margins", cmd: "GrowAll", key: "Win + Alt + Shift + Numpad 5", desc: "Symmetrically grow all 4 sides of the active window margin."},
+        {cat: "Sizing & Margins", cmd: "GrowLeft", key: "Win + Ctrl + Shift + Numpad 6", desc: "Grow left boundary outward from active window margin by step width."},
+        {cat: "Sizing & Margins", cmd: "GrowRight", key: "Win + Ctrl + Shift + Numpad 4", desc: "Grow right boundary outward from active window margin by step width."},
+        {cat: "Sizing & Margins", cmd: "GrowTop", key: "Win + Ctrl + Shift + Numpad 8", desc: "Grow top boundary outward from active window margin by step width."},
+        {cat: "Sizing & Margins", cmd: "GrowBottom", key: "Win + Ctrl + Shift + Numpad 2", desc: "Grow bottom boundary outward from active window margin by step width."},
+        {cat: "Sizing & Margins", cmd: "GrowAll", key: "Win + Ctrl + Shift + Numpad 5", desc: "Symmetrically grow all 4 sides of the active window margin."},
         {cat: "Sizing & Margins", cmd: "AddLeft", key: "Win + Alt + Shift + Left", desc: "Grow left boundary outward to nearest grid or midpoint grid cell."},
         {cat: "Sizing & Margins", cmd: "AddRight", key: "Win + Alt + Shift + Right", desc: "Grow right boundary outward to nearest grid or midpoint grid cell."},
         {cat: "Sizing & Margins", cmd: "AddTop", key: "Win + Alt + Shift + Up", desc: "Grow top boundary outward to nearest grid or midpoint grid cell."},
@@ -2910,11 +2914,11 @@ GetGlobalCommandList() {
         {cat: "Sizing & Margins", cmd: "SubtractTop", key: "Win + Ctrl + Alt + Up", desc: "Contract top boundary inward to nearest grid or midpoint grid cell."},
         {cat: "Sizing & Margins", cmd: "SubtractBottom", key: "Win + Ctrl + Alt + Down", desc: "Contract bottom boundary inward to nearest grid or midpoint grid cell."},
         
-        {cat: "Window Home", cmd: "SetHome", key: "Ctrl + Alt + S", desc: "Save active window class/process/fuzzy title signature to persistent home location."},
-        {cat: "Window Home", cmd: "ClearHome", key: "Ctrl + Alt + D", desc: "Delete saved home location configuration for active window."},
-        {cat: "Window Home", cmd: "GoHome", key: "Ctrl + Alt + G", desc: "Relocate window to its persistent home position."},
-        {cat: "Window Home", cmd: "Home", key: "Ctrl + Alt + H", desc: "Intelligent Home behavior: Move to home, or restore to pre-homed, or strip home config upon confirmation."},
-        {cat: "Window Home", cmd: "HomePeek", key: "Ctrl + Alt + P", desc: "Momentarily draw a transparent overlay footprint of the window's home location on screen."},
+        {cat: "Window Home", cmd: "SetHome", key: "Win + Ctrl + .", desc: "Save active window class/process/fuzzy title signature to persistent home location."},
+        {cat: "Window Home", cmd: "ClearHome", key: "Win + Ctrl + Shift + .", desc: "Delete saved home location configuration for active window."},
+        {cat: "Window Home", cmd: "GoHome", key: "Win + Alt + .", desc: "Relocate window to its persistent home position."},
+        {cat: "Window Home", cmd: "Home", key: "Win + .", desc: "Intelligent Home behavior: Move to home, or restore to pre-homed, or strip home config upon confirmation."},
+        {cat: "Window Home", cmd: "HomePeek", key: "Win + Shift + .", desc: "Momentarily draw a transparent overlay footprint of the window's home location on screen."},
         
         {cat: "Grid Matrix", cmd: "Center", key: "Numpad5", desc: "Move active window to center of screen without sizing changes."},
         {cat: "Grid Matrix", cmd: "JumpGridLeft", key: "Alt + Numpad 4", desc: "Hop window position to the left virtual grid quartile partition."},
@@ -3829,6 +3833,7 @@ SetWindowHome(hWnd) {
             FileAppend("[Homes]`r`n", sHomeIni, "UTF-8")
         }
         IniWrite(val, sHomeIni, "Homes", key)
+        UpdateSavedHomesCache()
         ShowTargetToolTip("Home Saved!")
     } catch Error as err {
         ShowTargetToolTip("Failed to save home: " . err.Message)
@@ -3844,6 +3849,7 @@ ClearWindowHome(hWnd) {
     sHomeIni := A_ScriptDir "\window-hotkeys-homes.ini"
     try {
         IniDelete(sHomeIni, "Homes", key)
+        UpdateSavedHomesCache()
         ShowTargetToolTip("Home Cleared!")
     } catch Error as err {
         ShowTargetToolTip("Failed to clear home: " . err.Message)
@@ -3973,6 +3979,156 @@ ShowHomePeek(hWnd) {
         SetTimer(() => (peekGui.Destroy()), -1200)
     } catch {
         ; Silent fail
+    }
+}
+
+UpdateSavedHomesCache() {
+    global g_SavedHomesList
+    g_SavedHomesList := []
+    sHomeIni := A_ScriptDir "\window-hotkeys-homes.ini"
+    if (!FileExist(sHomeIni)) {
+        return
+    }
+    try {
+        iniText := FileRead(sHomeIni)
+    } catch {
+        return
+    }
+    
+    inHomesSection := false
+    Loop Parse, iniText, "`n", "`r" {
+        line := Trim(A_LoopField)
+        if (line == "")
+            continue
+        if (RegExMatch(line, "i)^\[Homes\]")) {
+            inHomesSection := true
+            continue
+        } else if (RegExMatch(line, "^\[")) {
+            inHomesSection := false
+            continue
+        }
+        if (!inHomesSection)
+            continue
+
+        eqPos := InStr(line, "=")
+        if (!eqPos)
+            continue
+
+        fullKey := Trim(SubStr(line, 1, eqPos - 1))
+        val := Trim(SubStr(line, eqPos + 1))
+
+        iniClass := ""
+        iniExe := ""
+        iniTitle := ""
+
+        if (RegExMatch(fullKey, "i)Class:\s*([^|]*)", &matchClass)) {
+            iniClass := Trim(matchClass[1])
+        }
+        if (RegExMatch(fullKey, "i)Exe:\s*([^|]*)", &matchExe)) {
+            iniExe := StrLower(Trim(matchExe[1]))
+        }
+        if (RegExMatch(fullKey, "i)Title:\s*(.*)$", &matchTitle)) {
+            iniTitle := Trim(matchTitle[1])
+        }
+
+        parts := StrSplit(val, ",")
+        if (parts.Length == 4) {
+            g_SavedHomesList.Push({
+                class: iniClass,
+                exe: iniExe,
+                title: iniTitle,
+                x: Integer(parts[1]),
+                y: Integer(parts[2]),
+                w: Integer(parts[3]),
+                h: Integer(parts[4]),
+                key: fullKey
+            })
+        }
+    }
+}
+
+FindWindowsForHome(home) {
+    matchedHwnds := []
+    winCriteria := ""
+    if (home.class != "")
+        winCriteria .= "ahk_class " . home.class . " "
+    if (home.exe != "")
+        winCriteria .= "ahk_exe " . home.exe
+    
+    if (winCriteria == "")
+        return matchedHwnds
+
+    try {
+        hwndList := WinGetList(winCriteria)
+        for hWnd in hwndList {
+            try {
+                if (!DllCall("user32.dll", "bool", "IsWindowVisible", "hwnd", hWnd))
+                    continue
+                
+                if (home.title != "") {
+                    sTitle := WinGetTitle(hWnd)
+                    if (!InStr(sTitle, home.title) && !InStr(home.title, sTitle))
+                        continue
+                }
+                
+                matchedHwnds.Push(hWnd)
+            }
+        }
+    }
+    return matchedHwnds
+}
+
+UpdateHomeIndicators() {
+    global g_HomeIndicators, g_SavedHomesList, g_bSuspended
+    
+    currentMarkedHwnds := Map()
+    
+    if (g_bSuspended) {
+        for hWnd, indGui in g_HomeIndicators {
+            try indGui.Destroy()
+        }
+        g_HomeIndicators.Clear()
+        return
+    }
+    
+    for home in g_SavedHomesList {
+        matchedHwnds := FindWindowsForHome(home)
+        for hWnd in matchedHwnds {
+            if (currentMarkedHwnds.Has(hWnd))
+                continue
+            
+            try {
+                WinGetPos(&wX, &wY, &wW, &wH, "ahk_id " . hWnd)
+                if (wW < 100 || wH < 100)
+                    continue
+                
+                isAtHome := (Abs(wX - home.x) < 10 && Abs(wY - home.y) < 10 && Abs(wW - home.w) < 10 && Abs(wH - home.h) < 10)
+                color := isAtHome ? "00FF55" : "00FFFF" ; Green for at home, Cyan for has home
+                
+                if (!g_HomeIndicators.Has(hWnd)) {
+                    indGui := Gui("+AlwaysOnTop -Caption +ToolWindow +E0x20") ; Click-through
+                    g_HomeIndicators[hWnd] := indGui
+                } else {
+                    indGui := g_HomeIndicators[hWnd]
+                }
+                
+                indGui.BackColor := color
+                ; Shift right to x + 28, y + 12 to avoid overlap with the active dot (at x + 12)
+                indGui.Show("x" . (wX + 28) . " y" . (wY + 12) . " w8 h8 NoActivate")
+                currentMarkedHwnds[hWnd] := true
+            }
+        }
+    }
+    
+    staleHwnds := []
+    for hWnd, indGui in g_HomeIndicators {
+        if (!currentMarkedHwnds.Has(hWnd) || !WinExist("ahk_id " . hWnd)) {
+            staleHwnds.Push(hWnd)
+        }
+    }
+    for hWnd in staleHwnds {
+        try g_HomeIndicators[hWnd].Destroy()
+        g_HomeIndicators.Delete(hWnd)
     }
 }
 

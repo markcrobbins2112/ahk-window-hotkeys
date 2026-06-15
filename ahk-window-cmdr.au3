@@ -22,6 +22,18 @@ If Not @error And $aRet[0] Then
     $hWndAncestor = $aRet[0]
 EndIf
 
+; Check if topmost parent / ancestor window is visible and is an overlapped window.
+; In Win32, an overlapped window features neither WS_CHILD (0x40000000) nor WS_POPUP (0x80000000).
+Local $aVisible = DllCall("user32.dll", "bool", "IsWindowVisible", "hwnd", $hWndAncestor)
+If @error Or Not $aVisible[0] Then Exit
+
+Local $aStyle = DllCall("user32.dll", "long", "GetWindowLongW", "hwnd", $hWndAncestor, "int", -16) ; GWL_STYLE = -16
+If @error Then Exit
+Local $iStyle = $aStyle[0]
+
+; Verify it is overlapped (no WS_CHILD, no WS_POPUP)
+If BitAND($iStyle, 0x40000000) <> 0 Or BitAND($iStyle, 0x80000000) <> 0 Then Exit
+
 ; 4. Find the main HotWinAHK instance
 Local $hAHK = WinGetHandle("[CLASS:AutoHotkey]")
 If @error Or Not $hAHK Then

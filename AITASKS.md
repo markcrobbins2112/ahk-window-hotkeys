@@ -115,9 +115,12 @@
 - [x] Redid Center command to center precise active window metrics without causing any resize changes.
 - [x] Implemented new sizing commands: TrimAll, GrowLeft, GrowRight, GrowTop, GrowBottom, and GrowAll.
 - [x] Implemented persistent Window Home commands: SetHome, ClearHome, GoHome, Home (interactive with countdown/strip triggers), and HomePeek (translucent overlay footprint draw).
+- [x] Introduced dual-color ambient home status indicators (cyan when configured, green when perfectly aligned) offset gracefully.
+- [x] Added strict visible overlapped window search criteria to `ahk-window-cmdr.au3` to avoid applying verbs on invalid child/popup window frames.
 
 ## [x] Bindings
 - [x] Retained standard direction-oriented key combinations to triggers.
+- [x] Updated Reference Panel (`GetGlobalCommandList`) row metadata to perfectly follow HotWinAHK.ini adjustments.
 
 ## [x] Features
 - [x] Created advanced coordinate index mapper identifying bounding limits across cells and midpoint lines.

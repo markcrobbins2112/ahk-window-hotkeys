@@ -1,5 +1,5 @@
 ---
-status: fail
+status: pass
 ---
 # AI Development Log
 
@@ -18,7 +18,7 @@ status: fail
 
 ## Commit Message
 ```text
-feat(grow-home-au3): implement grow actions, au3 commander, and persistent window homes with interactive countdowns`
+feat(home-indicator-au3): implement ambient homing indicators and visible overlapped constraints in AutoIt commander
 ```
 
 <!-- Example AI Log Entry
@@ -31,6 +31,25 @@ subsections/tree bullets
 bulleted file list
 -->
 ## Log Entries
+
+## [2026-06-15T17:10:00Z]
+### 🎯 Primary Goals & Requirements
+- **Overlapped Window Constraint**: Constrain commands sent by the AutoIt window commander (`ahk-window-cmdr.au3`) only to visible first-class overlapped windows underneath the mouse pointer.
+- **Ambient Home Status Dot**: Render visual indicators at `x + 28, y + 12` inside all desktop windows with home configurations saved in `window-hotkeys-homes.ini` (cyan dot when home is registered, green dot when perfectly aligned "at home").
+- **Reference Panel Alignment**: Update the interactive Reference help panel row definitions to align with updated hotkeys inside `HotWinAHK.ini`.
+
+### 🛠️ Completed Changes in this Session
+- **Improved AutoIt Script**: Injected rigorous window state and style validation checks (IsWindowVisible, WS_CHILD, WS_POPUP bitmask filtering) to `/ahk-window-cmdr.au3`.
+- **Created Background Status Daemon**: Injected an O(1) memory cached `UpdateHomeIndicators()` ticker running every 250ms to draw cyan and green feedback status dots dynamically inside Windows.
+- **Matched Help Dashboard Row Models**: Rewrote row metadata in AHK's `GetGlobalCommandList` to fully document INI adjustments.
+- **Documented Features & Progress**: Updated `FEATURES.md`, `AITASKS.md`, and other tracking files.
+
+### 🔸 Affected Files
+- `/HotWinAHK.ahk`
+- `/ahk-window-cmdr.au3`
+- `/AITASKS.md`
+- `/AILOG.md`
+- `/FEATURES.md`
 
 ## [2026-06-15T16:30:00Z]
 ### 🎯 Primary Goals & Requirements

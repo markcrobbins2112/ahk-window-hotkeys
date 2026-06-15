@@ -112,7 +112,7 @@ Nudges and adjusts active layouts by adding or reducing specific edges while pre
 
 ### Autonomous External Window Commander (Au3)
 - Group: [Administrative Controls & Dynamic Compiler](#z1)
-Provides an external executable script `/ahk-window-cmdr.au3` written in AutoIt. It determines the primary topmost parent window ancestor directly underneath the cursor and triggers HotWinAHK commands targeting that parent window natively through standard high-speed `WM_COPYDATA` messages.
+Provides an external executable script `/ahk-window-cmdr.au3` written in AutoIt. It determines the primary topmost parent window ancestor directly underneath the cursor and triggers HotWinAHK commands targeting that parent window natively through standard high-speed `WM_COPYDATA` messages. This operation is constrained exclusively to visible, overlapped desktop application windows.
 
 ### Persistent Window Home Coordinates Matrix
 - Group: [Grid Matrix](#z2)
@@ -122,6 +122,7 @@ Enables persisting customized window dimension/coordinates into an external data
 - **GoHome**: Instantly relocates window to its home coordinates while tracking pre-homed positioning.
 - **Interactive Home Toggle**: Triggers a countdown when double-triggered while at home, offering automatic pre-homed restoration or prompt confirmation of home config zapping.
 - **Home Footprint Peeking**: Draws a translucent neon-green indicator showing saved boundaries in real-time.
+- **Ambient Home Status Dot**: Automatically paints a visual indicator dot inside any configured window (cyan dot when matching home exists, green dot when perfectly matched "at home").
 
 ### Tac-Edge Margin Docking
 - Group: [Boundary Docking & Mouse Fling Untuck](#z4)
