@@ -128,6 +128,10 @@ $^numpad6:: {
     ExecuteActionWithCondition("EdgeRight", "")
 }
 
+$^numpad8:: {
+    ExecuteActionWithCondition("EdgeTop", "")
+}
+
 $^numpad2:: {
     ExecuteActionWithCondition("EdgeBottom", "")
 }
@@ -144,6 +148,10 @@ $^numpad1:: {
     ExecuteActionWithCondition("EdgeBottomLeft", "")
 }
 
+$^numpad3:: {
+    ExecuteActionWithCondition("EdgeBottomRight", "")
+}
+
 $^numpad5:: {
     ExecuteActionWithCondition("EdgeCenter", "")
 }
@@ -154,6 +162,10 @@ $^numpadadd:: {
 
 $^numpadsub:: {
     ExecuteActionWithCondition("ScaleReduce10px", "")
+}
+
+$!#numpad8:: {
+    ExecuteActionWithCondition("TrimTop", "")
 }
 
 $!#numpad2:: {
@@ -244,6 +256,10 @@ $!numpad6:: {
     ExecuteActionWithCondition("JumpGridRight", "")
 }
 
+$!numpad8:: {
+    ExecuteActionWithCondition("JumpGridUp", "")
+}
+
 $!numpad2:: {
     ExecuteActionWithCondition("JumpGridDown", "")
 }
@@ -268,6 +284,10 @@ $numpad6:: {
     ExecuteActionWithCondition("MoveToGridRight", "")
 }
 
+$numpad8:: {
+    ExecuteActionWithCondition("MoveToGridUp", "")
+}
+
 $numpad2:: {
     ExecuteActionWithCondition("MoveToGridDown", "")
 }
@@ -278,6 +298,10 @@ $#numpad4:: {
 
 $#numpad6:: {
     ExecuteActionWithCondition("StretchToGridRight", "")
+}
+
+$#numpad8:: {
+    ExecuteActionWithCondition("StretchToGridUp", "")
 }
 
 $#numpad2:: {

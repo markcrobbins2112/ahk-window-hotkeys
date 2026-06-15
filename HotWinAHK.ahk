@@ -38,6 +38,7 @@ Global g_DiagnosticFocusHook := 0 ; Global focus monitoring hook handle
 Global g_PeekX := 0 ; Tracks peek position X
 Global g_PeekY := 0 ; Tracks peek position Y
 Global g_DotGui := "" ; Early declared active window top-left indicator dot GUI hook
+Global g_OsFocusHookHandle := 0
 
 ; --- CUSTOM VELOCITY BUMP SENSITIVITY REGISTRY ---
 ; Lower numbers make the flick speed more sensitive (5 is ultra-sensitive, 10 is moderate, 20 is heavy wrist snap)
@@ -119,6 +120,7 @@ SafeHotkey(KeyString, CallbackFunction) {
     }
     catch Error as err {
         ; IF AN INVALID KEY IS FOUND: SILENTLY ZAP IT IN THE INI AND REBOOT!
+        ;MsgBox(0,err.msg, "HERE")
         if (InStr(err.Message, "Invalid key name") || InStr(err.Message, "Parameter #1 invalid")) {
 
             ; 1. Scan through the INI file to find exactly which line contains the bad key string
@@ -351,7 +353,7 @@ CompileIniToStaticHotkeys() {
             "lbutton", 1, "rbutton", 1, "mbutton", 1, "xbutton1", 1, "xbutton2", 1,
             "wheelup", 1, "wheeldown", 1, "wheelleft", 1, "wheelright", 1,
             "numpad0", 1, "numpad1", 1, "numpad2", 1, "numpad3", 1, "numpad4", 1,
-            "numpad5", 1, "numpad6", 1, "numpad7", 1, "numpad9", 1,
+            "numpad5", 1, "numpad6", 1, "numpad7", 1, "numpad8", 1,"numpad9", 1,
             "numpaddot", 1, "numpaddiv", 1, "numpadmult", 1, "numpadadd", 1, "numpadsub", 1,
             "numpadenter", 1, "numpadins", 1, "numpadend", 1, "numpaddown", 1, "numpadpgdn", 1,
             "numpadleft", 1, "numpadclear", 1, "numpadright", 1, "numpadhome", 1, "numpadup", 1,
@@ -1454,8 +1456,8 @@ ExecuteCommandRegistry(sCmd, hWnd) {
                 SafeMove(nX, nY, , , hWnd)
             }
 
-        case "ScaleExpand10px": SafeMove(X - 5, Y - 5, W + g_z, H + g_z, hWnd)
-        case "ScaleReduce10px": SafeMove(X + 5, Y + 5, W - g_z, H - g_z, hWnd)
+        case "ScaleExpand10px": SafeMove(X - g_z / 2, Y - g_z / 2, W + g_z, H + g_z, hWnd)
+        case "ScaleReduce10px": SafeMove(X + g_z / 2, Y + g_z / 2, W - g_z, H - g_z, hWnd)
         case "TrimTop": SafeMove(X, Y + g_z, W, H - g_z, hWnd)
         case "TrimBottom": SafeMove(X, Y, W, H - g_z, hWnd)
         case "TrimLeft": SafeMove(X + g_z, Y, W - g_z, H, hWnd)
