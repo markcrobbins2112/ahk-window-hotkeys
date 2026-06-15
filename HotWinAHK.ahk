@@ -41,6 +41,8 @@ Global g_DotGui := "" ; Early declared active window top-left indicator dot GUI 
 Global g_OsFocusHookHandle := 0
 Global g_SavedHomesList := []
 Global g_HomeIndicators := Map()
+Global g_OverlayGui := ""
+Global g_OverlayTimer := ""
 
 ; --- CUSTOM VELOCITY BUMP SENSITIVITY REGISTRY ---
 ; Lower numbers make the flick speed more sensitive (5 is ultra-sensitive, 10 is moderate, 20 is heavy wrist snap)
@@ -541,8 +543,7 @@ IsMetaCommand(sCmd) {
 }
 ExecuteActionWithCondition(sCmd, sCond) {
     TraceLogString := "Command: [" . sCmd . "] | Filter: [" . (sCond == "" ? "NONE" : sCond) . "]"
-    ToolTip("⚡ RUNNING ENGINE ACTION`n" . TraceLogString)
-    SetTimer(() => ToolTip(), -2500)
+    ShowTargetToolTip("RUNNING ENGINE ACTION`n" . TraceLogString, -2500)
 
     if IsMetaCommand(sCmd) {
         ExecuteCommandRegistry(sCmd, 0)
@@ -1926,6 +1927,7 @@ ExecuteCommandRegistry(sCmd, hWnd) {
 ShutdownEngine() {
     ; Clear any lingering tooltips on the screen instantly
     ToolTip()
+    ClearCustomOverlay()
 
     ; Destroy active window dot indicator
     global g_DotGui
@@ -2218,12 +2220,105 @@ FocusNativeMenuHandle() {
 ; #endregion
 
 ; #region  _tooltip 
-ShowTargetToolTip(sText) {
-    ToolTip(sText)
-    SetTimer(ClearToolTip, -1500)
+ShowTargetToolTip(sText, duration := -1800) {
+    global g_OverlayGui
+    
+    ; Cancel any existing timer
+    try SetTimer(ClearCustomOverlay, 0)
+    
+    ; If the GUI exists, destroy it
+    if (g_OverlayGui != "") {
+        try g_OverlayGui.Destroy()
+        g_OverlayGui := ""
+    }
+    
+    ; Split input into lines
+    lines := StrSplit(sText, "`n")
+    maxLen := 0
+    for line in lines {
+        if (StrLen(line) > maxLen) {
+            maxLen := StrLen(line)
+        }
+    }
+    
+    ; Set minimum/maximum width/height constraints
+    estWidth := Integer(maxLen * 8.5) + 40
+    if (estWidth < 260)
+        estWidth := 260
+    if (estWidth > 750)
+        estWidth := 750
+        
+    lineCount := lines.Length
+    estHeight := lineCount * 22 + 35
+    if (estHeight < 65)
+        estHeight := 65
+    
+    ; Create a highly polished, elegant center screen overlay (dark/black theme with pretty icon)
+    g_OverlayGui := Gui("+AlwaysOnTop -Caption +ToolWindow +Owner")
+    g_OverlayGui.BackColor := "121214" ; Deep premium dark charcoal
+    
+    ; Select pretty icon depending on the message context
+    iconChar := "✦"
+    iconColor := "00FFCC" ; Vibrant cyan
+    if (InStr(sText, "Save") || InStr(sText, "Saved") || InStr(sText, "Added")) {
+        iconChar := "✔"
+        iconColor := "00FF55" ; Radiant neon green
+    } else if (InStr(sText, "Clear") || InStr(sText, "Delete") || InStr(sText, "Remove") || InStr(sText, "cancelled") || InStr(sText, "cancelled.")) {
+        iconChar := "✕"
+        iconColor := "FF3366" ; Vibrant ruby coral
+    } else if (InStr(sText, "Suspended")) {
+        iconChar := "⏸"
+        iconColor := "FFCC00" ; Cyber Amber
+    } else if (InStr(sText, "Active") || InStr(sText, "Restore") || InStr(sText, "restored")) {
+        iconChar := "▶"
+        iconColor := "00FF55" ; Radiant neon green
+    } else if (InStr(sText, "Error") || InStr(sText, "Failed")) {
+        iconChar := "⚠️"
+        iconColor := "FF3366" ; Ruby coral
+    } else if (InStr(sText, "AlwaysOnTop")) {
+        iconChar := "📌"
+        iconColor := "00FFFF" ; Cool Cyan
+    } else if (InStr(sText, "Running") || InStr(sText, "Re-Compile") || InStr(sText, "RUNNING ENGINE ACTION")) {
+        iconChar := "⚡"
+        iconColor := "FFCC00" ; Cyber Amber
+    } else if (InStr(sText, "Home")) {
+        iconChar := "🏠"
+        iconColor := "00FFFF" ; Ambient Cyan
+    }
+    
+    ; Icon Placement
+    g_OverlayGui.SetFont("s18 c" . iconColor, "Segoe UI Symbol")
+    g_OverlayGui.AddText("x22 y" . ((estHeight - 34) // 2) . " w32 h35 Center", iconChar)
+    
+    ; Message Text Box
+    g_OverlayGui.SetFont("s10.5 w600 cFFFFFF", "Segoe UI")
+    g_OverlayGui.AddText("x64 y" . ((estHeight - (lineCount * 21)) // 2) . " w" . estWidth . " h" . (lineCount * 22), sText)
+    
+    ; Accent Bottom Border
+    g_OverlayGui.AddProgress("x0 y" . (estHeight - 3) . " w" . (estWidth + 92) . " h3 Background121214 c" . iconColor, 100)
+    
+    ; Show Centered
+    guiW := Integer(estWidth + 92)
+    guiH := Integer(estHeight)
+    posX := Integer((A_ScreenWidth - guiW) // 2)
+    posY := Integer((A_ScreenHeight - guiH) // 2)
+    
+    g_OverlayGui.Show("x" . posX . " y" . posY . " w" . guiW . " h" . guiH . " NoActivate")
+    
+    if (duration < 0) {
+        SetTimer(ClearCustomOverlay, duration)
+    }
 }
 ClearToolTip() {
     ToolTip()
+    ClearCustomOverlay()
+}
+ClearCustomOverlay() {
+    global g_OverlayGui
+    if (g_OverlayGui != "") {
+        try g_OverlayGui.Destroy()
+        g_OverlayGui := ""
+    }
 }
 ; #endregion
 ; ----
@@ -2301,26 +2396,8 @@ SafeMove(nX, nY, nW := -1, nH := -1, targetHwnd := "") {
         LogMessage(s_DiagnosticOutputHistory)
         s_DiagnosticOutputHistory := "" ; Reset memory after flushing
     } catch {
-        ; --- THE FANCY LOCK NOTICE OVERLAY LAYER ---
-        CoordMode("Mouse", "Screen")
-        MouseGetPos(&currentMouseX, &currentMouseY)
-
-        noticeText := "╔═════════════════════════════════════╗`n"
-        noticeText .= "   ⚠️ LOG WRITE FAILED! ⚠️   `n"
-        noticeText .= "╚═════════════════════════════════════╝`n"
-        noticeText .= "Disk I/O collision detected on this tick.`n"
-        noticeText .= "SafeMove is caching log entries in RAM.`n"
-        noticeText .= "Retrying flush pass on next edge tick..."
-
-        ToolTip(noticeText, currentMouseX + 25, currentMouseY + 25)
-
-        ; Force the tooltip popup container to render in native Dark Mode
-        if (hTooltipWindow := WinExist("ahk_class tooltips_class32")) {
-            DllCall("uxtheme\SetWindowTheme", "ptr", hTooltipWindow, "wstr", "DarkMode_Explorer", "ptr", 0)
-        }
-
-        ; Auto-erase the visual warning box from the desktop screen after 2.5 seconds
-        SetTimer((*) => ToolTip(), -2500)
+        noticeText := "Disk I/O collision detected on this tick.`nSafeMove is caching log entries in RAM.`nRetrying flush pass on next edge tick..."
+        ShowTargetToolTip("LOG WRITE FAILED! (Disk I/O collision)`n`n" . noticeText, -2500)
     }
 
     if (targetHwnd == "" || !WinExist("ahk_id " . targetHwnd)) {
@@ -3889,7 +3966,7 @@ OnHomeCountdownTick(hWnd) {
 
     if (info.seconds <= 0) {
         g_mHomeCountdown.Delete(hWnd)
-        ToolTip()
+        ClearToolTip()
         
         if (g_mPreHomePositions.Has(hWnd)) {
             pre := g_mPreHomePositions[hWnd]
@@ -3900,7 +3977,7 @@ OnHomeCountdownTick(hWnd) {
         return
     }
 
-    ToolTip("Window is at Home!`nReturning to original position in " . info.seconds . "s...`nTrigger Home again to DELETE home config.")
+    ShowTargetToolTip("Window is at Home!`nReturning to original position in " . info.seconds . "s...`nTrigger Home again to DELETE home config.", -1200)
     SetTimer(() => OnHomeCountdownTick(hWnd), -1000)
 }
 
@@ -3914,9 +3991,9 @@ InteractiveHome(hWnd) {
     ; Check if countdown is already running
     if (g_mHomeCountdown.Has(hWnd)) {
         g_mHomeCountdown.Delete(hWnd)
-        ToolTip()
+        ClearToolTip()
         
-        confirm := MsgBox("Strip this window's saved Home position permanently?", "Confirm Delete Home", "YesNo IconQ +AlwaysOnTop")
+        confirm := MsgBox("Strip this window's saved Home position permanently?", "Confirm Delete Home", "YesNo Icon? 262144")
         if (confirm == "Yes") {
             ClearWindowHome(hWnd)
         } else {
@@ -3940,7 +4017,7 @@ InteractiveHome(hWnd) {
 
     if (isAtHome) {
         g_mHomeCountdown[hWnd] := {seconds: 5}
-        ToolTip("Window is at Home!`nReturning to original position in 5s...`nTrigger Home again to DELETE home config.")
+        ShowTargetToolTip("Window is at Home!`nReturning to original position in 5s...`nTrigger Home again to DELETE home config.", -1200)
         SetTimer(() => OnHomeCountdownTick(hWnd), -1000)
     } else {
         ; Save current position first

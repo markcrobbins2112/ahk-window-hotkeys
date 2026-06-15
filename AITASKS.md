@@ -126,6 +126,7 @@
 - [x] Created advanced coordinate index mapper identifying bounding limits across cells and midpoint lines.
 - [x] Developed robust compiled AutoIt Au3 script (ahk-window-cmdr.au3) supporting command execution on target ancestors via dynamic IPC/CopyData messages.
 - [x] Crafted a highly polished, persistent Window Home management module using fuzzy matching criteria for title-based window tracking.
+- [x] Replaced standard ToolTips with a magnificent dark center screen overlay GUI with intelligent sizing and context-adaptive iconography.
 ---
 ## Go Back to...
 - ▪️[AGENTS.md](AGENTS.md)

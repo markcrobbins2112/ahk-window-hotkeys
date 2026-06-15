@@ -18,7 +18,7 @@ status: pass
 
 ## Commit Message
 ```text
-feat(home-indicator-au3): implement ambient homing indicators and visible overlapped constraints in AutoIt commander
+feat(overlay-tooltips): implement elegant center screen dark overlay GUI with custom icons for all tooltipping feedback
 ```
 
 <!-- Example AI Log Entry
@@ -31,6 +31,22 @@ subsections/tree bullets
 bulleted file list
 -->
 ## Log Entries
+
+## [2026-06-15T17:30:00Z]
+### 🎯 Primary Goals & Requirements
+- **Obsidian Centered Tooltip Overlays**: Implement a beautiful center screen overlay with a high-contrast dark theme, custom typography, status boundaries, and pretty context-adaptive iconography to replace standard legacy ToolTips for all system notifications.
+
+### 🛠️ Completed Changes in this Session
+- **Created Overlay GUI Module**: Added a fully custom, AlwaysOnTop, Borderless center screen GUI block with beautiful Segoe UI typography and a sleek colored progress accent band.
+- **Context-Adaptive Iconography Mapping**: Integrated an automatic keyword detector that selects tailored icons (✔, ✕, ⏸, ▶, 📌, ⚡, 🏠, ✦) and matching accent colors based on notification text.
+- **Unified Messaging Systems**: Routed all command execution tracing, homing countdown ticks/actions, suspension/activation confirmations, and storage fallbacks through `ShowTargetToolTip()`.
+- **Refined Cleanup Lifecycles**: Standardized `ClearToolTip` and `ClearCustomOverlay` to destroy existing instances upon new triggers or manual cancels.
+
+### 🔸 Affected Files
+- `/HotWinAHK.ahk`
+- `/AITASKS.md`
+- `/AILOG.md`
+- `/FEATURES.md`
 
 ## [2026-06-15T17:10:00Z]
 ### 🎯 Primary Goals & Requirements

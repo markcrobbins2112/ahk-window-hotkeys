@@ -147,6 +147,10 @@ Provides a rich, physics-inspired mouse dragging mechanism for stowed/docked win
 - Group: [Administrative Controls & Dynamic Compiler](#z1)
 Emits a confirmation audio beep whenever window foreground text focus switches, indicating active engine operations.
 
+### Dark Center Screen Overlay
+- Group: [Administrative Controls & Dynamic Compiler](#z1)
+Represses native Windows tooltips with a beautiful obsidian centered overlay displaying actions. Features intelligent text sizing, responsive icon selections (✔, ✕, ⏸, ▶, 📌, ⚡, 🏠, ✦), and sleek bottom progress bar color accent lines matching the specific context.
+
 
 
 ---
