@@ -1,16 +1,23 @@
 {
   "name": "ahk-script-assistant",
-  "displayName" :"HotWinAHK",
+  "displayName": "HotWinAHK",
   "description": "High-performance window-management suite written in AutoHotkey v2.0",
-  "publisher": "markrobbins",
+  "publisher": "markchristianrobbins",
   "private": true,
   "version": "0.0.1",
   "type": "module",
-  "scripts": {
-  },
-  "dependencies": {
-  },
+  "scripts": {},
+  "dependencies": {},
   "devDependencies": {
     "@types/node": "^22.14.0"
-  }
+  },
+  "author": "markchristianrobbins",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/markchristianrobbins/ahk-window-hotkeys"
+  },
+  "bugs": {
+    "url": "https://github.com/markchristianrobbins/ahk-window-hotkeys/issues"
+  },
+  "homepage": "https://github.com/markchristianrobbins/ahk-window-hotkeys#readme"
 }
