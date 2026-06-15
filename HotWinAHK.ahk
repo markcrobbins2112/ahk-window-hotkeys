@@ -979,43 +979,43 @@ ExecuteCommandRegistry(sCmd, hWnd) {
                     case "SnapToGridEnlarge":
                         ; Check if already matched to our grid footprint template within a 10px variance
                         if (Abs(X - snapX) < 10 && Abs(Y - snapY) < 10 && Abs(W - snapW) < 10 && Abs(H - snapH) < 10) {
-                            if (gridUnitsTall > gridUnitsWide) {
-                                ; Taller than wide: Grow right-hand tracking edge out 1 unit
-                                cRight += 1
-                            } else if (gridUnitsWide > gridUnitsTall) {
-                                ; Wider than tall: Grow bottom tracking edge down 1 unit
-                                rBottom += 1
-                            } else {
-                                ; EQUAL: Priority addition goes straight to height
-                                rBottom += 1
-                            }
+                            cLeft -= 1
+                            cRight += 1
+                            rTop -= 1
+                            rBottom += 1
                         } else {
-                            ; Off-Grid: Snap safely onto pre-rounded column boundaries without scaling
+                            ; Off-Grid: Snap to grid by sizing the window to grid units (favoring enlargement) then moving to grid
+                            gridUnitsWide := Max(1, Ceil((W + 6) / pX))
+                            gridUnitsTall := Max(1, Ceil((H + 6) / pY))
+                            cLeft := Round((X - gX) / pX)
+                            cRight := cLeft + gridUnitsWide
+                            rTop := Round((Y - gY) / pY)
+                            rBottom := rTop + gridUnitsTall
                         }
 
                     case "SnapToGridShrink":
+                        ; Check if already matched to our grid footprint template within a 10px variance
                         if (Abs(X - snapX) < 10 && Abs(Y - snapY) < 10 && Abs(W - snapW) < 10 && Abs(H - snapH) < 10) {
-                            if (gridUnitsWide > gridUnitsTall) {
-                                if (gridUnitsWide > 1) {
-                                    cRight -= 1
-                                }
-                            } else if (gridUnitsTall > gridUnitsWide) {
-                                if (gridUnitsTall > 1) {
-                                    rBottom -= 1
-                                }
-                            } else {
-                                if (gridUnitsWide > 1) {
-                                    cRight -= 1
-                                } else if (gridUnitsTall > 1) {
-                                    rBottom -= 1
-                                }
+                            if (cRight - cLeft > 2) {
+                                cLeft += 1
+                                cRight -= 1
+                            } else if (cRight - cLeft == 2) {
+                                cRight -= 1
+                            }
+                            if (rBottom - rTop > 2) {
+                                rTop += 1
+                                rBottom -= 1
+                            } else if (rBottom - rTop == 2) {
+                                rBottom -= 1
                             }
                         } else {
-                            ; Pull inward cleanly to nearest inner tiles when starting off-grid
-                            cLeft := Ceil((X - gX) / pX)
-                            cRight := Floor((X + W - gX) / pX)
-                            rTop := Ceil((Y - gY) / pY)
-                            rBottom := Floor((Y + H - gY) / pY)
+                            ; Off-Grid: Snap to grid by sizing the window to grid units (favoring shrinkage) then moving to grid
+                            gridUnitsWide := Max(1, Floor((W + 6) / pX))
+                            gridUnitsTall := Max(1, Floor((H + 6) / pY))
+                            cLeft := Round((X - gX) / pX)
+                            cRight := cLeft + gridUnitsWide
+                            rTop := Round((Y - gY) / pY)
+                            rBottom := rTop + gridUnitsTall
                         }
 
                     case "MoveToGridLeft":

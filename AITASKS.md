@@ -29,6 +29,7 @@
 - [x] Complete TESTING.md outlining detailed testing procedures and interactive checklists
 - [x] Rename WindowNudger, WindowHotkeys.ahk, and WindowHotkeys.ini to HotWinAHK/displayName variants, and update all codebase references
 - [x] Rename helper subprocess script from TrayHelper.ahk to HotWinAHK_tray.ahk and update all reference models
+- [x] Implement SnapToGridEnlarge/Shrink grid snapping and multi-sided enlargement/shrinkage logic
 
 ## [x] Errors
 - [x] lint 1: Resolved warning where `ExecuteActionWithCondition` was considered an unassigned local variable. Fixed by placing the `#Include "HotWinAHK_aux.ahk"` statement at the bottom of `HotWinAHK.ahk` after the global function definitions.

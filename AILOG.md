@@ -32,6 +32,21 @@ bulleted file list
 -->
 ## Log Entries
 
+## [2026-06-15T14:45:00Z]
+### 🎯 Primary Goals & Requirements
+- **SnapToGridEnlarge**: Symmetrically expand windows by 1 grid cell on all outer margins (left, right, top, bottom) when the window is already snapped perfectly on the grid. If the window is off-grid, snap it to the nearest valid grid footprint by rounding size factors favoring enlargement and moving to position.
+- **SnapToGridShrink**: Symmetrically contract windows by 1 grid cell on all outer margins (left, right, top, bottom) when already snapped to the grid, maintaining centering and preventing size from dropping below 1x1 cells. If off-grid, snap to the nearest valid grid footprint by rounding size factors favoring shrinkage and moving to position.
+
+### 🛠️ Completed Changes in this Session
+- **Re-engineered SnapToGridEnlarge**: Re-coded the core case within `ExecuteCommandRegistry` in `HotWinAHK.ahk` to increment `cRight` & `rBottom` while decrementing `cLeft` & `rTop` dynamically when in-grid. Introduced standard mathematical sizing bounds `Max(1, Ceil((W + 6) / pX))` to map off-grid sizes favoring full enlargement.
+- **Re-engineered SnapToGridShrink**: Programmed standard mathematical sizing bounds `Max(1, Floor((W + 6) / pX))` for off-grid snapping favoring shrinkage. Implemented structured discrete centering logic for 2x2 and larger cells to smoothly shrink on all boundaries without jarring positional shifts.
+- **Checklist synchronization**: Synchronized completed items in `AITASKS.md`.
+
+### 🔸 Affected Files
+- `/HotWinAHK.ahk`
+- `/AITASKS.md`
+- `/AILOG.md`
+
 ## [2026-06-10T23:25:00Z]
 ### 🎯 Primary Goals & Requirements
 - **Interactive Command Palette implementation**: Design and build a beautiful, high-contrast Command Palette with a live fuzzy/partial search.
