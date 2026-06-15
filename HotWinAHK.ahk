@@ -918,7 +918,7 @@ ExecuteCommandRegistry(sCmd, hWnd) {
                 }
                 AnimateWinMove(nX, nY, hWnd)
             }
-        case "StretchLeft", "StretchRight", "StretchTop", "StretchBottom":
+        case "StretchLeft", "StretchRight", "StretchTop", "StretchBottom", "StretchTopLeft", "StretchTopRight", "StretchBottomLeft", "StretchBottomRight":
             hMon := DllCall("MonitorFromWindow", "ptr", hWnd, "uint", 2, "ptr")
             MI := Buffer(40)
             NumPut("uint", 40, MI, 0)
@@ -934,11 +934,15 @@ ExecuteCommandRegistry(sCmd, hWnd) {
                     case "StretchRight": nW := mRight - X
                     case "StretchTop": nY := mTop, nH := (Y + H) - mTop
                     case "StretchBottom": nH := mBottom - Y
+                    case "StretchTopLeft": nX := mLeft, nY := mTop, nW := (X + W) - mLeft, nH := (Y + H) - mTop
+                    case "StretchTopRight": nY := mTop, nW := mRight - X, nH := (Y + H) - mTop
+                    case "StretchBottomLeft": nX := mLeft, nW := (X + W) - mLeft, nH := mBottom - Y
+                    case "StretchBottomRight": nW := mRight - X, nH := mBottom - Y
                 }
                 SafeMove(nX, nY, nW, nH, hWnd)
             }
 
-        case "SnapToGridEnlarge", "SnapToGridShrink", "MouseToGrid", "MoveToGridLeft", "MoveToGridRight", "MoveToGridUp", "MoveToGridDown":
+        case "SnapToGridEnlarge", "SnapToGridShrink", "MouseToGrid", "MoveToGridLeft", "MoveToGridRight", "MoveToGridUp", "MoveToGridDown", "MoveToGridTopLeft", "MoveToGridTopRight", "MoveToGridBottomLeft", "MoveToGridBottomRight":
             ; 1. Base Grid Geometry Configurations
             gX := 15
             gY := 15
@@ -1035,6 +1039,30 @@ ExecuteCommandRegistry(sCmd, hWnd) {
                         rBottom -= 1
 
                     case "MoveToGridDown":
+                        rTop += 1
+                        rBottom += 1
+
+                    case "MoveToGridTopLeft":
+                        cLeft -= 1
+                        cRight -= 1
+                        rTop -= 1
+                        rBottom -= 1
+
+                    case "MoveToGridTopRight":
+                        cLeft += 1
+                        cRight += 1
+                        rTop -= 1
+                        rBottom -= 1
+
+                    case "MoveToGridBottomLeft":
+                        cLeft -= 1
+                        cRight -= 1
+                        rTop += 1
+                        rBottom += 1
+
+                    case "MoveToGridBottomRight":
+                        cLeft += 1
+                        cRight += 1
                         rTop += 1
                         rBottom += 1
 
@@ -1547,18 +1575,27 @@ ExecuteCommandRegistry(sCmd, hWnd) {
         case "TrimBottom": SafeMove(X, Y, W, H - g_z, hWnd)
         case "TrimLeft": SafeMove(X + g_z, Y, W - g_z, H, hWnd)
         case "TrimRight": SafeMove(X, Y, W - g_z, H, hWnd)
+        case "TrimTopLeft": SafeMove(X + g_z, Y + g_z, W - g_z, H - g_z, hWnd)
+        case "TrimTopRight": SafeMove(X, Y + g_z, W - g_z, H - g_z, hWnd)
+        case "TrimBottomLeft": SafeMove(X + g_z, Y, W - g_z, H - g_z, hWnd)
+        case "TrimBottomRight": SafeMove(X, Y, W - g_z, H - g_z, hWnd)
         case "TrimAll": SafeMove(X + g_z, Y + g_z, W - 2 * g_z, H - 2 * g_z, hWnd)
         case "GrowTop": SafeMove(X, Y - g_z, W, H + g_z, hWnd)
         case "GrowBottom": SafeMove(X, Y, W, H + g_z, hWnd)
         case "GrowLeft": SafeMove(X - g_z, Y, W + g_z, H, hWnd)
         case "GrowRight": SafeMove(X, Y, W + g_z, H, hWnd)
+        case "GrowTopLeft": SafeMove(X - g_z, Y - g_z, W + g_z, H + g_z, hWnd)
+        case "GrowTopRight": SafeMove(X, Y - g_z, W + g_z, H + g_z, hWnd)
+        case "GrowBottomLeft": SafeMove(X - g_z, Y, W + g_z, H + g_z, hWnd)
+        case "GrowBottomRight": SafeMove(X, Y, W + g_z, H + g_z, hWnd)
         case "GrowAll": SafeMove(X - g_z, Y - g_z, W + 2 * g_z, H + 2 * g_z, hWnd)
         case "SetHome": SetWindowHome(hWnd)
         case "ClearHome": ClearWindowHome(hWnd)
         case "GoHome": GoWindowHome(hWnd)
         case "Home": InteractiveHome(hWnd)
         case "HomePeek": ShowHomePeek(hWnd)
-        case "StretchToGridLeft", "StretchToGridRight", "StretchToGridUp", "StretchToGridDown", "PullToGridLeft", "PullToGridRight", "PullToGridUp", "PullToGridDown", "AddTop", "AddBottom", "AddLeft", "AddRight", "SubtractTop", "SubtractBottom", "SubtractLeft", "SubtractRight", "SubtractTopLeft", "SubtractTopRight", "SubtractBottomLeft", "SubtractBottomRight":
+        case "StretchToGridLeft", "StretchToGridRight", "StretchToGridUp", "StretchToGridDown", "StretchToGridTopLeft", "StretchToGridTopRight", "StretchToGridBottomLeft", "StretchToGridBottomRight", "PullToGridLeft", "PullToGridRight", "PullToGridUp", "PullToGridDown", "PullToGridTopLeft", "PullToGridTopRight", "PullToGridBottomLeft", "PullToGridBottomRight":
+        case "AddTop", "AddBottom", "AddLeft", "AddRight", "AddTopLeft", "AddTopRight", "AddBottomLeft", "AddBottomRight", "SubtractTop", "SubtractBottom", "SubtractLeft", "SubtractRight", "SubtractTopLeft", "SubtractTopRight", "SubtractBottomLeft", "SubtractBottomRight":
             ; 1. Base Grid Geometry Configurations (using half-grid / mid-point cells)
             gX := 15
             gY := 15
@@ -1594,6 +1631,34 @@ ExecuteCommandRegistry(sCmd, hWnd) {
                     if (Abs((Y + H) - snapBottom) < 10) {
                         lBottom := lBottom + 1
                     }
+                case "StretchToGridTopLeft", "AddTopLeft":
+                    if (Abs(X - snapX) < 10) {
+                        iLeft := iLeft - 1
+                    }
+                    if (Abs(Y - snapY) < 10) {
+                        kTop := kTop - 1
+                    }
+                case "StretchToGridTopRight", "AddTopRight":
+                    if (Abs((X + W) - snapRight) < 10) {
+                        jRight := jRight + 1
+                    }
+                    if (Abs(Y - snapY) < 10) {
+                        kTop := kTop - 1
+                    }
+                case "StretchToGridBottomLeft", "AddBottomLeft":
+                    if (Abs(X - snapX) < 10) {
+                        iLeft := iLeft - 1
+                    }
+                    if (Abs((Y + H) - snapBottom) < 10) {
+                        lBottom := lBottom + 1
+                    }
+                case "StretchToGridBottomRight", "AddBottomRight":
+                    if (Abs((X + W) - snapRight) < 10) {
+                        jRight := jRight + 1
+                    }
+                    if (Abs((Y + H) - snapBottom) < 10) {
+                        lBottom := lBottom + 1
+                    }
                 case "PullToGridLeft", "SubtractLeft":
                     if (Abs(X - snapX) < 10) {
                         iLeft := iLeft + 1
@@ -1622,7 +1687,7 @@ ExecuteCommandRegistry(sCmd, hWnd) {
                     if (lBottom <= kTop) {
                         lBottom := kTop + 1
                     }
-                case "SubtractTopLeft":
+                case "PullToGridTopLeft", "SubtractTopLeft":
                     if (Abs(Y - snapY) < 10) {
                         kTop := kTop + 1
                     }
@@ -1635,7 +1700,7 @@ ExecuteCommandRegistry(sCmd, hWnd) {
                     if (iLeft >= jRight) {
                         iLeft := jRight - 1
                     }
-                case "SubtractTopRight":
+                case "PullToGridTopRight", "SubtractTopRight":
                     if (Abs(Y - snapY) < 10) {
                         kTop := kTop + 1
                     }
@@ -1648,7 +1713,7 @@ ExecuteCommandRegistry(sCmd, hWnd) {
                     if (jRight <= iLeft) {
                         jRight := iLeft + 1
                     }
-                case "SubtractBottomLeft":
+                case "PullToGridBottomLeft", "SubtractBottomLeft":
                     if (Abs((Y + H) - snapBottom) < 10) {
                         lBottom := lBottom - 1
                     }
@@ -1661,7 +1726,7 @@ ExecuteCommandRegistry(sCmd, hWnd) {
                     if (iLeft >= jRight) {
                         iLeft := jRight - 1
                     }
-                case "SubtractBottomRight":
+                case "PullToGridBottomRight", "SubtractBottomRight":
                     if (Abs((Y + H) - snapBottom) < 10) {
                         lBottom := lBottom - 1
                     }
@@ -1694,7 +1759,7 @@ ExecuteCommandRegistry(sCmd, hWnd) {
 
             SafeMove(nX, nY, nW, nH, hWnd)
 
-        case "JumpGridLeft", "JumpGridRight", "JumpGridUp", "JumpGridDown":
+        case "JumpGridLeft", "JumpGridRight", "JumpGridUp", "JumpGridDown", "JumpGridTopLeft", "JumpGridTopRight", "JumpGridBottomLeft", "JumpGridBottomRight":
             ; 1. Base Grid Constants
             gX := 15, gY := 15
             pX := 424, pY := 232 ; Pitch spacing (Box width/height + 6px gap)
@@ -1743,6 +1808,30 @@ ExecuteCommandRegistry(sCmd, hWnd) {
 
                     case "JumpGridDown":
                         ; New Top edge equals old Bottom edge index
+                        rTop := rBottom
+                        rBottom := rTop + gridUnitsTall
+
+                    case "JumpGridTopLeft":
+                        cRight := cLeft
+                        cLeft := cRight - gridUnitsWide
+                        rBottom := rTop
+                        rTop := rBottom - gridUnitsTall
+
+                    case "JumpGridTopRight":
+                        cLeft := cRight
+                        cRight := cLeft + gridUnitsWide
+                        rBottom := rTop
+                        rTop := rBottom - gridUnitsTall
+
+                    case "JumpGridBottomLeft":
+                        cRight := cLeft
+                        cLeft := cRight - gridUnitsWide
+                        rTop := rBottom
+                        rBottom := rTop + gridUnitsTall
+
+                    case "JumpGridBottomRight":
+                        cLeft := cRight
+                        cRight := cLeft + gridUnitsWide
                         rTop := rBottom
                         rBottom := rTop + gridUnitsTall
                 }
@@ -3448,18 +3537,30 @@ CopyCommands() {
         "EdgeLeft", "EdgeRight", "EdgeTop", "EdgeBottom", "EdgeTopLeft", 
         "EdgeTopRight", "EdgeBottomLeft", "EdgeBottomRight", "EdgeCenter", 
         "ScaleExpand10px", "ScaleReduce10px", "ScaleExpandGridPart", "ScaleReduceGridPart", "TrimTop", "TrimBottom", 
-        "TrimLeft", "TrimRight", "TrimAll", "AddTop", "AddBottom", "AddLeft", "AddRight", 
+        "TrimLeft", "TrimRight", "TrimAll", 
+        "TrimTopLeft", "TrimTopRight", "TrimBottomLeft", "TrimBottomRight",
+        "AddTop", "AddBottom", "AddLeft", "AddRight", 
+        "AddTopLeft", "AddTopRight", "AddBottomLeft", "AddBottomRight",
         "GrowLeft", "GrowRight", "GrowTop", "GrowBottom", "GrowAll",
+        "GrowTopLeft", "GrowTopRight", "GrowBottomLeft", "GrowBottomRight",
         "SubtractTop", "SubtractBottom", "SubtractLeft", "SubtractRight", 
+        "SubtractTopLeft", "SubtractTopRight", "SubtractBottomLeft", "SubtractBottomRight",
         "SetHome", "ClearHome", "GoHome", "Home", "HomePeek", 
         "MouseRelativeSize", "HalfSizeLeft", "HalfSizeRight", "HalfSizeTop", "HalfSizeBottom", 
         "DoubleSizeLeft", "DoubleSizeRight", "DoubleSizeTop", "DoubleSizeBottom", 
         "NextWindow", "PrevWindow", "NextClassWindow", "PrevClassWindow", 
-        "JumpGridLeft", "JumpGridRight", "JumpGridUp", "JumpGridDown", "MouseToGrid", 
-        "SnapToGridEnlarge", "SnapToGridShrink", "Center", "MoveToGridLeft", 
-        "MoveToGridRight", "MoveToGridUp", "MoveToGridDown", "StretchToGridLeft", 
-        "StretchToGridRight", "StretchToGridUp", "StretchToGridDown", "PullToGridLeft", 
-        "PullToGridRight", "PullToGridUp", "PullToGridDown", "TuckLeft", "TuckRight", 
+        "JumpGridLeft", "JumpGridRight", "JumpGridUp", "JumpGridDown", 
+        "JumpGridTopLeft", "JumpGridTopRight", "JumpGridBottomLeft", "JumpGridBottomRight",
+        "MouseToGrid", 
+        "SnapToGridEnlarge", "SnapToGridShrink", "Center", 
+        "MoveToGridLeft", "MoveToGridRight", "MoveToGridUp", "MoveToGridDown", 
+        "MoveToGridTopLeft", "MoveToGridTopRight", "MoveToGridBottomLeft", "MoveToGridBottomRight",
+        "StretchToGridLeft", "StretchToGridRight", "StretchToGridUp", "StretchToGridDown", 
+        "StretchToGridTopLeft", "StretchToGridTopRight", "StretchToGridBottomLeft", "StretchToGridBottomRight",
+        "PullToGridLeft", "PullToGridRight", "PullToGridUp", "PullToGridDown", 
+        "PullToGridTopLeft", "PullToGridTopRight", "PullToGridBottomLeft", "PullToGridBottomRight",
+        "StretchLeft", "StretchRight", "StretchTop", "StretchBottom",
+        "StretchTopLeft", "StretchTopRight", "StretchBottomLeft", "StretchBottomRight", "TuckLeft", "TuckRight", 
         "TuckUp", "TuckDown", "BumpEdgeUntuck", "BumpEdgeUntuckActivate", 
         "FocusDeepestWindow", "CopyCommands", "CopyBindings"
     ]

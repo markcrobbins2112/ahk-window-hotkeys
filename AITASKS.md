@@ -31,6 +31,7 @@
 - [x] Rename helper subprocess script from TrayHelper.ahk to HotWinAHK_tray.ahk and update all reference models
 - [x] Implement SnapToGridEnlarge/Shrink grid snapping and multi-sided enlargement/shrinkage logic
 - [x] Make app single-instance with auto-replacement of existing instance, silent on parameter-driven restarts, and direct command-line parameter execution on the hovered window's parent ancestor
+- [x] Implement diagonal and corner variants (TopLeft, TopRight, BottomLeft, BottomRight) for MoveToGrid, StretchToGrid, PullToGrid, Grow, Trim, Add, Subtract, Stretch, and JumpGrid commands
 
 ## [x] Errors
 - [x] lint 1: Resolved warning where `ExecuteActionWithCondition` was considered an unassigned local variable. Fixed by placing the `#Include "HotWinAHK_aux.ahk"` statement at the bottom of `HotWinAHK.ahk` after the global function definitions.
