@@ -724,7 +724,7 @@ EnsureAllCommandsInIni() {
     for outerCat in iniStructure {
         newIniText .= ";   #region " . outerCat.name . "`r`n"
         for subCat in outerCat.subs {
-            newIniText .= "    ;   #region " . subCat.name . "`r`n"
+            newIniText .= "    `;   #region " . subCat.name . "`r`n"
             for cmdName in subCat.cmds {
                 cleanCmd := StrLower(cmdName)
                 if (writtenCommands.Has(cleanCmd)) {
@@ -756,17 +756,17 @@ EnsureAllCommandsInIni() {
                         }
                     }
                     if (rowDesc != "") {
-                        newIniText .= "            ; " . rowDesc . "`r`n"
+                        newIniText .= "            `; " . rowDesc . "`r`n"
                     }
                     newIniText .= "        [-" . cmdName . "]`r`n"
                     defaultBinding := rowKey
                     if (defaultBinding == "Custom" || defaultBinding == "Edge Bump" || defaultBinding == "Edge Click/Drag" || defaultBinding == "Auto Indicator") {
                         defaultBinding := ""
                     }
-                    newIniText .= "            ;keys1=" . defaultBinding . "`r`n"
+                    newIniText .= "            `;keys1=" . defaultBinding . "`r`n"
                 }
             }
-            newIniText .= "    ; #endregion " . subCat.name . "`r`n"
+            newIniText .= "    `; #endregion " . subCat.name . "`r`n"
         }
         newIniText .= "; #endregion " . outerCat.name . "`r`n`r`n"
     }
@@ -774,7 +774,7 @@ EnsureAllCommandsInIni() {
     ; If any sections (like [Settings]) are remaining, they are custom configurations we must append safely
     if (sectionsMap.Count > 0) {
         newIniText .= ";   #region Preferences`r`n"
-        newIniText .= "    ;   #region Settings`r`n"
+        newIniText .= "    `;   #region Settings`r`n"
         for key, value in sectionsMap {
             newIniText .= "        " . value.orig . "`r`n"
             Loop Parse, value.keys, "`n", "`r" {
@@ -786,7 +786,7 @@ EnsureAllCommandsInIni() {
             }
             newIniText .= "`r`n"
         }
-        newIniText .= "    ; #endregion Settings`r`n"
+        newIniText .= "    `; #endregion Settings`r`n"
         newIniText .= "; #endregion Preferences`r`n"
     }
     
