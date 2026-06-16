@@ -16,6 +16,10 @@
 [Open Notepad Safely](aip://open/c:/windows/notepad.exe)
 
 ## [x] Incoming tasks from chat
+- [x] Implement 'Untuck' in four dimensions (Left, Right, Top, Bottom) to completely restore stowed windows to their pre-tucked states directly
+- [x] Implement 'TuckPeek' in four dimensions (Left, Right, Top, Bottom) to sequential-peek stowed windows using consecutive hotkey steps, with Escape cancelling the cycle
+- [x] Implement 'EdgeIn' in eight dimensions to align window exactly one grid cell spacing inward from the relative screen border
+- [x] Implement 'DragWindow' mode to draw the active window and overlapping windows translucent, following the mouse smoothly until LButton/Enter is pressed or restoring position on Escape
 - [x] Move untucked window to the top of the Z-order index upon edge bump
 - [x] Implement physical drag resistance (4x perpendicular and 2x parallel damping tension) when pulling nestled windows from stowed bounds
 - [x] Implement hysteresis pop-off release threshold (120px) to restore normal free-floating window states

@@ -8,11 +8,6 @@ $#/:: {
     ExecuteActionWithCondition("HelpScreen", "")
 }
 
-$^+#c:: {
-    try Suspend("Permit")
-    ExecuteActionWithCondition("CmdPalette", "")
-}
-
 $^#/:: {
     try Suspend("Permit")
     ExecuteActionWithCondition("WinInfo", "")
@@ -53,24 +48,12 @@ $^#f12:: {
     ExecuteActionWithCondition("RestartProgram", "")
 }
 
-$^#.:: {
-    ExecuteActionWithCondition("SetHome", "")
+#rbutton:: {
+    ExecuteActionWithCondition("MouseToGrid", "")
 }
 
-$^+#.:: {
-    ExecuteActionWithCondition("ClearHome", "")
-}
-
-$!#.:: {
-    ExecuteActionWithCondition("GoHome", "")
-}
-
-$#.:: {
-    ExecuteActionWithCondition("Home", "")
-}
-
-$+#.:: {
-    ExecuteActionWithCondition("HomePeek", "")
+#lbutton:: {
+    ExecuteActionWithCondition("MouseRelativeSize", "")
 }
 
 $^#t:: {
@@ -97,44 +80,12 @@ $^#backspace:: {
     ExecuteActionWithCondition("FocusDeepestWindow", "")
 }
 
-$#pgdn:: {
-    ExecuteActionWithCondition("NextWindow", "")
-}
-
-!wheeldown:: {
-    ExecuteActionWithCondition("NextWindow", "")
-}
-
-$#pgup:: {
-    ExecuteActionWithCondition("PrevWindow", "")
-}
-
-!wheelup:: {
-    ExecuteActionWithCondition("PrevWindow", "")
-}
-
-$!#pgdn:: {
-    ExecuteActionWithCondition("NextClassWindow", "")
-}
-
-$!#pgup:: {
-    ExecuteActionWithCondition("PrevClassWindow", "")
-}
-
 $+#pgdn:: {
     ExecuteActionWithCondition("MinimizeToTray", "")
 }
 
 $+#pgup:: {
     ExecuteActionWithCondition("PickFromTray", "")
-}
-
-#rbutton:: {
-    ExecuteActionWithCondition("MouseToGrid", "")
-}
-
-#lbutton:: {
-    ExecuteActionWithCondition("MouseRelativeSize", "")
 }
 
 $!#left:: {
@@ -237,22 +188,6 @@ $#numpad2:: {
     ExecuteActionWithCondition("StretchToGridDown", "")
 }
 
-$#numpad7:: {
-    ExecuteActionWithCondition("StretchToGridTopLeft", "")
-}
-
-$#numpad9:: {
-    ExecuteActionWithCondition("StretchToGridTopRight", "")
-}
-
-$#numpad1:: {
-    ExecuteActionWithCondition("StretchToGridBottomLeft", "")
-}
-
-$#numpad3:: {
-    ExecuteActionWithCondition("StretchToGridBottomRight", "")
-}
-
 $!#numpad2:: {
     ExecuteActionWithCondition("PullToGridDown", "")
 }
@@ -269,22 +204,6 @@ $!#numpad6:: {
     ExecuteActionWithCondition("PullToGridRight", "")
 }
 
-$!#numpad7:: {
-    ExecuteActionWithCondition("PullToGridTopLeft", "")
-}
-
-$!#numpad9:: {
-    ExecuteActionWithCondition("PullToGridTopRight", "")
-}
-
-$!#numpad1:: {
-    ExecuteActionWithCondition("PullToGridBottomLeft", "")
-}
-
-$!#numpad3:: {
-    ExecuteActionWithCondition("PullToGridBottomRight", "")
-}
-
 $^+#numpad8:: {
     ExecuteActionWithCondition("GrowTop", "")
 }
@@ -299,22 +218,6 @@ $^+#numpad6:: {
 
 $^+#numpad4:: {
     ExecuteActionWithCondition("GrowRight", "")
-}
-
-$^+#numpad7:: {
-    ExecuteActionWithCondition("GrowTopLeft", "")
-}
-
-$^+#numpad9:: {
-    ExecuteActionWithCondition("GrowTopRight", "")
-}
-
-$^+#numpad1:: {
-    ExecuteActionWithCondition("GrowBottomLeft", "")
-}
-
-$^+#numpad3:: {
-    ExecuteActionWithCondition("GrowBottomRight", "")
 }
 
 $^+#numpad5:: {
@@ -335,26 +238,6 @@ $!+#numpad6:: {
 
 $!+#numpad4:: {
     ExecuteActionWithCondition("TrimRight", "")
-}
-
-$!+#numpad7:: {
-    ExecuteActionWithCondition("TrimTopLeft", "")
-}
-
-$!+#numpad9:: {
-    ExecuteActionWithCondition("TrimTopRight", "")
-}
-
-$!+#numpad1:: {
-    ExecuteActionWithCondition("TrimBottomLeft", "")
-}
-
-$!+#numpad3:: {
-    ExecuteActionWithCondition("TrimBottomRight", "")
-}
-
-$!#numpad5:: {
-    ExecuteActionWithCondition("TrimAll", "")
 }
 
 $!+#up:: {
@@ -389,6 +272,30 @@ $^!#right:: {
     ExecuteActionWithCondition("SubtractRight", "")
 }
 
+$!#numpad5:: {
+    ExecuteActionWithCondition("TrimAll", "")
+}
+
+$^#.:: {
+    ExecuteActionWithCondition("SetHome", "")
+}
+
+$^+#.:: {
+    ExecuteActionWithCondition("ClearHome", "")
+}
+
+$!#.:: {
+    ExecuteActionWithCondition("GoHome", "")
+}
+
+$#.:: {
+    ExecuteActionWithCondition("Home", "")
+}
+
+$+#.:: {
+    ExecuteActionWithCondition("HomePeek", "")
+}
+
 $^!+#left:: {
     ExecuteActionWithCondition("StretchLeft", "")
 }
@@ -399,6 +306,30 @@ $^!+#right:: {
 
 $^!+#up:: {
     ExecuteActionWithCondition("StretchTop", "")
+}
+
+$#pgdn:: {
+    ExecuteActionWithCondition("NextWindow", "")
+}
+
+!wheeldown:: {
+    ExecuteActionWithCondition("NextWindow", "")
+}
+
+$#pgup:: {
+    ExecuteActionWithCondition("PrevWindow", "")
+}
+
+!wheelup:: {
+    ExecuteActionWithCondition("PrevWindow", "")
+}
+
+$!#pgdn:: {
+    ExecuteActionWithCondition("NextClassWindow", "")
+}
+
+$!#pgup:: {
+    ExecuteActionWithCondition("PrevClassWindow", "")
 }
 
 $!numpad4:: {
@@ -445,22 +376,6 @@ $numpad2:: {
     ExecuteActionWithCondition("MoveToGridDown", "")
 }
 
-$numpad7:: {
-    ExecuteActionWithCondition("MoveToGridTopLeft", "")
-}
-
-$numpad9:: {
-    ExecuteActionWithCondition("MoveToGridTopRight", "")
-}
-
-$numpad1:: {
-    ExecuteActionWithCondition("MoveToGridBottomLeft", "")
-}
-
-$numpad3:: {
-    ExecuteActionWithCondition("MoveToGridBottomRight", "")
-}
-
 $^+#left:: {
     ExecuteActionWithCondition("TuckLeft", "")
 }
@@ -485,5 +400,10 @@ $^+#p:: {
 $^+#u:: {
     try Suspend("Permit")
     ExecuteActionWithCondition("Untuck", "")
+}
+
+$^+#c:: {
+    try Suspend("Permit")
+    ExecuteActionWithCondition("CmdPalette", "")
 }
 

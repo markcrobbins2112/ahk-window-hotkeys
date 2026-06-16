@@ -18,7 +18,7 @@ status: pass
 
 ## Commit Message
 ```text
-feat(grid-corners): implement diagonal and corner variants for grid action verbs
+feat(stow-drag): implement untuck, tuckpeek, edgein and dragwindow modes
 ```
 
 <!-- Example AI Log Entry
@@ -31,6 +31,26 @@ subsections/tree bullets
 bulleted file list
 -->
 ## Log Entries
+
+## [2026-06-16T08:50:00Z]
+### 🎯 Primary Goals & Requirements
+- **Implement New Window Controls**:
+  - **Untuck (4 Dimensions)**: Complete window restoration back to pre-tuck coordinates with contextual menus if multiple options are stowed on an edge.
+  - **TuckPeek (4 Dimensions)**: Sequential peek-reveal stowed windows with automatic return on focus loss or cancellation on Escape.
+  - **EdgeIn (8 Dimensions)**: Place active windows exactly one grid cell spacing inward from the given screen border or corner.
+  - **DragWindow Mode**: Create a mouse-following layout state with opacity drops on target and overlapping background elements.
+
+### 🛠️ Completed Changes in this Session
+- **Implemented Untuck Operations**: Formulated `UntuckDimension(edge)` selecting matching handles, utilizing a beautifully styled programmatic flyout menu for disambiguation if multiple windows are stowed on that edge.
+- **Implemented Sequential TuckPeek Cycling**: Programmed stateful `TuckPeekDimension(edge)` to advance through candidates sequentially, utilizing `#HotIf g_TuckPeekActive` to register Escape as a cancellation trigger that safely retucks the active preview window.
+- **Implemented EdgeIn Coordinate Formulas**: Extended `ExecuteCommandRegistry` case with 8 bounds offsets using `pX := 424` and `pY := 232` (precise cell dimensions).
+- **Implemented Translucent Mouse Dragging**: Crafted `StartDragWindow(hWnd)` capturing mouse coordinates, identifying overlapping windows in the Z-order stack recursively, applying semi-transparency (alpha `150`), moving bounds smoothly via a 15ms high-frequency cursor tracking loop, and binding LButton/Enter to commit or Escape to restore pre-drag coords using `#HotIf g_DragActive`.
+- **Integrated Commands**: Registered all new features under `GetGlobalCommandList` and `CopyCommands()` catalogs.
+
+### 🔸 Affected Files
+- `/HotWinAHK.ahk`
+- `/AITASKS.md`
+- `/AILOG.md`
 
 ## [2026-06-15T20:38:00Z]
 ### 🎯 Primary Goals & Requirements

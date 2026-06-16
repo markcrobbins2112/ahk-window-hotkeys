@@ -44,6 +44,21 @@ Global g_HomeIndicators := Map()
 Global g_OverlayGui := ""
 Global g_OverlayTimer := ""
 
+Global g_TuckPeekList := []
+Global g_TuckPeekIndex := 0
+Global g_TuckPeekEdge := ""
+Global g_TuckPeekActive := false
+
+Global g_DragActive := false
+Global g_DragHwnd := 0
+Global g_DragOrigX := 0
+Global g_DragOrigY := 0
+Global g_DragOrigW := 0
+Global g_DragOrigH := 0
+Global g_DragWindowsAbove := []
+Global g_DragMouseOffsetX := 0
+Global g_DragMouseOffsetY := 0
+
 ; --- CUSTOM VELOCITY BUMP SENSITIVITY REGISTRY ---
 ; Lower numbers make the flick speed more sensitive (5 is ultra-sensitive, 10 is moderate, 20 is heavy wrist snap)
 Global g_BumpVelocityThreshold := 5
@@ -693,6 +708,33 @@ ExecuteCommandRegistry(sCmd, hWnd) {
         case "Untuck":
             Menu_Untuck()
 
+        case "UntuckLeft":
+            UntuckDimension("Left")
+
+        case "UntuckRight":
+            UntuckDimension("Right")
+
+        case "UntuckTop", "UntuckUp":
+            UntuckDimension("Up")
+
+        case "UntuckBottom", "UntuckDown":
+            UntuckDimension("Down")
+
+        case "TuckPeekLeft":
+            TuckPeekDimension("Left")
+
+        case "TuckPeekRight":
+            TuckPeekDimension("Right")
+
+        case "TuckPeekTop", "TuckPeekUp":
+            TuckPeekDimension("Up")
+
+        case "TuckPeekBottom", "TuckPeekDown":
+            TuckPeekDimension("Down")
+
+        case "DragWindow":
+            StartDragWindow(hWnd)
+
         case "TuckLeft", "TuckRight", "TuckUp", "TuckDown":
             ; Force global registry data attachment directly inside the local case context
             global g_TuckedWindows, g_TuckedVisiblePixels
@@ -892,7 +934,7 @@ ExecuteCommandRegistry(sCmd, hWnd) {
 
             }
 
-        case "EdgeLeft", "EdgeRight", "EdgeTop", "EdgeBottom", "EdgeCenter", "EdgeTopLeft", "EdgeTopRight", "EdgeBottomLeft", "EdgeBottomRight":
+        case "EdgeLeft", "EdgeRight", "EdgeTop", "EdgeBottom", "EdgeCenter", "EdgeTopLeft", "EdgeTopRight", "EdgeBottomLeft", "EdgeBottomRight", "EdgeInLeft", "EdgeInRight", "EdgeInTop", "EdgeInBottom", "EdgeInTopLeft", "EdgeInTopRight", "EdgeInBottomLeft", "EdgeInBottomRight":
             hMon := DllCall("MonitorFromWindow", "ptr", hWnd, "uint", 2, "ptr")
             MI := Buffer(40)
             NumPut("uint", 40, MI, 0)
@@ -904,8 +946,11 @@ ExecuteCommandRegistry(sCmd, hWnd) {
                 mWidth := mRight - mLeft
                 mHeight := mBottom - mTop
 
+                pX := 424
+                pY := 232
+
                 nX := X, nY := Y
-                switch sCmd {
+                switch sCmd, false {
                     case "EdgeLeft": nX := mLeft
                     case "EdgeRight": nX := mRight - W
                     case "EdgeTop": nY := mTop
@@ -915,6 +960,14 @@ ExecuteCommandRegistry(sCmd, hWnd) {
                     case "EdgeBottomLeft": nX := mLeft, nY := mBottom - H
                     case "EdgeBottomRight": nX := mRight - W, nY := mBottom - H
                     case "EdgeCenter": nX := mLeft + Floor((mWidth - W) / 2), nY := mTop + Floor((mHeight - H) / 2)
+                    case "EdgeInLeft": nX := mLeft + pX
+                    case "EdgeInRight": nX := mRight - W - pX
+                    case "EdgeInTop": nY := mTop + pY
+                    case "EdgeInBottom": nY := mBottom - H - pY
+                    case "EdgeInTopLeft": nX := mLeft + pX, nY := mTop + pY
+                    case "EdgeInTopRight": nX := mRight - W - pX, nY := mTop + pY
+                    case "EdgeInBottomLeft": nX := mLeft + pX, nY := mBottom - H - pY
+                    case "EdgeInBottomRight": nX := mRight - W - pX, nY := mBottom - H - pY
                 }
                 AnimateWinMove(nX, nY, hWnd)
             }
@@ -3141,6 +3194,23 @@ GetGlobalCommandList() {
         {cat: "Docking & Fling", cmd: "TuckDown", key: "Win + Ctrl + Shift + Down", desc: "Tuck window past bottom screen wall, exposing a 20px dock indicator bar."},
         {cat: "Docking & Fling", cmd: "PeekTucked", key: "Win + Ctrl + Shift + P", desc: "Offers a menu of all tucked windows listing their titles and edge."},
         {cat: "Docking & Fling", cmd: "Untuck", key: "Win + Ctrl + Shift + U", desc: "Offers a menu of all tucked windows to completely restore them."},
+        {cat: "Docking & Fling", cmd: "UntuckLeft", key: "Custom", desc: "Untuck the window tucked at the left edge."},
+        {cat: "Docking & Fling", cmd: "UntuckRight", key: "Custom", desc: "Untuck the window tucked at the right edge."},
+        {cat: "Docking & Fling", cmd: "UntuckTop", key: "Custom", desc: "Untuck the window tucked at the top edge."},
+        {cat: "Docking & Fling", cmd: "UntuckBottom", key: "Custom", desc: "Untuck the window tucked at the bottom edge."},
+        {cat: "Docking & Fling", cmd: "TuckPeekLeft", key: "Custom", desc: "Reveal/peek tucked windows on the left edge sequentially."},
+        {cat: "Docking & Fling", cmd: "TuckPeekRight", key: "Custom", desc: "Reveal/peek tucked windows on the right edge sequentially."},
+        {cat: "Docking & Fling", cmd: "TuckPeekTop", key: "Custom", desc: "Reveal/peek tucked windows on the top edge sequentially."},
+        {cat: "Docking & Fling", cmd: "TuckPeekBottom", key: "Custom", desc: "Reveal/peek tucked windows on the bottom edge sequentially."},
+        {cat: "Sizing & Margins", cmd: "EdgeInLeft", key: "Custom", desc: "Set window alignment offset one grid cell from screen left edge."},
+        {cat: "Sizing & Margins", cmd: "EdgeInRight", key: "Custom", desc: "Set window alignment offset one grid cell from screen right edge."},
+        {cat: "Sizing & Margins", cmd: "EdgeInTop", key: "Custom", desc: "Set window alignment offset one grid cell from screen top edge."},
+        {cat: "Sizing & Margins", cmd: "EdgeInBottom", key: "Custom", desc: "Set window alignment offset one grid cell from screen bottom edge."},
+        {cat: "Sizing & Margins", cmd: "EdgeInTopLeft", key: "Custom", desc: "Align window offset one grid cell from screen top-left corner."},
+        {cat: "Sizing & Margins", cmd: "EdgeInTopRight", key: "Custom", desc: "Align window offset one grid cell from screen top-right corner."},
+        {cat: "Sizing & Margins", cmd: "EdgeInBottomLeft", key: "Custom", desc: "Align window offset one grid cell from screen bottom-left corner."},
+        {cat: "Sizing & Margins", cmd: "EdgeInBottomRight", key: "Custom", desc: "Align window offset one grid cell from screen bottom-right corner."},
+        {cat: "System Layer", cmd: "DragWindow", key: "Custom", desc: "Initiate DragWindow mode: Make window and ones above translucent, move with cursor, click/Enter to place, Esc to cancel."},
         
         {cat: "Window Cycling", cmd: "NextWindow", key: "Win + PgUp", desc: "Cycle focus smoothly forward across open desktop window frames."},
         {cat: "Window Cycling", cmd: "PrevWindow", key: "Win + PgDn", desc: "Cycle focus smoothly backward across open desktop window frames."},
@@ -3562,6 +3632,10 @@ CopyCommands() {
         "StretchLeft", "StretchRight", "StretchTop", "StretchBottom",
         "StretchTopLeft", "StretchTopRight", "StretchBottomLeft", "StretchBottomRight", "TuckLeft", "TuckRight", 
         "TuckUp", "TuckDown", "BumpEdgeUntuck", "BumpEdgeUntuckActivate", 
+        "UntuckLeft", "UntuckRight", "UntuckTop", "UntuckBottom",
+        "TuckPeekLeft", "TuckPeekRight", "TuckPeekTop", "TuckPeekBottom",
+        "EdgeInLeft", "EdgeInRight", "EdgeInTop", "EdgeInBottom", "EdgeInTopLeft", "EdgeInTopRight", "EdgeInBottomLeft", "EdgeInBottomRight",
+        "DragWindow",
         "FocusDeepestWindow", "CopyCommands", "CopyBindings"
     ]
     for cmd in commands {
@@ -4337,6 +4411,230 @@ UpdateHomeIndicators() {
         g_HomeIndicators.Delete(hWnd)
     }
 }
+
+UntuckDimension(edge) {
+    global g_TuckedWindows
+    matched := []
+    normalizedEdge := StrLower(edge)
+    if (normalizedEdge == "top")
+        normalizedEdge := "up"
+    if (normalizedEdge == "bottom")
+        normalizedEdge := "down"
+
+    for hwnd, profile in g_TuckedWindows {
+        if (!WinExist("ahk_id " . hwnd)) {
+            continue
+        }
+        profileEdge := StrLower(profile.edge)
+        if (profileEdge == "top")
+            profileEdge := "up"
+        if (profileEdge == "bottom")
+            profileEdge := "down"
+
+        if (profileEdge == normalizedEdge) {
+            matched.Push({hwnd: hwnd, profile: profile})
+        }
+    }
+    
+    if (matched.Length == 0) {
+        ShowTargetToolTip("No windows are currently tucked on the " . edge . " edge.")
+        return
+    }
+    
+    if (matched.Length == 1) {
+        Menu_Untuck_Callback(matched[1].hwnd, matched[1].profile)
+    } else {
+        mMenu := Menu()
+        mMenu.Add("--- Select Window to Untuck (" . edge . ") ---", (*) => 0)
+        mMenu.Disable("--- Select Window to Untuck (" . edge . ") ---")
+        mMenu.Add()
+        
+        for item in matched {
+            wTitle := WinGetTitle("ahk_id " . item.hwnd)
+            if (wTitle == "") {
+                wTitle := "Untitled (ahk_id " . item.hwnd . ")"
+            }
+            if (StrLen(wTitle) > 50) {
+                wTitle := SubStr(wTitle, 1, 47) . "..."
+            }
+            mMenu.Add("[" . item.profile.edge . "] " . wTitle, Menu_Untuck_Callback.Bind(item.hwnd, item.profile))
+        }
+        mMenu.Show()
+    }
+}
+
+EndTuckPeek() {
+    global g_TuckPeekActive, g_TuckPeekList, g_TuckPeekIndex, g_TuckPeekEdge, g_ActiveUntuckedHwnd
+    g_TuckPeekActive := false
+    g_TuckPeekList := []
+    g_TuckPeekIndex := 0
+    g_TuckPeekEdge := ""
+    
+    if (g_ActiveUntuckedHwnd != 0 && WinExist("ahk_id " . g_ActiveUntuckedHwnd)) {
+        ExecuteRetuckSequence(g_ActiveUntuckedHwnd)
+        g_ActiveUntuckedHwnd := 0
+    }
+    ShowTargetToolTip("TuckPeek ended.")
+}
+
+TuckPeekDimension(edge) {
+    global g_TuckPeekActive, g_TuckPeekList, g_TuckPeekIndex, g_TuckPeekEdge, g_TuckedWindows, g_ActiveUntuckedHwnd
+    
+    normalizedEdge := StrLower(edge)
+    if (normalizedEdge == "top")
+        normalizedEdge := "up"
+    if (normalizedEdge == "bottom")
+        normalizedEdge := "down"
+        
+    isSameEdge := (g_TuckPeekActive && g_TuckPeekEdge == normalizedEdge && g_TuckPeekList.Length > 0)
+    
+    if (!isSameEdge) {
+        g_TuckPeekList := []
+        for hwnd, profile in g_TuckedWindows {
+            if (!WinExist("ahk_id " . hwnd)) {
+                continue
+            }
+            profileEdge := StrLower(profile.edge)
+            if (profileEdge == "top")
+                profileEdge := "up"
+            if (profileEdge == "bottom")
+                profileEdge := "down"
+                
+            if (profileEdge == normalizedEdge) {
+                g_TuckPeekList.Push({hwnd: hwnd, edge: profile.edge, profile: profile})
+            }
+        }
+        
+        if (g_TuckPeekList.Length == 0) {
+            ShowTargetToolTip("No tucked windows on the " . edge . " edge.")
+            return
+        }
+        
+        g_TuckPeekActive := true
+        g_TuckPeekEdge := normalizedEdge
+        g_TuckPeekIndex := 1
+    } else {
+        if (g_ActiveUntuckedHwnd != 0 && WinExist("ahk_id " . g_ActiveUntuckedHwnd)) {
+            ExecuteRetuckSequence(g_ActiveUntuckedHwnd)
+            g_ActiveUntuckedHwnd := 0
+        }
+        
+        g_TuckPeekIndex := g_TuckPeekIndex + 1
+        if (g_TuckPeekIndex > g_TuckPeekList.Length) {
+            g_TuckPeekIndex := 1
+        }
+    }
+    
+    item := g_TuckPeekList[g_TuckPeekIndex]
+    
+    if (WinExist("ahk_id " . item.hwnd)) {
+        wTitle := WinGetTitle("ahk_id " . item.hwnd)
+        if (wTitle == "") {
+            wTitle := "Untitled"
+        }
+        ShowTargetToolTip("Peeking (" . g_TuckPeekIndex . "/" . g_TuckPeekList.Length . "): " . wTitle . "`n[Esc] to end peek")
+        RevealTuckedWindow(item.hwnd, item.edge, item.profile)
+    } else {
+        g_TuckPeekList.RemoveAt(g_TuckPeekIndex)
+        if (g_TuckPeekList.Length == 0) {
+            EndTuckPeek()
+            return
+        }
+        g_TuckPeekIndex := 1
+        TuckPeekDimension(edge)
+    }
+}
+
+StartDragWindow(hWnd) {
+    global g_DragActive, g_DragHwnd, g_DragWindowsAbove
+    global g_DragOrigX, g_DragOrigY, g_DragOrigW, g_DragOrigH
+    global g_DragMouseOffsetX, g_DragMouseOffsetY
+    
+    if (g_DragActive) {
+        EndDragWindow(false)
+    }
+    
+    if (!hWnd || !WinExist("ahk_id " . hWnd)) {
+        return
+    }
+    
+    g_DragHwnd := hWnd
+    WinGetPos(&g_DragOrigX, &g_DragOrigY, &g_DragOrigW, &g_DragOrigH, "ahk_id " . hWnd)
+    
+    ; Find windows above in Z-order
+    g_DragWindowsAbove := []
+    curHwnd := DllCall("GetWindow", "ptr", hWnd, "uint", 3, "ptr") ; GW_HWNDPREV
+    while (curHwnd) {
+        if (DllCall("IsWindowVisible", "ptr", curHwnd)) {
+            wTitle := WinGetTitle("ahk_id " . curHwnd)
+            if (wTitle != "" && wTitle != "Program Manager" && !InStr(wTitle, "HotWinAHK")) {
+                g_DragWindowsAbove.Push(curHwnd)
+            }
+        }
+        curHwnd := DllCall("GetWindow", "ptr", curHwnd, "uint", 3, "ptr") ; GW_HWNDPREV
+    }
+    
+    ; Make them semi-transparent
+    try WinSetTransparent(150, "ahk_id " . g_DragHwnd)
+    for upHwnd in g_DragWindowsAbove {
+        try WinSetTransparent(150, "ahk_id " . upHwnd)
+    }
+    
+    CoordMode("Mouse", "Screen")
+    MouseGetPos(&mX, &mY)
+    g_DragMouseOffsetX := mX - g_DragOrigX
+    g_DragMouseOffsetY := mY - g_DragOrigY
+    
+    g_DragActive := true
+    SetTimer(TrackDragWindow, 15)
+    ShowTargetToolTip("Drag Mode Started.`n[LButton] / [Enter] to place • [Esc] to restore")
+}
+
+TrackDragWindow() {
+    global g_DragActive, g_DragHwnd, g_DragMouseOffsetX, g_DragMouseOffsetY, g_DragOrigW, g_DragOrigH
+    if (!g_DragActive || !WinExist("ahk_id " . g_DragHwnd)) {
+        SetTimer(TrackDragWindow, 0)
+        return
+    }
+    
+    CoordMode("Mouse", "Screen")
+    MouseGetPos(&mX, &mY)
+    nX := mX - g_DragMouseOffsetX
+    nY := mY - g_DragMouseOffsetY
+    SafeMove(nX, nY, g_DragOrigW, g_DragOrigH, g_DragHwnd)
+}
+
+EndDragWindow(restore := false) {
+    global g_DragActive, g_DragHwnd, g_DragWindowsAbove, g_DragOrigX, g_DragOrigY, g_DragOrigW, g_DragOrigH
+    if (!g_DragActive)
+        return
+        
+    g_DragActive := false
+    SetTimer(TrackDragWindow, 0)
+    
+    ; Restore transparency
+    try WinSetTransparent("Off", "ahk_id " . g_DragHwnd)
+    for upHwnd in g_DragWindowsAbove {
+        try WinSetTransparent("Off", "ahk_id " . upHwnd)
+    }
+    
+    if (restore && WinExist("ahk_id " . g_DragHwnd)) {
+        SafeMove(g_DragOrigX, g_DragOrigY, g_DragOrigW, g_DragOrigH, g_DragHwnd)
+    }
+    
+    g_DragWindowsAbove := []
+    ShowTargetToolTip(restore ? "Drag Cancelled." : "Drag Completed.")
+}
+
+#HotIf g_TuckPeekActive
+Escape::EndTuckPeek()
+#HotIf
+
+#HotIf g_DragActive
+*LButton::EndDragWindow(false)
+*Enter::EndDragWindow(false)
+*Escape::EndDragWindow(true)
+#HotIf
 
 #Include "HotWinAHK_aux.ahk"
 ; #endregion
