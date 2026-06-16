@@ -30,8 +30,15 @@
 - [x] Created `KeyQuery` command: Provides dark modal dialog with an 8s timer/countdown (resets on keypress) to capture physical keystrokes/modifiers and look up associated HotWinAHK commands, running continuously until ESC is pressed
 - [x] Created `Settings` command: Provides interactive dark-themed configuration dialog (checkboxes) allowing the user to configure 'Silence All' (suppresses all audio beeps), 'Silent on Windows Commands' (silences movement sounds), and 'Tip Windows Commands' (shows/hides quick tip robot cursor tooltips). Writes preferences instantly to the `[Settings]` section in `HotWinAHK.ini`
 - [x] Fixed `DragWindow` command bugs: Eliminated opaque milky-white overlays on background windows by updating the tracking loop to only adjust the transparency (specifically: gentle 200 opacity) of the active dragged window itself
+- [x] Dual Numpad Hotkey Compilation: Implemented automated compilation ensuring both standard Numpad keystrokes and their Navigation (Ins, End, Down, PgDn, etc.) counterparts trigger identical HotWinAHK commands seamlessly, regardless of NumLock state
+- [x] DragWindow Overlapping Translucency: Integrated scanning and fading of overlapping windows above the current drag target to 50% opacity, allowing effortless visual identification of background structures during drags, with full transparency restoration on release
+- [x] Parameterized Tucked Peeking Lists: Refactored stowed list items with custom filter arguments and clear hexadecimal HWND labels (e.g. `[Left] Notepad [0x1D04FE]`)
+- [x] Interactive Search Window Picker: Programmed a dark-themed GUI matching the overall system aesthetics allowing live fuzzy search by titles and executable names to instantly refocus chosen windows on Enter or click
+- [x] Immersive 3D Parallax Rotation Mode: Coded the `Desk3d` depth-based parallax workspace that rotates active non-tucked windows on mouse movement with mathematical scaling weights based on layered distance index, cleanly resetting on Escape
+
 
 ## [x] Errors
+- [x] Unexpected Reserved Word in `ShowWindowPicker`: Fixed runtime compiler crash by replacing invalid block fat-arrow syntax (`(params) => { ... }`), which is unsupported in AutoHotkey v2, with proper native nested function blocks (`UpdateList(searchText) { ... }` and `ActivateSelection(*) { ... }`).
 - [x] lint 1: Resolved warning where `ExecuteActionWithCondition` was considered an unassigned local variable. Fixed by placing the `#Include "HotWinAHK_aux.ahk"` statement at the bottom of `HotWinAHK.ahk` after the global function definitions.
 - [x] lint 2: Resolved warning where `ShowHelpScreen` was flagged as an unassigned local variable inside case `HelpScreen`. Built a fully-featured, dark-themed interactive help dashboard in `HotWinAHK.ahk`.
 - [x] Ceiling local variable warning: Resolved diagnostic sequence warning where `Ceiling` was flagged as an unassigned local variable by replacing it with the correct built-in `Ceil` function in `HotWinAHK.ahk`.

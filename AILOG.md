@@ -18,7 +18,7 @@ status: pass
 
 ## Commit Message
 ```text
-feat(settings): implement interactive Settings dialog and KeyQuery keyboard tracker command, and fix DragWindow milky-white overlay bugs
+fix(picker): resolve illegal block fat-arrow syntax in ShowWindowPicker utilizing proper nested functions
 ```
 
 <!-- Example AI Log Entry
@@ -31,6 +31,43 @@ subsections/tree bullets
 bulleted file list
 -->
 ## Log Entries
+
+## [2026-06-16T14:18:00Z]
+### 🎯 Primary Goals & Requirements
+- **Resolve Unexpected Reserved Word Compilation Error**: Standard block fat-arrow configurations are not supported in AutoHotkey v2 and result in unexpected curly bracket errors. Re-engineer internal helper routines within the `ShowWindowPicker` method into valid AHK nested structures.
+
+### 🛠️ Completed Changes in this Session
+- **Refactored `ShowWindowPicker` helper methods**: Restructured `UpdateList` and `ActivateSelection` to use standard nested function definition blocks instead of invalid block arrow notation, ensuring proper scoping, clean dynamic variables extraction, and successful script initialization.
+
+### 🔸 Affected Files
+- `/HotWinAHK.ahk`
+- `/AITASKS.md`
+- `/AILOG.md`
+
+
+## [2026-06-16T14:15:00Z]
+### 🎯 Primary Goals & Requirements
+- **Interactive Multi-Field Window Picker**: Create an AlwaysOnTop, dark-themed utility (`WindowPicker`) allowing fuzzy live-filtering of active windows by title/process, activating chosen frames seamlessly on double-click/Enter.
+- **Immersive Parallax Depth Workspace**: Develop a depth-based 3D workspace display (`Desk3d`) that leverages continuous mouse coordination to translate active window matrices based on proportional layering weights.
+- **Robust NumLock-Agnostic Compilation**: Program auto-counterpart bindings during compilation so Numpad keys (e.g., `Numpad9` <-> `NumpadPgUp`) trigger identical commands with total reliability, regardless of NumLock state.
+- **Layered Drag Translucency Scanning**: Modernize `DragWindow` operation to recursively discover and fade overlapping background panels, keeping the drag subject clear.
+
+### 🛠️ Completed Changes in this Session
+- **Coded WindowPicker GUI**: Built `ShowWindowPicker()` featuring structured search box filtering, multi-field grid rendering, Escape close hooks, and automatic target focus recovery.
+- **Formulated Desk3D Parallax Formulas**: Developed high-frequency `TrackDesk3D()` calculating offsets proportional to distance index values (weight limiters scaling from 1.2 downward by 0.15 steps) to shift coordinates symmetrically based on mouse drift delta.
+- **Configured Dual-Register Compilation**: Programmed `GetNumpadCounterpart()` and counterpart detection lookup mapping tables inside `CompileIniToStaticHotkeys()`, generating matching hotkeys for both Lock states on-the-fly.
+- **Optimized Overlapping Drag Transparency**: Re-implemented Z-order scanning inside `StartDragWindow()`, identifying background frames above the drag target and setting them to a soft translucent `50` opacity, fully restored on drag end.
+- **Registered Catalogs & Documentation**: Updated help listings in `GetGlobalCommandList()` to surface the new commands across built-in help frames and the Command Palette.
+
+### 🔸 Affected Files
+- `/HotWinAHK.ahk`
+- `/AITASKS.md`
+- `/AILOG.md`
+- `/FEATURES.md`
+- `/MANUAL.md`
+- `/README.md`
+- `/SPEC.md`
+
 
 ## [2026-06-16T12:26:00Z]
 ### 🎯 Primary Goals & Requirements

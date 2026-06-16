@@ -26,7 +26,7 @@ HotWinAHK operates as a low-overhead orchestrator for the Windows desktop enviro
 
 ## 🧠 2. Core Modules & Systems
 The codebase is composed of highly specialized systems that collaborate without thread blocks:
-- **Hotkeys Dynamic Compiler**: Parsed using `IniRead` arrays. Identifies active sections, extracts mapping keys, maps virtual modifier sequences (Ctrl, Alt, Shift, Win), verifies standard character formats, and structures `.ahk` trigger blocks with execution safety gates.
+- **Hotkeys Dynamic Compiler**: Parsed using `IniRead` arrays. Identifies active sections, extracts mapping keys, maps virtual modifier sequences (Ctrl, Alt, Shift, Win), verifies standard character formats, and structures `.ahk` trigger blocks with execution safety gates. Automatically registers matching counterparts for Numpad hotkeys (such as mapping standard layout keys with their non-lock navigation equivalents) during compilation so bindings work flawlessly under any keyboard state.
 - **Velocity Bump Tracker**: An active thread loop running on a tight 25ms interval. Evaluates physical mouse velocities and boundary positions against configured edge parameters.
 - **Focus Tone Feedback listener**: Uses a Microsoft Win32 event hook callback registration (`EVENT_SYSTEM_FOREGROUND`) to detect active window changes and beep audible sound frequencies using non-blocking DLL calls.
 - **Dark-Themed Tooltip Engine**: Intercepts active Windows tooltips (`ahk_class tooltips_class32`) and forces dark theme styling natively using the Windows UX Theme library (`SetWindowTheme` API).
@@ -51,6 +51,11 @@ The application's crown jewel is its mathematical screen-edge docking and mouse-
   Parallel dragging coordinates are restricted with a 2x damping parameter ($0.5$).
 - **Hysteresis Pop-off Threshold**: If the resisted drag direction displacement exceeds 120 absolute screen pixels ($\text{pullDistance} > 120\text{px}$), the docking structural anchor snaps. The window is removed from the stowed registry maps, plays an audio pitch, and is restored as a free-floating window.
 - **Ctrl-Hold Dock-Seeking Indicator Overlay**: Holding the `Ctrl` key during a stowed window drag disables physical resistance and enters a Dock-Seeking Mode. The engine calculates the closest screen margin of the mouse's active monitor layout, instantiates a click-through translucent cyan GUI indicator overlay bar (60px thickness) aligned to that edge, and immediately snaps and docks the stowed window to the selected monitor margin upon left-clicked mouse release.
+- **Overlapping Z-Order Translucency Scanner**: Engages upon DragWindow execution to query the native window stack recursively. Discovers all visible frames resting above the target drag handles and lowers their transparency level to a soft `50` alpha weight while holding the target moving object at `200` transparency. On release, the cached original opacities of all elevated windows are instantly written back.
+- **Desk3D Proportional Parallax Workspace**: Maps active open desktop frames to integer depth layers. On mouse coordinate changes, it registers the displacement vector from starting center points ($\Delta X_{\text{mouse}}, \Delta Y_{\text{mouse}}$), shifting coords according to reciprocal depth step functions:
+  $$\text{shiftX} = -\Delta X_{\text{mouse}} \times \max\left(0.05, 1.2 - (\text{layerIndex} - 1) \times 0.15\right)$$
+  $$\text{shiftY} = -\Delta Y_{\text{mouse}} \times \max\left(0.05, 1.2 - (\text{layerIndex} - 1) \times 0.15\right)$$
+  This designs a high-fidelity 3D workspace where foreground window assets slide fluidly over background assets, cleanly resettable on Esc.
 
 ## 🛰️ 4. Commands, Keybindings & Context Flags
 Every action from simple moves to grid mapping is indexed inside the INI command table:
@@ -106,6 +111,8 @@ Every action from simple moves to grid mapping is indexed inside the INI command
 - **NextClassWindow**: Cycle focus specifically forward between windows of identical process class.
 - **PrevClassWindow**: Cycle focus specifically backward between windows of identical process class.
 - **FocusDeepestWindow**: Activate the deepest window in the Z-order list.
+- **WindowPicker**: Launch the interactive Window Selection GUI supporting fuzzy filter search by title or executable file name.
+- **Desk3d**: Enter the mathematical 3D parallax workspace mode, rotating window layouts symmetrically using layered distance weights.
 
 #### 🫥 TUCK (Docker & Auto-Hide)
 - **TuckLeft**: Tuck window past left screen wall, exposing a 20px dock indicator bar.
@@ -114,8 +121,11 @@ Every action from simple moves to grid mapping is indexed inside the INI command
 - **TuckDown**: Tuck window past bottom screen wall, exposing a 20px dock indicator bar.
 - **BumpEdgeUntuck**: Trigger untuck peeking when cursor reaches tucked window edge indicator.
 - **BumpEdgeUntuckActivate**: Fully restore tucked window when pulled/clicked past the pop-off threshold.
+- **PeekTucked**: Present interactive pop-up list of stowed handles to temporarily peek.
+- **Untuck**: Present interactive pop-up list of stowed handles to permanently restore.
 - **UntuckLeft** / **UntuckRight** / **UntuckTop** / **UntuckBottom**: Untuck the window tucked at the specified edge.
 - **TuckPeekLeft** / **TuckPeekRight** / **TuckPeekTop** / **TuckPeekBottom**: Reveal/peek tucked windows on the specified edge sequentially.
+- **TuckedPeekAll** / **TuckedPeekLeft** / **TuckedPeekRight** / **TuckedPeekTop** / **TuckedPeekBottom**: Spawns edge-filtered interactive pop-up lists of stowed handles displaying full Hexadecimal HWND identifiers.
 
 #### 🗺️ MOVE (Grid Matrix Positioning)
 - **Center**: Move active window to center of screen without sizing changes.

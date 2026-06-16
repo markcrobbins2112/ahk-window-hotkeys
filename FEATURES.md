@@ -153,6 +153,26 @@ Represses native Windows tooltips with a beautiful obsidian centered overlay dis
 
 
 
+### NumLock-Agnostic Dual Numpad Hotkey Compilation
+- Group: [Administrative Controls & Dynamic Compiler](#z1)
+Ensures that all specified Numpad key commands trigger reliably with total parity regardless of NumLock state. The configuration matrix compiler automatically registers matching counterparts for both NumLock states (e.g., matching `Numpad9` with `NumpadPgUp`), eliminating missing keys or unresponsive bindings.
+
+### Layered Drag Translucency Scanning
+- Group: [Screen Snapping & Monitor Positioning Matrix](#z2)
+When DragWindow mode is engaged, the engine dynamically scans the desktop Z-order stack to identify background window panels that overlap or sit directly above the current drag target. It lowers these overlapping frames to a soft, translucent `50` opacity during transit while the active moving target is kept at a comfortable `200` translucent opacity, giving users absolute visual clarity regarding background layouts. Original trans-opacities are fully restored on release.
+
+### Parameterized Tucked Peeking/Filtering Menus
+- Group: [Boundary Docking & Mouse Fling Untuck](#z4)
+Extends the tucked window listing with dynamic, parameter-driven filtering by specific edges (Left, Right, Top, Bottom). It displays matching stowed applications cleanly formatted with their native Hexadecimal HWND descriptors (e.g., `[Left] Notepad [0x1D04FE]`) so that managing multiple stowed window files remains rapid and conflict-free.
+
+### Fuzzy-Searchable GUI Window Picker
+- Group: [Administrative Controls & Dynamic Compiler](#z1)
+Spawns a highly-optimized AlwaysOnTop dark GUI dialog allowing users to live-filter all active desktop applications by typing partial titles or process names (e.g. typing "chrome" or "md"). Rows feature window titles, executable binaries, and HWND identifiers. Double-clicking a row or hitting Enter instantly destroys the menu and activates/refocuses the selected frame.
+
+### Immersive 3D Parallax Rotation Mode (Desk3D)
+- Group: [Administrative Controls & Dynamic Compiler](#z1)
+Triggering Desk3D activates an immersive parallax desktop view. Every active, non-tucked window is assigned a depth layer and set to a soft transparent `76` opacity. Moving the mouse across the screen translates the window coordinates symmetrically using high-frequency proportional depth weights (closer windows travel more; deeper windows resist drift). All original grids and transparency bounds are cleanly restored upon hitting Escape or re-triggering the command.
+
 ---
 ## Go Back to...
 - ▪️[AGENTS.md](AGENTS.md)

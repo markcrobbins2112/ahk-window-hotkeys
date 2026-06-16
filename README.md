@@ -23,3 +23,7 @@ Hotkeys to make your windows jump through hoops! HotWinAHK is a highly optimized
 - **Edge Tucking & Docking**: Tuck active frames into off-screen slots on client margins, keeping a thin tactile accent edge visible (e.g. 20px).
 - **Velocity Bump Untuck Engine**: Polls mouse movements natively at 25ms interval vectors. Sliding the cursor aggressively past screen wall thresholds pulls tucked frames back into immediate view.
 - **Dynamic Configuration Compiler**: Read direct matrices from a customized `HotWinAHK.ini` file and compile hotkeys dynamically on-the-fly into native AutoHotkey `HotWinAHK_aux.ahk` scripts to maximize system execution speed.
+- **Fuzzy Window Picker**: Search, filter, and switch active applications instantly using an elegant dark-themed GUI search drawer.
+- **3D Parallax Desktop Mode**: Rotate and view open workspaces with a mathematical depth parallax visualizer.
+- **NumLock-Agnostic Compilation**: Never experience drifted hotkeys. Automatic double-binding links are generated for standard Numpads regardless of NumLock toggle states.
+

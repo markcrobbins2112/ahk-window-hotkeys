@@ -68,6 +68,39 @@ Global g_DragWindowsAbove := []
 Global g_DragMouseOffsetX := 0
 Global g_DragMouseOffsetY := 0
 
+Global g_NumpadMap := Map(
+    "numpad0", "numpadins",
+    "numpad1", "numpadend",
+    "numpad2", "numpaddown",
+    "numpad3", "numpadpgdn",
+    "numpad4", "numpadleft",
+    "numpad5", "numpadclear",
+    "numpad6", "numpadright",
+    "numpad7", "numpadhome",
+    "numpad8", "numpadup",
+    "numpad9", "numpadpgup",
+    "numpaddot", "numpaddel"
+)
+
+Global g_NumpadReverseMap := Map(
+    "numpadins", "numpad0",
+    "numpadend", "numpad1",
+    "numpaddown", "numpad2",
+    "numpadpgdn", "numpad3",
+    "numpadleft", "numpad4",
+    "numpadclear", "numpad5",
+    "numpadright", "numpad6",
+    "numpadhome", "numpad7",
+    "numpadup", "numpad8",
+    "numpadpgup", "numpad9",
+    "numpaddel", "numpaddot"
+)
+
+Global g_Desk3dActive := false
+Global g_Desk3dWindows := []
+Global g_DeskStartMouseX := 0
+Global g_DeskStartMouseY := 0
+
 ; --- CUSTOM VELOCITY BUMP SENSITIVITY REGISTRY ---
 ; Lower numbers make the flick speed more sensitive (5 is ultra-sensitive, 10 is moderate, 20 is heavy wrist snap)
 Global g_BumpVelocityThreshold := 5
@@ -487,6 +520,42 @@ CompileStrokeToAHK(sStroke) {
 
     return sAHKPrefix . sCleanKey
 }
+GetNumpadCounterpart(keyName) {
+    global g_NumpadMap, g_NumpadReverseMap
+    kL := StrLower(keyName)
+    if (g_NumpadMap.Has(kL)) {
+        return g_NumpadMap[kL]
+    }
+    if (g_NumpadReverseMap.Has(kL)) {
+        return g_NumpadReverseMap[kL]
+    }
+    return ""
+}
+NormalizeHotKeyToNumpad9Display(strokeString) {
+    global g_NumpadReverseMap
+    lowerStroke := StrLower(strokeString)
+    outStr := strokeString
+    for navKey, numKey in g_NumpadReverseMap {
+        pos := InStr(lowerStroke, navKey)
+        if (pos > 0) {
+            origKey := SubStr(outStr, pos, StrLen(navKey))
+            isAllUpper := (Format("{:U}", origKey) == origKey)
+            isAllLower := (Format("{:L}", origKey) == origKey)
+            isTitle := (SubStr(origKey, 1, 1) == "N" && SubStr(origKey, 7, 1) == "P")
+            
+            targetNumKey := numKey
+            if (isAllUpper) {
+                targetNumKey := Format("{:U}", targetNumKey)
+            } else if (isTitle || !isAllLower) {
+                targetNumKey := "Numpad" . SubStr(targetNumKey, 7)
+            }
+            
+            outStr := SubStr(outStr, 1, pos - 1) . targetNumKey . SubStr(outStr, pos + StrLen(navKey))
+            lowerStroke := StrLower(outStr)
+        }
+    }
+    return outStr
+}
 CompileIniToStaticHotkeys() {
     global g_sIniFile, g_sGeneratedFile
 
@@ -601,29 +670,45 @@ CompileIniToStaticHotkeys() {
                 continue
             }
 
-            ; INTERCEPT DUPLICATES. If this exact key combination was already written, skip it!
-            if InStr(WrittenKeysRegistry, "|" sAHKStroke "|") {
-                continue
+            ; EXCELLENT: Automatically handle dual registration for Numpad Keys (Numpad9 <-> NumpadPgUp etc)
+            pureKey := RegExReplace(sAHKStroke, "i)[#\^\!\+\~\*\<\>\$\&]", "")
+            prefix := SubStr(sAHKStroke, 1, StrLen(sAHKStroke) - StrLen(pureKey))
+            counterpart := GetNumpadCounterpart(pureKey)
+
+            ; 1. Record and compile primary stroke
+            if !InStr(WrittenKeysRegistry, "|" sAHKStroke "|") {
+                WrittenKeysRegistry .= "|" sAHKStroke "|"
+                
+                sPrefix := "$"
+                if (InStr(sAHKStroke, "$") || InStr(sAHKStroke, "~") || InStr(sAHKStroke, "*") || RegExMatch(sAHKStroke, "i)(lbutton|rbutton|mbutton|xbutton|wheel)")) {
+                    sPrefix := ""
+                }
+                ScriptBuffer .= sPrefix sAHKStroke ":: {`n"
+                if (sCmd == "ToggleSuspension" || sCmd == "ExitProgram" || sCmd == "RestartProgram" || sCmd == "ReloadConfig" || sCmd == "EditConfig" || sCmd == "HelpScreen" || sCmd == "WinInfo" || sCmd == "CopyCommands" || sCmd == "CopyBindings" || sCmd == "CopyCommandsHelp" || sCmd == "CopyCommandsAlpha" || sCmd == "CopyBindingsAlpha" || sCmd == "CopyBindingsLocation" || sCmd == "SysMenu" || InStr(sCmd, "TuckedPeek") || sCmd == "Untuck" || sCmd == "CmdPalette" || sCmd == "KeyDiagnostics" || sCmd == "KeyQuery" || sCmd == "Settings" || sCmd == "WindowPicker" || sCmd == "Desk3d") {
+                    ScriptBuffer .= '    try Suspend("Permit")`n'
+                }
+                ScriptBuffer .= '    ExecuteActionWithCondition("' sCmd '", "' sCond '")`n'
+                ScriptBuffer .= "}`n`n"
             }
 
-            ; Append the unique shortcut to our temporary tracker registry string
-            WrittenKeysRegistry .= "|" sAHKStroke "|"
-
-            ; Writes your raw native code formatting blocks
-            ; Use the "$" prefix on keyboard keys to force AutoHotkey's precise low-level hook.
-            ; This prevents the buggy Windows RegisterHotkey API from misinterpreting standard number keys (like 2 and 4)
-            ; as their Numpad equivalents (Numpad2 and Numpad4).
-            sPrefix := "$"
-            ; Skip hook prefix for mouse buttons, wheels, or hotkeys that already have hook/wildcard/passthrough flags
-            if (InStr(sAHKStroke, "$") || InStr(sAHKStroke, "~") || InStr(sAHKStroke, "*") || RegExMatch(sAHKStroke, "i)(lbutton|rbutton|mbutton|xbutton|wheel)")) {
-                sPrefix := ""
+            ; 2. Record and compile counterpart stroke
+            if (counterpart != "") {
+                counterpartStroke := prefix . counterpart
+                if !InStr(WrittenKeysRegistry, "|" counterpartStroke "|") {
+                    WrittenKeysRegistry .= "|" counterpartStroke "|"
+                    
+                    sPrefix := "$"
+                    if (InStr(counterpartStroke, "$") || InStr(counterpartStroke, "~") || InStr(counterpartStroke, "*") || RegExMatch(counterpartStroke, "i)(lbutton|rbutton|mbutton|xbutton|wheel)")) {
+                        sPrefix := ""
+                    }
+                    ScriptBuffer .= sPrefix counterpartStroke ":: {`n"
+                    if (sCmd == "ToggleSuspension" || sCmd == "ExitProgram" || sCmd == "RestartProgram" || sCmd == "ReloadConfig" || sCmd == "EditConfig" || sCmd == "HelpScreen" || sCmd == "WinInfo" || sCmd == "CopyCommands" || sCmd == "CopyBindings" || sCmd == "CopyCommandsHelp" || sCmd == "CopyCommandsAlpha" || sCmd == "CopyBindingsAlpha" || sCmd == "CopyBindingsLocation" || sCmd == "SysMenu" || InStr(sCmd, "TuckedPeek") || sCmd == "Untuck" || sCmd == "CmdPalette" || sCmd == "KeyDiagnostics" || sCmd == "KeyQuery" || sCmd == "Settings" || sCmd == "WindowPicker" || sCmd == "Desk3d") {
+                        ScriptBuffer .= '    try Suspend("Permit")`n'
+                    }
+                    ScriptBuffer .= '    ExecuteActionWithCondition("' sCmd '", "' sCond '")`n'
+                    ScriptBuffer .= "}`n`n"
+                }
             }
-            ScriptBuffer .= sPrefix sAHKStroke ":: {`n"
-            if (sCmd == "ToggleSuspension" || sCmd == "ExitProgram" || sCmd == "RestartProgram" || sCmd == "ReloadConfig" || sCmd == "EditConfig" || sCmd == "HelpScreen" || sCmd == "WinInfo" || sCmd == "CopyCommands" || sCmd == "CopyBindings" || sCmd == "CopyCommandsHelp" || sCmd == "CopyCommandsAlpha" || sCmd == "CopyBindingsAlpha" || sCmd == "CopyBindingsLocation" || sCmd == "SysMenu" || sCmd == "PeekTucked" || sCmd == "Untuck" || sCmd == "CmdPalette" || sCmd == "KeyDiagnostics" || sCmd == "KeyQuery" || sCmd == "Settings") {
-                ScriptBuffer .= '    try Suspend("Permit")`n'
-            }
-            ScriptBuffer .= '    ExecuteActionWithCondition("' sCmd '", "' sCond '")`n'
-            ScriptBuffer .= "}`n`n"
         }
     }
 
@@ -690,7 +775,7 @@ LoadHotkeysAtRuntime() {
 ; #region  _engine 
 IsMetaCommand(sCmd) {
     ; Add your untuck commands to the meta-command bypass list
-    if (InStr(sCmd, "BumpEdgeUntuck") || InStr(sCmd, "HelpScreen") || InStr(sCmd, "ReloadConfig") || InStr(sCmd, "CopyCommands") || InStr(sCmd, "CopyBindings") || InStr(sCmd, "CopyCommandsHelp") || InStr(sCmd, "CopyCommandsAlpha") || InStr(sCmd, "CopyBindingsAlpha") || InStr(sCmd, "CopyBindingsLocation") || InStr(sCmd, "SysMenu") || InStr(sCmd, "PeekTucked") || InStr(sCmd, "Untuck") || InStr(sCmd, "CmdPalette") || InStr(sCmd, "KeyDiagnostics") || sCmd == "KeyQuery" || sCmd == "Settings" || sCmd == "RestoreAllMaximized" || sCmd == "MaximizeAllRestored" || sCmd == "MaximizeAllMinimized" || sCmd == "SwapMaximizedRestored" || sCmd == "SwapMinimizedRestored" || sCmd == "MinimizeAll" || sCmd == "MinimizeAllRestored" || sCmd == "MinimizeAllMaximized") {
+    if (InStr(sCmd, "BumpEdgeUntuck") || InStr(sCmd, "HelpScreen") || InStr(sCmd, "ReloadConfig") || InStr(sCmd, "CopyCommands") || InStr(sCmd, "CopyBindings") || InStr(sCmd, "CopyCommandsHelp") || InStr(sCmd, "CopyCommandsAlpha") || InStr(sCmd, "CopyBindingsAlpha") || InStr(sCmd, "CopyBindingsLocation") || InStr(sCmd, "SysMenu") || InStr(sCmd, "TuckedPeek") || InStr(sCmd, "Untuck") || InStr(sCmd, "CmdPalette") || InStr(sCmd, "KeyDiagnostics") || sCmd == "KeyQuery" || sCmd == "Settings" || sCmd == "RestoreAllMaximized" || sCmd == "MaximizeAllRestored" || sCmd == "MaximizeAllMinimized" || sCmd == "SwapMaximizedRestored" || sCmd == "SwapMinimizedRestored" || sCmd == "MinimizeAll" || sCmd == "MinimizeAllRestored" || sCmd == "MinimizeAllMaximized" || sCmd == "WindowPicker" || sCmd == "Desk3d") {
         return true
     }
 
@@ -827,11 +912,29 @@ ExecuteCommandRegistry(sCmd, hWnd) {
         case "CmdPalette":
             ShowCmdPalette(hWnd)
 
-        case "PeekTucked":
-            Menu_PeekTucked()
+        case "TuckedPeekAll":
+            Menu_TuckedPeek()
+
+        case "TuckedPeekLeft":
+            Menu_TuckedPeek("Left")
+
+        case "TuckedPeekRight":
+            Menu_TuckedPeek("Right")
+
+        case "TuckedPeekTop", "TuckedPeekUp":
+            Menu_TuckedPeek("Up")
+
+        case "TuckedPeekBottom", "TuckedPeekDown":
+            Menu_TuckedPeek("Down")
 
         case "Untuck":
             Menu_Untuck()
+
+        case "WindowPicker":
+            ShowWindowPicker()
+
+        case "Desk3d":
+            StartDesk3D()
 
         case "UntuckLeft":
             UntuckDimension("Left")
@@ -3414,6 +3517,8 @@ GetGlobalCommandList() {
         {cat: "FOCUS", cmd: "NextClassWindow", key: "Win + Alt + PgUp", desc: "Cycle focus specifically forward between windows of identical process class."},
         {cat: "FOCUS", cmd: "PrevClassWindow", key: "Win + Alt + PgDn", desc: "Cycle focus specifically backward between windows of identical process class."},
         {cat: "FOCUS", cmd: "FocusDeepestWindow", key: "Win + Ctrl + Backspace", desc: "Activate the deepest window in the Z-order list."},
+        {cat: "FOCUS", cmd: "WindowPicker", key: "Custom", desc: "Fuzzy-search and filter active GUI windows, instantly focusing selected window."},
+        {cat: "FOCUS", cmd: "Desk3d", key: "Custom", desc: "Enable 3D workspace parallax rotation mode, shifting restored windows based on multi-layered depth."},
 
         ; == TUCK ==
         {cat: "TUCK", cmd: "TuckLeft", key: "Win + Ctrl + Shift + Left", desc: "Tuck window past left screen wall, exposing a 20px dock indicator bar."},
@@ -3422,6 +3527,8 @@ GetGlobalCommandList() {
         {cat: "TUCK", cmd: "TuckDown", key: "Win + Ctrl + Shift + Down", desc: "Tuck window past bottom screen wall, exposing a 20px dock indicator bar."},
         {cat: "TUCK", cmd: "BumpEdgeUntuck", key: "Edge Bump", desc: "Trigger untuck peeking when cursor reaches tucked window edge indicator."},
         {cat: "TUCK", cmd: "BumpEdgeUntuckActivate", key: "Edge Click/Drag", desc: "Fully restore tucked window when pulled/clicked past the pop-off threshold."},
+        {cat: "TUCK", cmd: "PeekTucked", key: "Win + Ctrl + Shift + P", desc: "Open interactive menu of all tucked windows to peek or activate."},
+        {cat: "TUCK", cmd: "Untuck", key: "Win + Ctrl + Shift + U", desc: "Open interactive menu of all tucked windows to fully untuck them."},
         {cat: "TUCK", cmd: "UntuckLeft", key: "Custom", desc: "Untuck the window tucked at the left edge."},
         {cat: "TUCK", cmd: "UntuckRight", key: "Custom", desc: "Untuck the window tucked at the right edge."},
         {cat: "TUCK", cmd: "UntuckTop", key: "Custom", desc: "Untuck the window tucked at the top edge."},
@@ -3430,6 +3537,11 @@ GetGlobalCommandList() {
         {cat: "TUCK", cmd: "TuckPeekRight", key: "Custom", desc: "Reveal/peek tucked windows on the right edge sequentially."},
         {cat: "TUCK", cmd: "TuckPeekTop", key: "Custom", desc: "Reveal/peek tucked windows on the top edge sequentially."},
         {cat: "TUCK", cmd: "TuckPeekBottom", key: "Custom", desc: "Reveal/peek tucked windows on the bottom edge sequentially."},
+        {cat: "TUCK", cmd: "TuckedPeekAll", key: "Custom", desc: "Show interactive popup menu of all tucked windows formatted with HWND labels."},
+        {cat: "TUCK", cmd: "TuckedPeekLeft", key: "Custom", desc: "Show popup menu of Left tucked windows formatted with HWND labels."},
+        {cat: "TUCK", cmd: "TuckedPeekRight", key: "Custom", desc: "Show popup menu of Right tucked windows formatted with HWND labels."},
+        {cat: "TUCK", cmd: "TuckedPeekTop", key: "Custom", desc: "Show popup menu of Top tucked windows formatted with HWND labels."},
+        {cat: "TUCK", cmd: "TuckedPeekBottom", key: "Custom", desc: "Show popup menu of Bottom tucked windows formatted with HWND labels."},
 
         ; == MOVE ==
         {cat: "MOVE", cmd: "Center", key: "Numpad5", desc: "Move active window to center of screen without sizing changes."},
@@ -5026,22 +5138,43 @@ RevealTuckedWindow(closestHwnd, targetEdge, activeTuckProfile) {
     }
 }
 
-Menu_PeekTucked() {
+Menu_TuckedPeek(filterEdge := "") {
     global g_TuckedWindows
     if (g_TuckedWindows.Count == 0) {
         ShowTargetToolTip("No windows are currently tucked.")
         return
     }
     
+    normalizedFilter := StrLower(filterEdge)
+    if (normalizedFilter == "top")
+        normalizedFilter := "up"
+    if (normalizedFilter == "bottom")
+        normalizedFilter := "down"
+        
+    matchedCount := 0
     mMenu := Menu()
-    mMenu.Add("--- Stowed Windows Menu ---", (*) => 0)
-    mMenu.Disable("--- Stowed Windows Menu ---")
+    mTitle := filterEdge != "" ? "--- Stowed Windows Menu (" . filterEdge . ") ---" : "--- Stowed Windows Menu ---"
+    mMenu.Add(mTitle, (*) => 0)
+    mMenu.Disable(mTitle)
     mMenu.Add()
     
     for hwnd, profile in g_TuckedWindows {
         if (!WinExist("ahk_id " . hwnd)) {
             continue
         }
+        
+        if (filterEdge != "") {
+            profileEdge := StrLower(profile.edge)
+            if (profileEdge == "top")
+                profileEdge := "up"
+            if (profileEdge == "bottom")
+                profileEdge := "down"
+            if (profileEdge != normalizedFilter) {
+                continue
+            }
+        }
+        
+        matchedCount++
         wTitle := WinGetTitle("ahk_id " . hwnd)
         if (wTitle == "") {
             wTitle := "Untitled (ahk_id " . hwnd . ")"
@@ -5050,8 +5183,13 @@ Menu_PeekTucked() {
             wTitle := SubStr(wTitle, 1, 47) . "..."
         }
         
-        menuLabel := "[" . profile.edge . "] " . wTitle
+        menuLabel := "[" . profile.edge . "] " . wTitle . " [0x" . Format("{:X}", hwnd) . "]"
         mMenu.Add(menuLabel, Menu_PeekTucked_Callback.Bind(hwnd, profile.edge, profile))
+    }
+    
+    if (matchedCount == 0) {
+        ShowTargetToolTip("No windows are currently tucked on the " . filterEdge . " edge.")
+        return
     }
     
     mMenu.Show()
@@ -5085,7 +5223,7 @@ Menu_Untuck() {
             wTitle := SubStr(wTitle, 1, 47) . "..."
         }
         
-        menuLabel := "[" . profile.edge . "] " . wTitle
+        menuLabel := "[" . profile.edge . "] " . wTitle . " [0x" . Format("{:X}", hwnd) . "]"
         mMenu.Add(menuLabel, Menu_Untuck_Callback.Bind(hwnd, profile))
     }
     
@@ -5679,7 +5817,7 @@ UntuckDimension(edge) {
             if (StrLen(wTitle) > 50) {
                 wTitle := SubStr(wTitle, 1, 47) . "..."
             }
-            mMenu.Add("[" . item.profile.edge . "] " . wTitle, Menu_Untuck_Callback.Bind(item.hwnd, item.profile))
+            mMenu.Add("[" . item.profile.edge . "] " . wTitle . " [0x" . Format("{:X}", item.hwnd) . "]", Menu_Untuck_Callback.Bind(item.hwnd, item.profile))
         }
         mMenu.Show()
     }
@@ -5772,6 +5910,7 @@ StartDragWindow(hWnd) {
     global g_DragOrigX, g_DragOrigY, g_DragOrigW, g_DragOrigH
     global g_DragMouseOffsetX, g_DragMouseOffsetY
     global g_DragTuckActive, g_DragTuckEdge, g_DragTuckIndicatorGui
+    global g_DragWindowsAbove
     
     if (g_DragActive) {
         EndDragWindow(false)
@@ -5803,6 +5942,42 @@ StartDragWindow(hWnd) {
     
     ; Make only the active dragged window slightly translucent (OPACITY: 200/255)
     try WinSetTransparent(200, "ahk_id " . g_DragHwnd)
+    
+    g_DragWindowsAbove := []
+    try {
+        allWins := WinGetList()
+        for h in allWins {
+            if (h == g_DragHwnd) {
+                break
+            }
+            style := WinGetStyle("ahk_id " . h)
+            if (!(style & 0x10000000)) ; Must be WS_VISIBLE
+                continue
+            exStyle := WinGetExStyle("ahk_id " . h)
+            if (exStyle & 0x00000080) ; WS_EX_TOOLWINDOW
+                continue
+            
+            wClass := WinGetClass("ahk_id " . h)
+            if (wClass == "Progman" || wClass == "WorkerW" || wClass == "Shell_TrayWnd" || wClass == "Button")
+                continue
+                
+            wTitle := WinGetTitle("ahk_id " . h)
+            if (wTitle == "")
+                continue
+                
+            origTrans := ""
+            try {
+                origTrans := WinGetTransparent("ahk_id " . h)
+            } catch {
+                origTrans := "Off"
+            }
+            if (origTrans == "")
+                origTrans := "Off"
+                
+            g_DragWindowsAbove.Push({hwnd: h, origTrans: origTrans})
+            try WinSetTransparent(50, "ahk_id " . h)
+        }
+    }
     
     g_DragMouseOffsetX := mX - g_DragOrigX
     g_DragMouseOffsetY := mY - g_DragOrigY
@@ -5905,7 +6080,7 @@ TrackDragWindow() {
 
 EndDragWindow(restore := false) {
     global g_DragActive, g_DragHwnd, g_DragOrigX, g_DragOrigY, g_DragOrigW, g_DragOrigH
-    global g_DragTuckActive, g_DragTuckEdge, g_DragTuckIndicatorGui
+    global g_DragTuckActive, g_DragTuckEdge, g_DragTuckIndicatorGui, g_DragWindowsAbove
     if (!g_DragActive)
         return
         
@@ -5916,6 +6091,19 @@ EndDragWindow(restore := false) {
     
     ; Restore transparency on the single active window
     try WinSetTransparent("Off", "ahk_id " . g_DragHwnd)
+    
+    for item in g_DragWindowsAbove {
+        if (WinExist("ahk_id " . item.hwnd)) {
+            try {
+                if (item.origTrans == "Off" || item.origTrans == "") {
+                    WinSetTransparent("Off", "ahk_id " . item.hwnd)
+                } else {
+                    WinSetTransparent(item.origTrans, "ahk_id " . item.hwnd)
+                }
+            }
+        }
+    }
+    g_DragWindowsAbove := []
     
     if (restore) {
         if (WinExist("ahk_id " . g_DragHwnd)) {
@@ -5941,6 +6129,228 @@ EndDragWindow(restore := false) {
         }
     }
 }
+
+ShowWindowPicker() {
+    pickerGui := Gui("+AlwaysOnTop -MaximizeBox -MinimizeBox", "Window Picker")
+    pickerGui.SetFont("s10", "Segoe UI")
+    pickerGui.BackColor := "1E1E24"
+    pickerGui.SetFont("cFFFFFF")
+    
+    pickerGui.Add("Text", "x15 y10 w470", "Type to fuzzy filter windows. Press Enter/Click to activate, Esc to close.")
+    
+    searchEdit := pickerGui.Add("Edit", "x15 y30 w470 h25 Background2A2A35 cFFFFFF vSearch")
+    winListview := pickerGui.Add("ListView", "x15 y65 w470 h280 Background2A2A35 cFFFFFF Grid NoSortHdr +Report -Multi", ["Window Title", "Process Name", "HWND"])
+    winListview.ModifyCol(1, 280)
+    winListview.ModifyCol(2, 110)
+    winListview.ModifyCol(3, 80)
+    
+    winData := []
+    allWins := WinGetList()
+    for h in allWins {
+        try {
+            style := WinGetStyle("ahk_id " . h)
+            if (!(style & 0x10000000))
+                continue
+            
+            exStyle := WinGetExStyle("ahk_id " . h)
+            if (exStyle & 0x00000080)
+                continue
+                
+            wClass := WinGetClass("ahk_id " . h)
+            if (wClass == "Progman" || wClass == "WorkerW" || wClass == "Shell_TrayWnd" || wClass == "Button")
+                continue
+                
+            wTitle := WinGetTitle("ahk_id " . h)
+            if (wTitle == "")
+                continue
+                
+            wExe := WinGetProcessName("ahk_id " . h)
+            
+            winData.Push({title: wTitle, exe: wExe, hwnd: h})
+        }
+    }
+    
+    UpdateList(searchText) {
+        winListview.Delete()
+        normalizedSearch := StrLower(searchText)
+        for idx, item in winData {
+            if (normalizedSearch == "") {
+                winListview.Add(, item.title, item.exe, "0x" . Format("{:X}", item.hwnd))
+            } else {
+                titleL := StrLower(item.title)
+                exeL := StrLower(item.exe)
+                
+                terms := StrSplit(normalizedSearch, " ")
+                match := true
+                for term in terms {
+                    if (term == "")
+                        continue
+                    if (!InStr(titleL, term) && !InStr(exeL, term)) {
+                        match := false
+                        break
+                    }
+                }
+                if (match) {
+                    winListview.Add(, item.title, item.exe, "0x" . Format("{:X}", item.hwnd))
+                }
+            }
+        }
+        if (winListview.GetCount() > 0) {
+            winListview.Modify(1, "Select Focus")
+        }
+    }
+    
+    searchEdit.OnEvent("Change", (ctrl, *) => UpdateList(ctrl.Value))
+    
+    ActivateSelection(*) {
+        row := winListview.GetNext(0, "Focused")
+        if (row > 0) {
+            hText := winListview.GetText(row, 3)
+            selectedHwnd := Number(hText)
+            pickerGui.Destroy()
+            if (WinExist("ahk_id " . selectedHwnd)) {
+                WinActivate("ahk_id " . selectedHwnd)
+            }
+        }
+    }
+    
+    winListview.OnEvent("DoubleClick", (*) => ActivateSelection())
+    pickerGui.OnEvent("Escape", (*) => pickerGui.Destroy())
+    
+    pickerGui.Add("Button", "x0 y0 w0 h0 Default", "").OnEvent("Click", (*) => ActivateSelection())
+    
+    UpdateList("")
+    pickerGui.Show("w500 h360")
+}
+
+StartDesk3D() {
+    global g_Desk3dActive, g_Desk3dWindows, g_DeskStartMouseX, g_DeskStartMouseY, g_TuckedWindows
+    if (g_Desk3dActive) {
+        EndDesk3D()
+        return
+    }
+    
+    g_Desk3dWindows := []
+    allWins := WinGetList()
+    
+    idx := 1
+    for h in allWins {
+        if (g_TuckedWindows.Has(h)) {
+            continue
+        }
+        
+        try {
+            style := WinGetStyle("ahk_id " . h)
+            if (!(style & 0x10000000))
+                continue
+            exStyle := WinGetExStyle("ahk_id " . h)
+            if (exStyle & 0x00000080)
+                continue
+            
+            wClass := WinGetClass("ahk_id " . h)
+            if (wClass == "Progman" || wClass == "WorkerW" || wClass == "Shell_TrayWnd" || wClass == "Button")
+                continue
+                
+            wTitle := WinGetTitle("ahk_id " . h)
+            if (wTitle == "")
+                continue
+                
+            minMax := WinGetMinMax("ahk_id " . h)
+            if (minMax != 0)
+                continue
+                
+            WinGetPos(&origX, &origY, &origW, &origH, "ahk_id " . h)
+            
+            origTrans := ""
+            try {
+                origTrans := WinGetTransparent("ahk_id " . h)
+            } catch {
+                origTrans := "Off"
+            }
+            if (origTrans == "")
+                origTrans := "Off"
+                
+            g_Desk3dWindows.Push({
+                hwnd: h,
+                origX: origX,
+                origY: origY,
+                origW: origW,
+                origH: origH,
+                origTrans: origTrans,
+                depthIdx: idx
+            })
+            
+            try WinSetTransparent(76, "ahk_id " . h)
+            idx++
+        }
+    }
+    
+    if (g_Desk3dWindows.Length == 0) {
+        ShowTargetToolTip("Desk3D: No restored windows active.")
+        return
+    }
+    
+    g_Desk3dActive := true
+    CoordMode("Mouse", "Screen")
+    MouseGetPos(&g_DeskStartMouseX, &g_DeskStartMouseY)
+    
+    SetTimer(TrackDesk3D, 15)
+    ShowTargetToolTip("Desk3D Mode Active. Move mouse to rotate windows. [Esc] to exit.")
+}
+
+TrackDesk3D() {
+    global g_Desk3dActive, g_Desk3dWindows, g_DeskStartMouseX, g_DeskStartMouseY
+    if (!g_Desk3dActive) {
+        SetTimer(TrackDesk3D, 0)
+        return
+    }
+    
+    CoordMode("Mouse", "Screen")
+    MouseGetPos(&mX, &mY)
+    
+    deltaX := mX - g_DeskStartMouseX
+    deltaY := mY - g_DeskStartMouseY
+    
+    for item in g_Desk3dWindows {
+        if (!WinExist("ahk_id " . item.hwnd)) {
+            continue
+        }
+        
+        weight := Max(0.05, 1.2 - (item.depthIdx - 1) * 0.15)
+        shiftX := -deltaX * weight
+        shiftY := -deltaY * weight
+        
+        SafeMove(item.origX + shiftX, item.origY + shiftY, item.origW, item.origH, item.hwnd)
+    }
+}
+
+EndDesk3D() {
+    global g_Desk3dActive, g_Desk3dWindows
+    if (!g_Desk3dActive)
+        return
+        
+    g_Desk3dActive := false
+    SetTimer(TrackDesk3D, 0)
+    
+    for item in g_Desk3dWindows {
+        if (WinExist("ahk_id " . item.hwnd)) {
+            SafeMove(item.origX, item.origY, item.origW, item.origH, item.hwnd)
+            try {
+                if (item.origTrans == "Off" || item.origTrans == "") {
+                    WinSetTransparent("Off", "ahk_id " . item.hwnd)
+                } else {
+                    WinSetTransparent(item.origTrans, "ahk_id " . item.hwnd)
+                }
+            }
+        }
+    }
+    g_Desk3dWindows := []
+    ShowTargetToolTip("Desk3D Mode Disabled.")
+}
+
+#HotIf g_Desk3dActive
+Escape::EndDesk3D()
+#HotIf
 
 #HotIf g_TuckPeekActive
 Escape::EndTuckPeek()

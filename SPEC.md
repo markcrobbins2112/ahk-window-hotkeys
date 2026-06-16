@@ -42,6 +42,13 @@ To deliver ultra-low overhead, maximum robustness, and seamless user experiences
 - **Z-Order Elevation on Untuck**: Whenever a stowed window is peeked open by mouse hover or border edge bump, it is elevated to the top of the Z-order stack (`HWND_TOP`) using `WinMoveTop("ahk_id " . hwnd)`, ensuring it draws over everything on the screen without stealing active text cursor focus.
 - **Damped Drag Resistance & 120px Hysteresis Pop-off**: Implements custom click-drag interception for stowed windows. Initiates a 4x movement multiplier resistance ($0.25$ factor) pulling away from the docked edge, and 2x cursor resistance ($0.50$ factor) parallel to the edge. Pulling beyond 120px triggers a pop-off, liberating the window from stowed status.
 - **Ctrl-Hold Dock-Seeking Indicator Overlays**: Intercepts drags while holding `Ctrl` to enter Dock-Seeking Mode. Bypasses movement resistance, dynamically calculates coordinate proximity on monitor edges, builds clicked-through translucent cyan (`0x00FFCC`) predictive highlight bands (60px thickness) on predicted margins, and docks to the selected edge on release.
+- **NumLock-Agnostic Dual-Counterpart Bindings**: Automatically parses numeric keypad hotkeys upon INI compilation and registers dual hotkeys for both Lock states (e.g., matching standard numpads with navigation labels). Handles the standard keyboard modifier drift securely, preventing execution crashes.
+- **Z-Order Overlapping Back-Translucency Scanner**: Discovers all active window frames layering above or overlapping the active drag target on DragWindow engagement. Lowers these obstructing panels to `50` alpha opacity to give absolute layout visibility, and safely restores user-configured transparencies on dragging completion.
+- **Immersive 3D Parallax Desktop Engine (Desk3D)**: Assigns every active restored window (excluding stowed/tucked elements) into depth layered coordinate vectors. Continuously intercepts mouse coordinates, applying decay factor weight scales based on stack distance:
+  $$\text{displacement} = -\Delta\text{mouse} \times \max\left(0.05, 1.2 - (\text{layerIndex} - 1) \times 0.15\right)$$
+  Translates layouts fluidly to present an immersive volumetric viewport. Restores default borders seamlessly on Escape.
+- **Searchable Fuzzy Window Selector Drawer**: Spawns an AlwaysOnTop, dark-styled (`#121214`) ListView frame hosting titles, binary names, and hexadecimal HWND labels. Executes live filtering via standard change-hooks on the edit box, and instantly activates the targeted Window handle upon double-click or Enter.
+
 
 
 ---
