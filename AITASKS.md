@@ -131,6 +131,14 @@
 - [x] Replaced standard ToolTips with a magnificent dark center screen overlay GUI with intelligent sizing and context-adaptive iconography.
 - [x] Resolved commander messaging bug by locking the main orchestrator script window title and configuring AutoIt to find it with hidden windows matching enabled.
 - [x] Implemented single-instance auto-replacement logic with quiet startup options and parameter routing to hovered parent window ancestors.
+
+## [x] Checkpoint 3 Accomplished Tasks
+- [x] **KeyQuery Timer and Spacebar Binding**: Removed countdown timer from KeyQuery; it now runs persistently until ESC is pressed. Added `Spacebar` to immediately copy the mapped command string to the clipboard with an aesthetic status message.
+- [x] **Class Navigation Executable Check**: Reconfigured `PrevClassWindow` and `NextClassWindow` to group windows by their full executable path (`WinGetProcessPath`) instead of just `WinGetClass`.
+- [x] **Mouse-Relative Window Drag**: Dynamic `DragWindow` operation now targets the ancestor window under the mouse cursor first, falling back to the active foreground window.
+- [x] **Granular Beeps & Editor Customization**: Updated the settings manager and UI to support disabling startup/suspension sound beeps and added a dark-themed text field allowing the user to configure a custom text editor path (e.g., Cursor) with direct system shell fallbacks.
+- [x] **Edge-Drag Automatic Tucking**: Designed a translucent cyan indicator overlay during window drag mode that displays when approaching screen margins. Releasing the window triggers automatic stowing on the predicted edge.
+- [x] **8 New Bulk Window Operations**: Added `RestoreAllMaximized`, `MaximizeAllRestored`, `MaximizeAllMinimized`, `SwapMaximizedRestored`, `SwapMinimizedRestored`, `MinimizeAll`, `MinimizeAllRestored`, and `MinimizeAllMaximized`. Created the `IsEligibleForBulkCommand` utility to protect stowed (tucked), hidden, or trayed windows from bulk state alterations.
 ---
 ## Go Back to...
 - ▪️[AGENTS.md](AGENTS.md)

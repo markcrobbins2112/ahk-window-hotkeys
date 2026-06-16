@@ -26,6 +26,12 @@ Global g_hMainScriptHWND := A_ScriptHwnd ; Locks the true physical window ID on 
 ; --- THE LIVE WINDOW REGISTRY ---
 Global g_mHiddenWindowsRegistry := Map() ; Key: hWnd | Value: Window Title text string
 Global g_z := 40 ;
+Global g_DragTuckActive := false   ; Whether a tuck indicator is active during DragWindow
+Global g_DragTuckEdge := ""        ; The edge we want to tuck to
+Global g_DragTuckIndicatorGui := "" ; Translucent tuck preview GUI
+Global g_SettingsDisableStartupBeep := false
+Global g_SettingsDisableSuspensionBeep := false
+Global g_SettingsEditorPath := "notepad.exe"
 Global g_TuckedWindows := Map()  ; Format: hWnd -> {edge: "Left", x: origX, y: origY, w: origW, h: origH}
 Global g_ActiveUntuckedHwnd := 0 ; Tracks currently hovered untucked window
 Global g_LastActiveBeforeUntuck := 0
@@ -215,6 +221,47 @@ AudibleFocusListenerCallback(hWinEventHook, event, hwnd, idObject, idChild, dwEv
     ; Silencing focus changes as requested by user
     return
 }
+IsEligibleForBulkCommand(hwnd, allowMinimized := false) {
+    global g_TuckedWindows
+    if (g_TuckedWindows.Has(hwnd)) {
+        return false
+    }
+    
+    if (!WinExist("ahk_id " . hwnd)) {
+        return false
+    }
+    
+    try {
+        winClass := WinGetClass(hwnd)
+        winTitle := WinGetTitle(hwnd)
+        style := WinGetStyle(hwnd)
+        minMaxStatus := WinGetMinMax(hwnd)
+        
+        if (minMaxStatus == -1) {
+            if (!allowMinimized) {
+                return false
+            }
+        } else {
+            if (!(style & 0x10000000)) {
+                return false
+            }
+        }
+        
+        if (InStr(winClass, "Shell_TrayWnd") || InStr(winClass, "Progman") || InStr(winClass, "WorkerW") || InStr(winTitle, "HotWinAHK") || winClass == "Windows.UI.Core.CoreWindow" || winClass == "TaskListThumbnailWnd") {
+            return false
+        }
+        
+        if (minMaxStatus != -1) {
+            WinGetPos(, , &wWidth, &wHeight, hwnd)
+            if (wWidth <= 100 || wHeight <= 100) {
+                return false
+            }
+        }
+    } catch {
+        return false
+    }
+    return true
+}
 SetProcessDarkMode() {
     try {
         hUxtheme := DllCall("LoadLibrary", "str", "uxtheme.dll", "ptr")
@@ -235,8 +282,8 @@ SetProcessDarkMode() {
     }
 }
 PlayStartupSound() {
-    global g_SettingsSilenceAll
-    if (g_bIsSilentRestart || g_SettingsSilenceAll)
+    global g_SettingsSilenceAll, g_SettingsDisableStartupBeep
+    if (g_bIsSilentRestart || g_SettingsSilenceAll || g_SettingsDisableStartupBeep)
         return
     ; A beautiful upbeat major triad arpeggio (A4, C#5, E5, A5)
     SoundBeep(440, 80)
@@ -257,8 +304,8 @@ PlayBigCommandSound() {
     SoundBeep(1320, 120)
 }
 PlayToggleSuspensionSound(bSuspended) {
-    global g_SettingsSilenceAll
-    if (g_SettingsSilenceAll)
+    global g_SettingsSilenceAll, g_SettingsDisableSuspensionBeep
+    if (g_SettingsSilenceAll || g_SettingsDisableSuspensionBeep)
         return
     if (bSuspended) {
         ; Descending sad tones for suspension (deactivation)
@@ -327,20 +374,22 @@ ReloadIniConfig() {
     CompileIniToStaticHotkeys()
 }
 EditIniConfig() {
-    global g_sIniFile
+    global g_sIniFile, g_SettingsEditorPath
     if !FileExist(g_sIniFile) {
         FileAppend("; Window Nudger Configuration Setup`n", g_sIniFile)
     }
 
-    ; FIXED: Call the Windows Shell directly.
-    ; This replicates a real mouse double-click, forcing your default .ini program to open it.
-    DllCall("shell32\ShellExecuteW",
-        "ptr", 0,
-        "str", "open",
-        "str", g_sIniFile,
-        "str", "",
-        "str", "",
-        "int", 1) ; 1 = SW_SHOWNORMAL
+    try {
+        Run('"' g_SettingsEditorPath '" "' g_sIniFile '"')
+    } catch {
+        DllCall("shell32\ShellExecuteW",
+            "ptr", 0,
+            "str", "open",
+            "str", g_sIniFile,
+            "str", "",
+            "str", "",
+            "int", 1) ; 1 = SW_SHOWNORMAL
+    }
 }
 GetSectionKeys(sectionName) {
     try {
@@ -641,7 +690,7 @@ LoadHotkeysAtRuntime() {
 ; #region  _engine 
 IsMetaCommand(sCmd) {
     ; Add your untuck commands to the meta-command bypass list
-    if (InStr(sCmd, "BumpEdgeUntuck") || InStr(sCmd, "HelpScreen") || InStr(sCmd, "ReloadConfig") || InStr(sCmd, "CopyCommands") || InStr(sCmd, "CopyBindings") || InStr(sCmd, "CopyCommandsHelp") || InStr(sCmd, "CopyCommandsAlpha") || InStr(sCmd, "CopyBindingsAlpha") || InStr(sCmd, "CopyBindingsLocation") || InStr(sCmd, "SysMenu") || InStr(sCmd, "PeekTucked") || InStr(sCmd, "Untuck") || InStr(sCmd, "CmdPalette") || InStr(sCmd, "KeyDiagnostics") || sCmd == "KeyQuery" || sCmd == "Settings") {
+    if (InStr(sCmd, "BumpEdgeUntuck") || InStr(sCmd, "HelpScreen") || InStr(sCmd, "ReloadConfig") || InStr(sCmd, "CopyCommands") || InStr(sCmd, "CopyBindings") || InStr(sCmd, "CopyCommandsHelp") || InStr(sCmd, "CopyCommandsAlpha") || InStr(sCmd, "CopyBindingsAlpha") || InStr(sCmd, "CopyBindingsLocation") || InStr(sCmd, "SysMenu") || InStr(sCmd, "PeekTucked") || InStr(sCmd, "Untuck") || InStr(sCmd, "CmdPalette") || InStr(sCmd, "KeyDiagnostics") || sCmd == "KeyQuery" || sCmd == "Settings" || sCmd == "RestoreAllMaximized" || sCmd == "MaximizeAllRestored" || sCmd == "MaximizeAllMinimized" || sCmd == "SwapMaximizedRestored" || sCmd == "SwapMinimizedRestored" || sCmd == "MinimizeAll" || sCmd == "MinimizeAllRestored" || sCmd == "MinimizeAllMaximized") {
         return true
     }
 
@@ -1358,8 +1407,13 @@ ExecuteCommandRegistry(sCmd, hWnd) {
             }
 
         case "NextClassWindow":
-            ; 1. Grab the active window's core engine class string identifier
-            activeClass := WinGetClass(hWnd)
+            ; 1. Grab the active window's full executable path safely
+            activeExe := ""
+            try {
+                activeExe := WinGetProcessPath(hWnd)
+            } catch {
+                return
+            }
 
             ; 2. Push current window to the absolute bottom of the stack
             DllCall("SetWindowPos", "ptr", hWnd, "ptr", 1, "int", 0, "int", 0, "int", 0, "int", 0, "uint", 0x0013) ; 1 = HWND_BOTTOM, 0x0013 = NOSIZE|NOMOVE|NOACTIVATE
@@ -1367,7 +1421,7 @@ ExecuteCommandRegistry(sCmd, hWnd) {
             ; Yield 10ms to let the Windows visual index layer register the shift depth
             Sleep(10)
 
-            ; 3. Scan top-down exclusively for matching application classes
+            ; 3. Scan top-down exclusively for matching application executables
             winList := WinGetList()
             for targetHwnd in winList {
                 if (targetHwnd == hWnd) {
@@ -1378,8 +1432,14 @@ ExecuteCommandRegistry(sCmd, hWnd) {
                     continue
                 }
 
-                ; Only process if it belongs to our exact active application class family
-                if (WinGetClass(targetHwnd) == activeClass) {
+                ; Only process if it belongs to our exact active application full path exe
+                try {
+                    thisExe := WinGetProcessPath(targetHwnd)
+                } catch {
+                    continue
+                }
+
+                if (thisExe == activeExe) {
                     ; SAFETY LAYER: Inspect window dimensions to discard zero-size ghost frames
                     try {
                         WinGetPos(, , &tW, &tH, targetHwnd)
@@ -1400,8 +1460,13 @@ ExecuteCommandRegistry(sCmd, hWnd) {
             }
 
         case "PrevClassWindow":
-            ; 1. Grab the active window's core engine class string identifier
-            activeClass := WinGetClass(hWnd)
+            ; 1. Grab the active window's full executable path safely
+            activeExe := ""
+            try {
+                activeExe := WinGetProcessPath(hWnd)
+            } catch {
+                return
+            }
 
             ; 2. Scan the window list backward (starting from the bottom of the stack up)
             winList := WinGetList()
@@ -1418,8 +1483,14 @@ ExecuteCommandRegistry(sCmd, hWnd) {
                     continue
                 }
 
-                ; Only process if it belongs to our exact active application class family
-                if (WinGetClass(targetHwnd) == activeClass) {
+                ; Only process if it belongs to our exact active application full path exe
+                try {
+                    thisExe := WinGetProcessPath(targetHwnd)
+                } catch {
+                    continue
+                }
+
+                if (thisExe == activeExe) {
                     ; SAFETY LAYER: Inspect window dimensions to discard zero-size ghost frames
                     try {
                         WinGetPos(, , &tW, &tH, targetHwnd)
@@ -1436,6 +1507,99 @@ ExecuteCommandRegistry(sCmd, hWnd) {
                         WinActivate(targetHwnd)
                         break
                     }
+                }
+            }
+
+        case "RestoreAllMaximized":
+            winList := WinGetList()
+            for hwnd in winList {
+                if (IsEligibleForBulkCommand(hwnd) && WinGetMinMax(hwnd) == 1) {
+                    try WinRestore(hwnd)
+                }
+            }
+
+        case "MaximizeAllRestored":
+            winList := WinGetList()
+            for hwnd in winList {
+                if (IsEligibleForBulkCommand(hwnd) && WinGetMinMax(hwnd) == 0) {
+                    try WinMaximize(hwnd)
+                }
+            }
+
+        case "MaximizeAllMinimized":
+            winList := WinGetList()
+            for hwnd in winList {
+                if (IsEligibleForBulkCommand(hwnd, true) && WinGetMinMax(hwnd) == -1) {
+                    try WinMaximize(hwnd)
+                }
+            }
+
+        case "SwapMaximizedRestored":
+            winList := WinGetList()
+            maxList := []
+            resList := []
+            for hwnd in winList {
+                if (IsEligibleForBulkCommand(hwnd)) {
+                    status := WinGetMinMax(hwnd)
+                    if (status == 1) {
+                        maxList.Push(hwnd)
+                    } else if (status == 0) {
+                        resList.Push(hwnd)
+                    }
+                }
+            }
+            for hwnd in maxList {
+                try WinRestore(hwnd)
+            }
+            for hwnd in resList {
+                try WinMaximize(hwnd)
+            }
+
+        case "SwapMinimizedRestored":
+            winList := WinGetList()
+            minList := []
+            resList := []
+            for hwnd in winList {
+                if (IsEligibleForBulkCommand(hwnd, true)) {
+                    status := WinGetMinMax(hwnd)
+                    if (status == -1) {
+                        minList.Push(hwnd)
+                    } else if (status == 0) {
+                        resList.Push(hwnd)
+                    }
+                }
+            }
+            for hwnd in minList {
+                try WinRestore(hwnd)
+            }
+            for hwnd in resList {
+                try WinMinimize(hwnd)
+            }
+
+        case "MinimizeAll":
+            winList := WinGetList()
+            for hwnd in winList {
+                if (IsEligibleForBulkCommand(hwnd)) {
+                    status := WinGetMinMax(hwnd)
+                    if (status == 0 || status == 1) {
+                        try WinMinimize(hwnd)
+                    }
+                }
+            }
+
+        case "MinimizeAllRestored":
+            winList := WinGetList()
+            for hwnd in winList {
+                if (IsEligibleForBulkCommand(hwnd) && WinGetMinMax(hwnd) == 0) {
+                    try WinMinimize(hwnd)
+                }
+            }
+
+        case "MinimizeAllMaximized":
+            winList := WinGetList()
+            for hwnd in winList {
+                if (IsEligibleForBulkCommand(hwnd) && WinGetMinMax(hwnd) == 1) {
+                    try WinMinimize(hwnd)
                 }
             }
 
@@ -3228,6 +3392,14 @@ GetGlobalCommandList() {
         {cat: "WINDOW", cmd: "MinimizeToTray", key: "Win + Shift + PgDn", desc: "Stow active window into an autonomous system-tray notification process."},
         {cat: "WINDOW", cmd: "PickFromTray", key: "Win + Shift + PgUp", desc: "Open stowed window tray instances via right-click contextual list."},
         {cat: "WINDOW", cmd: "DragWindow", key: "Custom", desc: "Initiate DragWindow mode: Make window and ones above translucent, move with cursor, click/Enter to place, Esc to cancel."},
+        {cat: "WINDOW", cmd: "RestoreAllMaximized", key: "Custom", desc: "Restore all maximized windows to normal size (excludes docked, hidden or trayed)."},
+        {cat: "WINDOW", cmd: "MaximizeAllRestored", key: "Custom", desc: "Maximize all normal/restored windows (excludes docked, hidden or trayed)."},
+        {cat: "WINDOW", cmd: "MaximizeAllMinimized", key: "Custom", desc: "Maximize all minimized windows (excludes docked, hidden or trayed)."},
+        {cat: "WINDOW", cmd: "SwapMaximizedRestored", key: "Custom", desc: "Swap window states: restore maximized; maximize normal/restored (excludes docked, hidden or trayed)."},
+        {cat: "WINDOW", cmd: "SwapMinimizedRestored", key: "Custom", desc: "Swap window states: restore minimized; minimize normal/restored (excludes docked, hidden or trayed)."},
+        {cat: "WINDOW", cmd: "MinimizeAll", key: "Custom", desc: "Minimize all normal and maximized windows (excludes docked, hidden or trayed bounds)."},
+        {cat: "WINDOW", cmd: "MinimizeAllRestored", key: "Custom", desc: "Minimize all normal/restored windows (excludes docked, hidden or trayed)."},
+        {cat: "WINDOW", cmd: "MinimizeAllMaximized", key: "Custom", desc: "Minimize all maximized windows (excludes docked, hidden or trayed)."},
 
         ; == HOME ==
         {cat: "HOME", cmd: "SetHome", key: "Win + Ctrl + .", desc: "Save active window class/process/fuzzy title signature to persistent home location."},
@@ -4325,7 +4497,7 @@ StartKeyDiagnostics() {
 }
 
 LoadSettings() {
-    global g_SettingsSilenceAll, g_SettingsSilentOnWinCmds, g_SettingsTipWinCmds, g_sIniFile
+    global g_SettingsSilenceAll, g_SettingsSilentOnWinCmds, g_SettingsTipWinCmds, g_SettingsDisableStartupBeep, g_SettingsDisableSuspensionBeep, g_SettingsEditorPath, g_sIniFile
     
     try {
         valSilenceAll := IniRead(g_sIniFile, "Settings", "SilenceAll", "false")
@@ -4347,10 +4519,35 @@ LoadSettings() {
     } catch {
         g_SettingsTipWinCmds := true
     }
+
+    try {
+        valDisableStartup := IniRead(g_sIniFile, "Settings", "DisableStartupBeep", "false")
+        g_SettingsDisableStartupBeep := (valDisableStartup = "true" || valDisableStartup = 1 || valDisableStartup = "1")
+    } catch {
+        g_SettingsDisableStartupBeep := false
+    }
+
+    try {
+        valDisableSuspension := IniRead(g_sIniFile, "Settings", "DisableSuspensionBeep", "false")
+        g_SettingsDisableSuspensionBeep := (valDisableSuspension = "true" || valDisableSuspension = 1 || valDisableSuspension = "1")
+    } catch {
+        g_SettingsDisableSuspensionBeep := false
+    }
+
+    try {
+        localAppData := ""
+        try localAppData := EnvGet("LOCALAPPDATA")
+        cursorPath := localAppData != "" ? localAppData . "\Programs\cursor\Cursor.exe" : ""
+        defaultEd := (cursorPath != "" && FileExist(cursorPath)) ? cursorPath : "notepad.exe"
+        
+        g_SettingsEditorPath := IniRead(g_sIniFile, "Settings", "EditorPath", defaultEd)
+    } catch {
+        g_SettingsEditorPath := "notepad.exe"
+    }
 }
 
 StartSettingsDialog() {
-    global g_SettingsSilenceAll, g_SettingsSilentOnWinCmds, g_SettingsTipWinCmds, g_sIniFile
+    global g_SettingsSilenceAll, g_SettingsSilentOnWinCmds, g_SettingsTipWinCmds, g_SettingsDisableStartupBeep, g_SettingsDisableSuspensionBeep, g_SettingsEditorPath, g_sIniFile
 
     ; Ensure we load the freshest settings
     LoadSettings()
@@ -4367,38 +4564,61 @@ StartSettingsDialog() {
     settingsGui.Add("Text", "x20 y50 w360 h2 BackgroundTrans Center c33333A", "__________________________________________________")
 
     ; Checkboxes
-    settingsGui.SetFont("s10.5 cE0E0E6")
-    chkSilenceAll := settingsGui.Add("Checkbox", "x50 y85 w300 h25" . (g_SettingsSilenceAll ? " Checked" : ""), "Silence All Audio Cues / SoundBeeps")
-    chkSilentOnWinCmds := settingsGui.Add("Checkbox", "x50 y120 w300 h25" . (g_SettingsSilentOnWinCmds ? " Checked" : ""), "Silent on Window Movement Commands")
-    chkTipWinCmds := settingsGui.Add("Checkbox", "x50 y155 w300 h25" . (g_SettingsTipWinCmds ? " Checked" : ""), "Show Cursor Tooltips for Window Commands")
+    settingsGui.SetFont("s10 cE0E0E6")
+    chkSilenceAll := settingsGui.Add("Checkbox", "x50 y80 w300 h22" . (g_SettingsSilenceAll ? " Checked" : ""), "Silence All Audio Cues / SoundBeeps")
+    chkSilentOnWinCmds := settingsGui.Add("Checkbox", "x50 y110 w300 h22" . (g_SettingsSilentOnWinCmds ? " Checked" : ""), "Silent on Window Movement Commands")
+    chkTipWinCmds := settingsGui.Add("Checkbox", "x50 y140 w300 h22" . (g_SettingsTipWinCmds ? " Checked" : ""), "Show Cursor Tooltips for Window Commands")
+    
+    ; granular beep options
+    chkDisableStartup := settingsGui.Add("Checkbox", "x50 y170 w300 h22" . (g_SettingsDisableStartupBeep ? " Checked" : ""), "Silence Startup Major Triad Arpeggio Beep")
+    chkDisableSuspension := settingsGui.Add("Checkbox", "x50 y200 w300 h22" . (g_SettingsDisableSuspensionBeep ? " Checked" : ""), "Silence Toggle-Suspension Beeps")
 
     ; Separator
-    settingsGui.Add("Text", "x20 y195 w360 h2 BackgroundTrans Center c33333A", "__________________________________________________")
+    settingsGui.Add("Text", "x20 y230 w360 h2 BackgroundTrans Center c33333A", "__________________________________________________")
+
+    ; Editor path setting row
+    settingsGui.SetFont("s10 bold c00FFCC")
+    settingsGui.Add("Text", "x30 y255 w100 h22", "Editor Path:")
+    settingsGui.SetFont("s9.5 norm cFFFFFF")
+    txtEditorPath := settingsGui.Add("Edit", "x130 y252 w240 h24 Background1E1E22 cFFFFFF Border", g_SettingsEditorPath)
+
+    ; Separator
+    settingsGui.Add("Text", "x20 y285 w360 h2 BackgroundTrans Center c33333A", "__________________________________________________")
 
     ; Buttons
-    btnSave := settingsGui.Add("Button", "x60 y220 w120 h35", "Save Settings")
-    btnCancel := settingsGui.Add("Button", "x220 y220 w120 h35", "Cancel")
+    settingsGui.SetFont("s10")
+    btnSave := settingsGui.Add("Button", "x60 y310 w120 h35", "Save Settings")
+    btnCancel := settingsGui.Add("Button", "x220 y310 w120 h35", "Cancel")
 
     ; Callbacks
     btnSave.OnEvent("Click", SaveClick)
     btnCancel.OnEvent("Click", CancelClick)
 
-    settingsGui.Show("w400 h280 Center")
+    settingsGui.Show("w400 h365 Center")
 
     SaveClick(*) {
         isSilenceAll := chkSilenceAll.Value
         isSilentOnWinCmds := chkSilentOnWinCmds.Value
         isTipWinCmds := chkTipWinCmds.Value
+        isDisableStartup := chkDisableStartup.Value
+        isDisableSuspension := chkDisableSuspension.Value
+        editorPathStr := Trim(txtEditorPath.Value)
 
         try {
             IniWrite(isSilenceAll ? "true" : "false", g_sIniFile, "Settings", "SilenceAll")
             IniWrite(isSilentOnWinCmds ? "true" : "false", g_sIniFile, "Settings", "SilentOnWinCmds")
             IniWrite(isTipWinCmds ? "true" : "false", g_sIniFile, "Settings", "TipWinCmds")
+            IniWrite(isDisableStartup ? "true" : "false", g_sIniFile, "Settings", "DisableStartupBeep")
+            IniWrite(isDisableSuspension ? "true" : "false", g_sIniFile, "Settings", "DisableSuspensionBeep")
+            IniWrite(editorPathStr, g_sIniFile, "Settings", "EditorPath")
         }
 
         global g_SettingsSilenceAll := isSilenceAll
         global g_SettingsSilentOnWinCmds := isSilentOnWinCmds
         global g_SettingsTipWinCmds := isTipWinCmds
+        global g_SettingsDisableStartupBeep := isDisableStartup
+        global g_SettingsDisableSuspensionBeep := isDisableSuspension
+        global g_SettingsEditorPath := editorPathStr
 
         settingsGui.Destroy()
         if (!g_SettingsSilenceAll) {
@@ -4507,28 +4727,20 @@ StartKeyQuery() {
     queryGui.SetFont("s14 bold c00FF55")
     queryGui_CommandText := queryGui.Add("Text", "x20 y145 w460 Center", "")
 
-    queryGui.SetFont("s11 bold cFF4444")
-    queryGui_TimerText := queryGui.Add("Text", "x20 y185 w460 Center", "Time Remaining: 8s")
+    queryGui.SetFont("s10 bold c88888D")
+    queryGui_CopyText := queryGui.Add("Text", "x20 y185 w460 Center", "")
 
-    queryGui.SetFont("s9 c88888D")
-    queryGui.Add("Text", "x20 y215 w460 Center", "[Press ESC key to Exit Key Query Mode]")
+    queryGui.SetFont("s10 norm c88888D")
+    queryGui.Add("Text", "x20 y215 w460 Center", "[ESC to Close • Spacebar to Copy Current Binding]")
 
-    queryGui.Show("w500 h250 Center")
+    queryGui.Show("w500 h255 Center")
 
-    isAborted := false
-    timeoutMs := 8000
-    startTime := A_TickCount
+    lastPressedKey := ""
+    lastDispName := ""
+    lastMatchedCmd := ""
 
     while (true) {
-        elapsed := A_TickCount - startTime
-        if (elapsed >= timeoutMs) {
-            break
-        }
-        
-        remainingTime := Ceil((timeoutMs - elapsed) / 1000)
-        queryGui_TimerText.Text := "Time Remaining: " . (remainingTime <= 0 ? 0 : remainingTime) . "s"
-
-        ih := InputHook("L1 T0.1")
+        ih := InputHook("L1 T2.0") ; No overall timer, just check short intervals to maintain GUI responsive loop
         ih.KeyOpt("{All}", "E")
         ih.KeyOpt("{LCtrl}{RCtrl}{LShift}{RShift}{LAlt}{RAlt}{LWin}{RWin}", "-E")
         ih.Start()
@@ -4538,7 +4750,6 @@ StartKeyQuery() {
             pressedKey := ih.EndKey
             
             if (StrLower(pressedKey) == "escape") {
-                isAborted := true
                 break
             }
 
@@ -4546,6 +4757,22 @@ StartKeyQuery() {
             mAlt   := GetKeyState("Alt", "P")
             mShift := GetKeyState("Shift", "P")
             mWin   := (GetKeyState("LWin", "P") || GetKeyState("RWin", "P"))
+
+            if (StrLower(pressedKey) == "space") {
+                if (lastDispName != "") {
+                    clipboardText := lastDispName . " = " . (lastMatchedCmd != "" ? lastMatchedCmd : "[No Command Bound]")
+                    A_Clipboard := clipboardText
+                    queryGui_CopyText.SetFont("c00FF55")
+                    queryGui_CopyText.Text := "📋 Copied: " . clipboardText
+                    if (!g_SettingsSilenceAll) {
+                        SoundBeep(1500, 100)
+                    }
+                } else {
+                    queryGui_CopyText.SetFont("cFF3333")
+                    queryGui_CopyText.Text := "⚠️ Press any key combinations first!"
+                }
+                continue
+            }
 
             dispName := ""
             if (mWin)
@@ -4570,11 +4797,14 @@ StartKeyQuery() {
             canonicalKey .= StrLower(pressedKey)
 
             queryGui_DetectedText.Text := "Pressed: " . dispName
+            lastPressedKey := pressedKey
+            lastDispName := dispName
 
             if (bindingsMap.Has(canonicalKey)) {
                 matchedCmd := bindingsMap[canonicalKey]
                 queryGui_CommandText.SetFont("c00FF55")
                 queryGui_CommandText.Text := "Command: " . matchedCmd
+                lastMatchedCmd := matchedCmd
                 
                 if (!g_SettingsSilenceAll) {
                     SoundBeep(1200, 50)
@@ -4582,12 +4812,15 @@ StartKeyQuery() {
             } else {
                 queryGui_CommandText.SetFont("cFF3333")
                 queryGui_CommandText.Text := "[No Command Bound]"
+                lastMatchedCmd := ""
                 if (!g_SettingsSilenceAll) {
                     SoundBeep(600, 80)
                 }
             }
-
-            startTime := A_TickCount
+            
+            ; Reset transient copy tooltip indicator upon pressing new keys
+            queryGui_CopyText.SetFont("c88888D")
+            queryGui_CopyText.Text := "[Spacebar to Copy Current Binding]"
         }
     }
 
@@ -5538,33 +5771,63 @@ StartDragWindow(hWnd) {
     global g_DragActive, g_DragHwnd
     global g_DragOrigX, g_DragOrigY, g_DragOrigW, g_DragOrigH
     global g_DragMouseOffsetX, g_DragMouseOffsetY
+    global g_DragTuckActive, g_DragTuckEdge, g_DragTuckIndicatorGui
     
     if (g_DragActive) {
         EndDragWindow(false)
     }
     
-    if (!hWnd || !WinExist("ahk_id " . hWnd)) {
-        return
+    ; DragWindow chooses window under mouse first, fallback to active window
+    CoordMode("Mouse", "Screen")
+    MouseGetPos(&mX, &mY, &mHwnd)
+    targetHW := 0
+    if (mHwnd) {
+        mRoot := DllCall("GetAncestor", "ptr", mHwnd, "uint", 2, "ptr")
+        targetHW := mRoot ? mRoot : mHwnd
     }
     
-    g_DragHwnd := hWnd
-    WinGetPos(&g_DragOrigX, &g_DragOrigY, &g_DragOrigW, &g_DragOrigH, "ahk_id " . hWnd)
+    if (!targetHW || !WinExist("ahk_id " . targetHW) || WinGetClass("ahk_id " . targetHW) == "Progman" || WinGetClass("ahk_id " . targetHW) == "WorkerW") {
+        targetHW := hWnd
+    }
+    
+    if (!targetHW || !WinExist("ahk_id " . targetHW)) {
+        targetHW := WinExist("A")
+    }
+    
+    if (!targetHW || !WinExist("ahk_id " . targetHW)) {
+         return
+    }
+    
+    g_DragHwnd := targetHW
+    WinGetPos(&g_DragOrigX, &g_DragOrigY, &g_DragOrigW, &g_DragOrigH, "ahk_id " . g_DragHwnd)
     
     ; Make only the active dragged window slightly translucent (OPACITY: 200/255)
     try WinSetTransparent(200, "ahk_id " . g_DragHwnd)
     
-    CoordMode("Mouse", "Screen")
-    MouseGetPos(&mX, &mY)
     g_DragMouseOffsetX := mX - g_DragOrigX
     g_DragMouseOffsetY := mY - g_DragOrigY
     
+    ; Lazily setup tuck preview Gui
+    if (g_DragTuckIndicatorGui == "") {
+        g_DragTuckIndicatorGui := Gui("+AlwaysOnTop -Caption +ToolWindow +E0x20") ; Click-through
+        g_DragTuckIndicatorGui.BackColor := "00FFCC"
+        try {
+            g_DragTuckIndicatorGui.Show("Hide")
+            WinSetTransparent(100, "ahk_id " . g_DragTuckIndicatorGui.Hwnd)
+        }
+    }
+    
+    g_DragTuckActive := false
+    g_DragTuckEdge := ""
+    
     g_DragActive := true
     SetTimer(TrackDragWindow, 15)
-    ShowTargetToolTip("Drag Mode Started.`n[LButton] / [Enter] to place • [Esc] to restore")
+    ShowTargetToolTip("Drag Mode Started.`n[LButton] / [Enter] to place • [Esc] to restore`nDrag to screen edges to TUCK window!")
 }
 
 TrackDragWindow() {
     global g_DragActive, g_DragHwnd, g_DragMouseOffsetX, g_DragMouseOffsetY, g_DragOrigW, g_DragOrigH
+    global g_DragTuckActive, g_DragTuckEdge, g_DragTuckIndicatorGui
     if (!g_DragActive || !WinExist("ahk_id " . g_DragHwnd)) {
         SetTimer(TrackDragWindow, 0)
         return
@@ -5572,6 +5835,69 @@ TrackDragWindow() {
     
     CoordMode("Mouse", "Screen")
     MouseGetPos(&mX, &mY)
+    
+    ; Identify active monitor from mouse coordinates
+    hMon := DllCall("MonitorFromPoint", "int64", (mY << 32) | (mX & 0xFFFFFFFF), "uint", 2, "ptr")
+    MI := Buffer(40)
+    NumPut("uint", 40, MI, 0)
+    
+    isEdge := false
+    edgeName := ""
+    mLeft := 0, mTop := 0, mRight := 0, mBottom := 0
+    
+    if (DllCall("GetMonitorInfo", "ptr", hMon, "ptr", MI)) {
+        mLeft := NumGet(MI, 20, "int")
+        mTop := NumGet(MI, 24, "int")
+        mRight := NumGet(MI, 28, "int")
+        mBottom := NumGet(MI, 32, "int")
+        
+        tol := 10
+        distL := Abs(mX - mLeft)
+        distR := Abs(mX - mRight)
+        distT := Abs(mY - mTop)
+        distB := Abs(mY - mBottom)
+        
+        minD := Min(distL, distR, distT, distB)
+        
+        if (minD <= tol) {
+            isEdge := true
+            if (minD == distL) {
+                edgeName := "Left"
+            } else if (minD == distR) {
+                edgeName := "Right"
+            } else if (minD == distT) {
+                edgeName := "Up"
+            } else if (minD == distB) {
+                edgeName := "Down"
+            }
+        }
+    }
+    
+    if (isEdge && edgeName != "") {
+        g_DragTuckActive := true
+        g_DragTuckEdge := edgeName
+        
+        width := mRight - mLeft
+        height := mBottom - mTop
+        
+        switch edgeName {
+            case "Left":
+                g_DragTuckIndicatorGui.Show("x" . mLeft . " y" . mTop . " w40 h" . height . " NoActivate")
+            case "Right":
+                g_DragTuckIndicatorGui.Show("x" . (mRight - 40) . " y" . mTop . " w40 h" . height . " NoActivate")
+            case "Up":
+                g_DragTuckIndicatorGui.Show("x" . mLeft . " y" . mTop . " w" . width . " h40 NoActivate")
+            case "Down":
+                g_DragTuckIndicatorGui.Show("x" . mLeft . " y" . (mBottom - 40) . " w" . width . " h40 NoActivate")
+        }
+    } else {
+        if (g_DragTuckActive) {
+            g_DragTuckActive := false
+            g_DragTuckEdge := ""
+            try g_DragTuckIndicatorGui.Hide()
+        }
+    }
+    
     nX := mX - g_DragMouseOffsetX
     nY := mY - g_DragMouseOffsetY
     SafeMove(nX, nY, g_DragOrigW, g_DragOrigH, g_DragHwnd)
@@ -5579,20 +5905,41 @@ TrackDragWindow() {
 
 EndDragWindow(restore := false) {
     global g_DragActive, g_DragHwnd, g_DragOrigX, g_DragOrigY, g_DragOrigW, g_DragOrigH
+    global g_DragTuckActive, g_DragTuckEdge, g_DragTuckIndicatorGui
     if (!g_DragActive)
         return
         
     g_DragActive := false
     SetTimer(TrackDragWindow, 0)
     
+    try g_DragTuckIndicatorGui.Hide()
+    
     ; Restore transparency on the single active window
     try WinSetTransparent("Off", "ahk_id " . g_DragHwnd)
     
-    if (restore && WinExist("ahk_id " . g_DragHwnd)) {
-        SafeMove(g_DragOrigX, g_DragOrigY, g_DragOrigW, g_DragOrigH, g_DragHwnd)
+    if (restore) {
+        if (WinExist("ahk_id " . g_DragHwnd)) {
+            SafeMove(g_DragOrigX, g_DragOrigY, g_DragOrigW, g_DragOrigH, g_DragHwnd)
+        }
+        ShowTargetToolTip("Drag Cancelled.")
+    } else {
+        if (g_DragTuckActive && g_DragTuckEdge != "") {
+            tuckEdge := g_DragTuckEdge
+            
+            g_DragTuckActive := false
+            g_DragTuckEdge := ""
+            
+            if (WinExist("ahk_id " . g_DragHwnd)) {
+                WinMove(g_DragOrigX, g_DragOrigY, g_DragOrigW, g_DragOrigH, "ahk_id " . g_DragHwnd)
+                ExecuteCommandRegistry("Tuck" . tuckEdge, g_DragHwnd)
+            }
+            ShowTargetToolTip("Window Tucked on " . tuckEdge . " edge!")
+        } else {
+            g_DragTuckActive := false
+            g_DragTuckEdge := ""
+            ShowTargetToolTip("Drag Completed.")
+        }
     }
-    
-    ShowTargetToolTip(restore ? "Drag Cancelled." : "Drag Completed.")
 }
 
 #HotIf g_TuckPeekActive
