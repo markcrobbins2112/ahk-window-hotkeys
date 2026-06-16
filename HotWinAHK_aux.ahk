@@ -83,6 +83,16 @@ $^+#k:: {
     ExecuteActionWithCondition("KeyDiagnostics", "")
 }
 
+$^+#q:: {
+    try Suspend("Permit")
+    ExecuteActionWithCondition("KeyQuery", "")
+}
+
+$^+#i:: {
+    try Suspend("Permit")
+    ExecuteActionWithCondition("Settings", "")
+}
+
 $^#.:: {
     ExecuteActionWithCondition("SetHome", "")
 }

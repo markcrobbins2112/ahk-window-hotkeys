@@ -18,7 +18,7 @@ status: pass
 
 ## Commit Message
 ```text
-feat(diag): implement interactive KeyDiagnostics command, fix SafeMove dimension preservation on centering and pixel shifting, and resolve Win32 dark popup menus via hidden uxtheme ordinals
+feat(settings): implement interactive Settings dialog and KeyQuery keyboard tracker command, and fix DragWindow milky-white overlay bugs
 ```
 
 <!-- Example AI Log Entry
@@ -31,6 +31,25 @@ subsections/tree bullets
 bulleted file list
 -->
 ## Log Entries
+
+## [2026-06-16T12:26:00Z]
+### 🎯 Primary Goals & Requirements
+- **Interactive Settings Command**: Create an interactive, dark-themed configuration dialog (`Settings`) allowing the user to configure 'Silence All' (default: false), 'Silent on Windows Commands' (default: false), and 'Tip Windows Commands' (default: true), persisting configurations instantly to `HotWinAHK.ini`.
+- **Keyboard Shortcut KeyQuery Tracker**: Program a continuous listening command (`KeyQuery`) that presents a 500px dark dialog with resetting timeouts (8s) showing parsed physical key modifiers and looking up active HotWinAHK commands mapped to them, exiting cleanly on the Escape key.
+- **Repair DragWindow Interceptions**: Address the unresponsiveness and "milky white overlay" screen lockouts on drag start by rewriting the hover/Z-order tracking routines to alter opacity *only* on the singular dragged window frame rather than compiling and masking every background window simultaneously.
+
+### 🛠️ Completed Changes in this Session
+- **Programmed Settings Configurations**: Developed `StartSettingsDialog()` displaying real-time toggle checks, wiring save events through direct `.OnEvent("Click", ...)` subscriptions, and reading/writing settings variables using try/catch wrapper operations around `IniRead`/`IniWrite`.
+- **Coded KeyQuery Command Tracker**: Coded `StartKeyQuery()` loading normalized key models from `BuildBindingsMap()`. Activates precise, suspended-state `InputHook` captures returning display outputs like `"Pressed: Win + Alt + S"` alongside their verified action routes or a `"No Command Bound"` red warnings indicator.
+- **Fixed DragWindow Mechanics**: Simplified `StartDragWindow(hWnd)` and `EndDragWindow(restore)` to remove references to `g_DragWindowsAbove`, setting a comfortable translucent opacity value of `200` on the target dragging window only, eliminating the cumulative white screen masking effect.
+- **Integrated System Sound Options**: Wrapped all core tone and arpeggio generators (`PlayStartupSound`, `PlayBigCommandSound`, `PlayToggleSuspensionSound`, and `PlayTinyFeedbackSound`) inside `g_SettingsSilenceAll` and `g_SettingsSilentOnWinCmds` boolean parameters.
+
+### 🔸 Affected Files
+- `/HotWinAHK.ahk`
+- `/HotWinAHK.ini`
+- `/MANUAL.md`
+- `/AITASKS.md`
+- `/AILOG.md`
 
 ## [2026-06-16T12:20:00Z]
 ### 🎯 Primary Goals & Requirements

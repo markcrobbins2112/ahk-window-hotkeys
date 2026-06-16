@@ -12,6 +12,9 @@ if not A_IsAdmin {
 ; #region _globals 
 Global g_sIniFile := A_ScriptDir "\HotWinAHK.ini"
 Global g_sGeneratedFile := A_ScriptDir "\HotWinAHK_aux.ahk"
+Global g_SettingsSilenceAll := false
+Global g_SettingsSilentOnWinCmds := false
+Global g_SettingsTipWinCmds := true
 Global g_bSuspended := false
 ; --- ADD THIS NEW GLOBAL DICTIONARY TRACKER ---
 Global g_mActiveTrayMenus := Map() ; Tracks all minimized tray menus safely in AHK v2
@@ -101,6 +104,7 @@ if (wasAlreadyRunning && A_Args.Length > 0) {
 }
 
 SetProcessDarkMode()
+LoadSettings()
 A_IconTip := "🤖 HotWinAHK"
 SetTimer(CheckScreenEdgeBumps, 25)
 SetTimer(UpdateActiveWindowDot, 100)
@@ -231,7 +235,8 @@ SetProcessDarkMode() {
     }
 }
 PlayStartupSound() {
-    if (g_bIsSilentRestart)
+    global g_SettingsSilenceAll
+    if (g_bIsSilentRestart || g_SettingsSilenceAll)
         return
     ; A beautiful upbeat major triad arpeggio (A4, C#5, E5, A5)
     SoundBeep(440, 80)
@@ -243,12 +248,18 @@ PlayStartupSound() {
     SoundBeep(880, 150)
 }
 PlayBigCommandSound() {
+    global g_SettingsSilenceAll
+    if (g_SettingsSilenceAll)
+        return
     ; Ascending dual-tone sweep for administrative commands
     SoundBeep(880, 80)
     Sleep(40)
     SoundBeep(1320, 120)
 }
 PlayToggleSuspensionSound(bSuspended) {
+    global g_SettingsSilenceAll
+    if (g_SettingsSilenceAll)
+        return
     if (bSuspended) {
         ; Descending sad tones for suspension (deactivation)
         SoundBeep(700, 60)
@@ -262,6 +273,9 @@ PlayToggleSuspensionSound(bSuspended) {
     }
 }
 PlayTinyFeedbackSound() {
+    global g_SettingsSilenceAll, g_SettingsSilentOnWinCmds
+    if (g_SettingsSilenceAll || g_SettingsSilentOnWinCmds)
+        return
     ; Snappy feedback click/tone
     SoundBeep(1600, 15)
 }
@@ -556,7 +570,7 @@ CompileIniToStaticHotkeys() {
                 sPrefix := ""
             }
             ScriptBuffer .= sPrefix sAHKStroke ":: {`n"
-            if (sCmd == "ToggleSuspension" || sCmd == "ExitProgram" || sCmd == "RestartProgram" || sCmd == "ReloadConfig" || sCmd == "EditConfig" || sCmd == "HelpScreen" || sCmd == "WinInfo" || sCmd == "CopyCommands" || sCmd == "CopyBindings" || sCmd == "CopyCommandsHelp" || sCmd == "CopyCommandsAlpha" || sCmd == "CopyBindingsAlpha" || sCmd == "CopyBindingsLocation" || sCmd == "SysMenu" || sCmd == "PeekTucked" || sCmd == "Untuck" || sCmd == "CmdPalette" || sCmd == "KeyDiagnostics") {
+            if (sCmd == "ToggleSuspension" || sCmd == "ExitProgram" || sCmd == "RestartProgram" || sCmd == "ReloadConfig" || sCmd == "EditConfig" || sCmd == "HelpScreen" || sCmd == "WinInfo" || sCmd == "CopyCommands" || sCmd == "CopyBindings" || sCmd == "CopyCommandsHelp" || sCmd == "CopyCommandsAlpha" || sCmd == "CopyBindingsAlpha" || sCmd == "CopyBindingsLocation" || sCmd == "SysMenu" || sCmd == "PeekTucked" || sCmd == "Untuck" || sCmd == "CmdPalette" || sCmd == "KeyDiagnostics" || sCmd == "KeyQuery" || sCmd == "Settings") {
                 ScriptBuffer .= '    try Suspend("Permit")`n'
             }
             ScriptBuffer .= '    ExecuteActionWithCondition("' sCmd '", "' sCond '")`n'
@@ -627,7 +641,7 @@ LoadHotkeysAtRuntime() {
 ; #region  _engine 
 IsMetaCommand(sCmd) {
     ; Add your untuck commands to the meta-command bypass list
-    if (InStr(sCmd, "BumpEdgeUntuck") || InStr(sCmd, "HelpScreen") || InStr(sCmd, "ReloadConfig") || InStr(sCmd, "CopyCommands") || InStr(sCmd, "CopyBindings") || InStr(sCmd, "CopyCommandsHelp") || InStr(sCmd, "CopyCommandsAlpha") || InStr(sCmd, "CopyBindingsAlpha") || InStr(sCmd, "CopyBindingsLocation") || InStr(sCmd, "SysMenu") || InStr(sCmd, "PeekTucked") || InStr(sCmd, "Untuck") || InStr(sCmd, "CmdPalette") || InStr(sCmd, "KeyDiagnostics")) {
+    if (InStr(sCmd, "BumpEdgeUntuck") || InStr(sCmd, "HelpScreen") || InStr(sCmd, "ReloadConfig") || InStr(sCmd, "CopyCommands") || InStr(sCmd, "CopyBindings") || InStr(sCmd, "CopyCommandsHelp") || InStr(sCmd, "CopyCommandsAlpha") || InStr(sCmd, "CopyBindingsAlpha") || InStr(sCmd, "CopyBindingsLocation") || InStr(sCmd, "SysMenu") || InStr(sCmd, "PeekTucked") || InStr(sCmd, "Untuck") || InStr(sCmd, "CmdPalette") || InStr(sCmd, "KeyDiagnostics") || sCmd == "KeyQuery" || sCmd == "Settings") {
         return true
     }
 
@@ -635,6 +649,7 @@ IsMetaCommand(sCmd) {
     return false
 }
 ExecuteActionWithCondition(sCmd, sCond) {
+    global g_SettingsTipWinCmds
     if IsMetaCommand(sCmd) {
         ExecuteCommandRegistry(sCmd, 0)
         return
@@ -645,7 +660,9 @@ ExecuteActionWithCondition(sCmd, sCond) {
 
     ; Play a snappy retro click tone and show an elegant cursor tooltip
     PlayTinyFeedbackSound()
-    ShowQuickTip("🤖 " . sCmd)
+    if (g_SettingsTipWinCmds) {
+        ShowQuickTip("🤖 " . sCmd)
+    }
 
     hWndTarget := InStr(sCmd, "UnderMouse") ? MouseGetWindowHWND() : DllCall("user32\GetForegroundWindow", "ptr")
 
@@ -722,6 +739,8 @@ ExecuteCommandRegistry(sCmd, hWnd) {
         case "CopyBindingsAlpha": CopyBindingsAlpha()
         case "CopyBindingsLocation": CopyBindingsLocation()
         case "KeyDiagnostics": StartKeyDiagnostics()
+        case "KeyQuery": StartKeyQuery()
+        case "Settings": StartSettingsDialog()
         case "SysMenu": SysMenu()
     }
 
@@ -3197,6 +3216,8 @@ GetGlobalCommandList() {
         {cat: "SYSTEM", cmd: "ExitProgram", key: "Win + Alt + X", desc: "Safely terminate the HotWinAHK background orchestrator process."},
         {cat: "SYSTEM", cmd: "RestartProgram", key: "Win + Ctrl + F12", desc: "Instantly reload and reboot the HotWinAHK execution engine."},
         {cat: "SYSTEM", cmd: "KeyDiagnostics", key: "Win + Ctrl + Shift + K", desc: "Verify and test physical modifier combos on keypad and arrow keys."},
+        {cat: "SYSTEM", cmd: "KeyQuery", key: "Win + Ctrl + Shift + Q", desc: "Fuzzy query real-time keyboard strokes to identify active command bindings."},
+        {cat: "SYSTEM", cmd: "Settings", key: "Win + Ctrl + Shift + I", desc: "Open the interactive configurations panel to customize sounds, clicks, and tooltips."},
         {cat: "SYSTEM", cmd: "Active Window Dot", key: "Auto Indicator", desc: "Draws green dot at active window's top-left (yellow when program is suspended)."},
 
         ; == WINDOW ==
@@ -4260,7 +4281,9 @@ StartKeyDiagnostics() {
                 diagGui_TimerText.SetFont("c00FF55")
                 diagGui_TimerText.Text := "PASSED!"
             }
-            SoundBeep(1800, 40)
+            if (!g_SettingsSilenceAll) {
+                SoundBeep(1800, 40)
+            }
             Sleep(250)
             try {
                 diagGui_TimerText.SetFont("cFF4444")
@@ -4268,7 +4291,9 @@ StartKeyDiagnostics() {
         } else {
             ; Failure! Show fail tooltip and record failure
             failedKeys.Push(item.name)
-            SoundBeep(350, 150)
+            if (!g_SettingsSilenceAll) {
+                SoundBeep(350, 150)
+            }
             ShowTargetToolTip("FAILED: " . item.name, -1500)
             Sleep(200)
         }
@@ -4297,6 +4322,281 @@ StartKeyDiagnostics() {
         A_Clipboard := "All keys passed!"
         ShowTargetToolTip("🤖 All keys passed diagnostics flawlessly!`r`nList copied to clipboard.", -4000)
     }
+}
+
+LoadSettings() {
+    global g_SettingsSilenceAll, g_SettingsSilentOnWinCmds, g_SettingsTipWinCmds, g_sIniFile
+    
+    try {
+        valSilenceAll := IniRead(g_sIniFile, "Settings", "SilenceAll", "false")
+        g_SettingsSilenceAll := (valSilenceAll = "true" || valSilenceAll = 1 || valSilenceAll = "1")
+    } catch {
+        g_SettingsSilenceAll := false
+    }
+    
+    try {
+        valSilentOnWinCmds := IniRead(g_sIniFile, "Settings", "SilentOnWinCmds", "false")
+        g_SettingsSilentOnWinCmds := (valSilentOnWinCmds = "true" || valSilentOnWinCmds = 1 || valSilentOnWinCmds = "1")
+    } catch {
+        g_SettingsSilentOnWinCmds := false
+    }
+    
+    try {
+        valTipWinCmds := IniRead(g_sIniFile, "Settings", "TipWinCmds", "true")
+        g_SettingsTipWinCmds := (valTipWinCmds = "true" || valTipWinCmds = 1 || valTipWinCmds = "1")
+    } catch {
+        g_SettingsTipWinCmds := true
+    }
+}
+
+StartSettingsDialog() {
+    global g_SettingsSilenceAll, g_SettingsSilentOnWinCmds, g_SettingsTipWinCmds, g_sIniFile
+
+    ; Ensure we load the freshest settings
+    LoadSettings()
+
+    ; Create Gui with dark theme
+    settingsGui := Gui("+AlwaysOnTop -MaximizeBox -MinimizeBox +ToolWindow", "🤖 HotWinAHK - Settings")
+    settingsGui.BackColor := "121214"
+    settingsGui.SetFont("s10 cE0E0E6", "Segoe UI")
+
+    settingsGui.SetFont("s14 bold c4476ff")
+    settingsGui.Add("Text", "x20 y20 w360 Center", "🤖 Engine Settings Configurations")
+
+    ; Separator
+    settingsGui.Add("Text", "x20 y50 w360 h2 BackgroundTrans Center c33333A", "__________________________________________________")
+
+    ; Checkboxes
+    settingsGui.SetFont("s10.5 cE0E0E6")
+    chkSilenceAll := settingsGui.Add("Checkbox", "x50 y85 w300 h25" . (g_SettingsSilenceAll ? " Checked" : ""), "Silence All Audio Cues / SoundBeeps")
+    chkSilentOnWinCmds := settingsGui.Add("Checkbox", "x50 y120 w300 h25" . (g_SettingsSilentOnWinCmds ? " Checked" : ""), "Silent on Window Movement Commands")
+    chkTipWinCmds := settingsGui.Add("Checkbox", "x50 y155 w300 h25" . (g_SettingsTipWinCmds ? " Checked" : ""), "Show Cursor Tooltips for Window Commands")
+
+    ; Separator
+    settingsGui.Add("Text", "x20 y195 w360 h2 BackgroundTrans Center c33333A", "__________________________________________________")
+
+    ; Buttons
+    btnSave := settingsGui.Add("Button", "x60 y220 w120 h35", "Save Settings")
+    btnCancel := settingsGui.Add("Button", "x220 y220 w120 h35", "Cancel")
+
+    ; Callbacks
+    btnSave.OnEvent("Click", SaveClick)
+    btnCancel.OnEvent("Click", CancelClick)
+
+    settingsGui.Show("w400 h280 Center")
+
+    SaveClick(*) {
+        isSilenceAll := chkSilenceAll.Value
+        isSilentOnWinCmds := chkSilentOnWinCmds.Value
+        isTipWinCmds := chkTipWinCmds.Value
+
+        try {
+            IniWrite(isSilenceAll ? "true" : "false", g_sIniFile, "Settings", "SilenceAll")
+            IniWrite(isSilentOnWinCmds ? "true" : "false", g_sIniFile, "Settings", "SilentOnWinCmds")
+            IniWrite(isTipWinCmds ? "true" : "false", g_sIniFile, "Settings", "TipWinCmds")
+        }
+
+        global g_SettingsSilenceAll := isSilenceAll
+        global g_SettingsSilentOnWinCmds := isSilentOnWinCmds
+        global g_SettingsTipWinCmds := isTipWinCmds
+
+        settingsGui.Destroy()
+        if (!g_SettingsSilenceAll) {
+            SoundBeep(1200, 100)
+        }
+        ShowTargetToolTip("Settings saved successfully!")
+    }
+
+    CancelClick(*) {
+        settingsGui.Destroy()
+    }
+}
+
+BuildBindingsMap() {
+    global g_sIniFile
+    bindingsMap := Map()
+    
+    if !FileExist(g_sIniFile) {
+        return bindingsMap
+    }
+    
+    sectionsText := IniRead(g_sIniFile)
+    loop parse, sectionsText, "`n", "`r" {
+        sCmd := Trim(A_LoopField)
+        if (sCmd == "" || SubStr(sCmd, 1, 1) == "-") {
+            continue
+        }
+        
+        loop 10 {
+            currentKeyProp := "keys" A_Index
+            keyValue := IniRead(g_sIniFile, sCmd, currentKeyProp, "")
+            if (keyValue == "") {
+                break
+            }
+            
+            if InStr(keyValue, "|") {
+                aSplit := StrSplit(keyValue, "|")
+                sStroke := Trim(aSplit[1])
+            } else {
+                sStroke := Trim(keyValue)
+            }
+            
+            parts := StrSplit(sStroke, "+")
+            hasWin := false
+            hasCtrl := false
+            hasAlt := false
+            hasShift := false
+            mainKey := ""
+            
+            for part in parts {
+                p := Trim(part)
+                if (RegExMatch(p, "i)^(LWin|RWin|Win)$")) {
+                    hasWin := true
+                } else if (RegExMatch(p, "i)^(LCtrl|RCtrl|Ctrl)$")) {
+                    hasCtrl := true
+                } else if (RegExMatch(p, "i)^(LAlt|RAlt|Alt)$")) {
+                    hasAlt := true
+                } else if (RegExMatch(p, "i)^(LShift|RShift|Shift)$")) {
+                    hasShift := true
+                } else {
+                    mainKey := StrLower(p)
+                }
+            }
+            
+            canonical := ""
+            if (hasWin)
+                canonical .= "Win+"
+            if (hasCtrl)
+                canonical .= "Ctrl+"
+            if (hasAlt)
+                canonical .= "Alt+"
+            if (hasShift)
+                canonical .= "Shift+"
+            canonical .= mainKey
+            
+            bindingsMap[canonical] := sCmd
+        }
+    }
+    return bindingsMap
+}
+
+StartKeyQuery() {
+    global g_SettingsSilenceAll
+    bindingsMap := BuildBindingsMap()
+
+    oldSuspend := g_bSuspended
+
+    Suspend(true)
+    global g_bSuspended := true
+
+    queryGui := Gui("+AlwaysOnTop -MaximizeBox -MinimizeBox +ToolWindow", "🤖 HotWinAHK - Key Query")
+    queryGui.BackColor := "121214"
+    queryGui.SetFont("s10 cE0E0E6", "Segoe UI")
+
+    queryGui.SetFont("s14 bold c4476ff")
+    queryGui.Add("Text", "x20 y20 w460 Center", "🤖 Key Query Mode")
+    
+    queryGui.SetFont("s10 c88888D")
+    queryGui.Add("Text", "x20 y52 w460 Center", "Detecting physical keystrokes and showing their registered commands")
+
+    queryGui.Add("Text", "x20 y75 w460 h2 BackgroundTrans Center c33333A", "__________________________________________________________________")
+
+    queryGui.SetFont("s11 bold cFFCC00")
+    queryGui_DetectedText := queryGui.Add("Text", "x20 y115 w460 Center", "READY: Press any combination...")
+
+    queryGui.SetFont("s14 bold c00FF55")
+    queryGui_CommandText := queryGui.Add("Text", "x20 y145 w460 Center", "")
+
+    queryGui.SetFont("s11 bold cFF4444")
+    queryGui_TimerText := queryGui.Add("Text", "x20 y185 w460 Center", "Time Remaining: 8s")
+
+    queryGui.SetFont("s9 c88888D")
+    queryGui.Add("Text", "x20 y215 w460 Center", "[Press ESC key to Exit Key Query Mode]")
+
+    queryGui.Show("w500 h250 Center")
+
+    isAborted := false
+    timeoutMs := 8000
+    startTime := A_TickCount
+
+    while (true) {
+        elapsed := A_TickCount - startTime
+        if (elapsed >= timeoutMs) {
+            break
+        }
+        
+        remainingTime := Ceil((timeoutMs - elapsed) / 1000)
+        queryGui_TimerText.Text := "Time Remaining: " . (remainingTime <= 0 ? 0 : remainingTime) . "s"
+
+        ih := InputHook("L1 T0.1")
+        ih.KeyOpt("{All}", "E")
+        ih.KeyOpt("{LCtrl}{RCtrl}{LShift}{RShift}{LAlt}{RAlt}{LWin}{RWin}", "-E")
+        ih.Start()
+        ih.Wait()
+
+        if (ih.EndReason == "EndKey") {
+            pressedKey := ih.EndKey
+            
+            if (StrLower(pressedKey) == "escape") {
+                isAborted := true
+                break
+            }
+
+            mCtrl  := GetKeyState("Ctrl", "P")
+            mAlt   := GetKeyState("Alt", "P")
+            mShift := GetKeyState("Shift", "P")
+            mWin   := (GetKeyState("LWin", "P") || GetKeyState("RWin", "P"))
+
+            dispName := ""
+            if (mWin)
+                dispName .= "Win + "
+            if (mCtrl)
+                dispName .= "Ctrl + "
+            if (mAlt)
+                dispName .= "Alt + "
+            if (mShift)
+                dispName .= "Shift + "
+            dispName .= pressedKey
+
+            canonicalKey := ""
+            if (mWin)
+                canonicalKey .= "Win+"
+            if (mCtrl)
+                canonicalKey .= "Ctrl+"
+            if (mAlt)
+                canonicalKey .= "Alt+"
+            if (mShift)
+                canonicalKey .= "Shift+"
+            canonicalKey .= StrLower(pressedKey)
+
+            queryGui_DetectedText.Text := "Pressed: " . dispName
+
+            if (bindingsMap.Has(canonicalKey)) {
+                matchedCmd := bindingsMap[canonicalKey]
+                queryGui_CommandText.SetFont("c00FF55")
+                queryGui_CommandText.Text := "Command: " . matchedCmd
+                
+                if (!g_SettingsSilenceAll) {
+                    SoundBeep(1200, 50)
+                }
+            } else {
+                queryGui_CommandText.SetFont("cFF3333")
+                queryGui_CommandText.Text := "[No Command Bound]"
+                if (!g_SettingsSilenceAll) {
+                    SoundBeep(600, 80)
+                }
+            }
+
+            startTime := A_TickCount
+        }
+    }
+
+    queryGui.Destroy()
+
+    Suspend(oldSuspend)
+    global g_bSuspended := oldSuspend
+
+    ShowTargetToolTip("Key Query Complete.")
 }
 
 SysMenu() {
@@ -5235,7 +5535,7 @@ TuckPeekDimension(edge) {
 }
 
 StartDragWindow(hWnd) {
-    global g_DragActive, g_DragHwnd, g_DragWindowsAbove
+    global g_DragActive, g_DragHwnd
     global g_DragOrigX, g_DragOrigY, g_DragOrigW, g_DragOrigH
     global g_DragMouseOffsetX, g_DragMouseOffsetY
     
@@ -5250,24 +5550,8 @@ StartDragWindow(hWnd) {
     g_DragHwnd := hWnd
     WinGetPos(&g_DragOrigX, &g_DragOrigY, &g_DragOrigW, &g_DragOrigH, "ahk_id " . hWnd)
     
-    ; Find windows above in Z-order
-    g_DragWindowsAbove := []
-    curHwnd := DllCall("GetWindow", "ptr", hWnd, "uint", 3, "ptr") ; GW_HWNDPREV
-    while (curHwnd) {
-        if (DllCall("IsWindowVisible", "ptr", curHwnd)) {
-            wTitle := WinGetTitle("ahk_id " . curHwnd)
-            if (wTitle != "" && wTitle != "Program Manager" && !InStr(wTitle, "HotWinAHK")) {
-                g_DragWindowsAbove.Push(curHwnd)
-            }
-        }
-        curHwnd := DllCall("GetWindow", "ptr", curHwnd, "uint", 3, "ptr") ; GW_HWNDPREV
-    }
-    
-    ; Make them semi-transparent
-    try WinSetTransparent(150, "ahk_id " . g_DragHwnd)
-    for upHwnd in g_DragWindowsAbove {
-        try WinSetTransparent(150, "ahk_id " . upHwnd)
-    }
+    ; Make only the active dragged window slightly translucent (OPACITY: 200/255)
+    try WinSetTransparent(200, "ahk_id " . g_DragHwnd)
     
     CoordMode("Mouse", "Screen")
     MouseGetPos(&mX, &mY)
@@ -5294,24 +5578,20 @@ TrackDragWindow() {
 }
 
 EndDragWindow(restore := false) {
-    global g_DragActive, g_DragHwnd, g_DragWindowsAbove, g_DragOrigX, g_DragOrigY, g_DragOrigW, g_DragOrigH
+    global g_DragActive, g_DragHwnd, g_DragOrigX, g_DragOrigY, g_DragOrigW, g_DragOrigH
     if (!g_DragActive)
         return
         
     g_DragActive := false
     SetTimer(TrackDragWindow, 0)
     
-    ; Restore transparency
+    ; Restore transparency on the single active window
     try WinSetTransparent("Off", "ahk_id " . g_DragHwnd)
-    for upHwnd in g_DragWindowsAbove {
-        try WinSetTransparent("Off", "ahk_id " . upHwnd)
-    }
     
     if (restore && WinExist("ahk_id " . g_DragHwnd)) {
         SafeMove(g_DragOrigX, g_DragOrigY, g_DragOrigW, g_DragOrigH, g_DragHwnd)
     }
     
-    g_DragWindowsAbove := []
     ShowTargetToolTip(restore ? "Drag Cancelled." : "Drag Completed.")
 }
 

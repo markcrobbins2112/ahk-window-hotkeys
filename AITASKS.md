@@ -27,6 +27,9 @@
 - [x] Configured robot emoji tooltips and overlay icons for brand visibility
 - [x] Fixed dimension preservation in `SafeMove()` so Center, MoveTad, and Movepx commands do not resize windows to 800x600 grid defaults
 - [x] Created interactive `KeyDiagnostics` command testing physical keypad & arrow modifier keys with 5s timeouts and clipboard reporting
+- [x] Created `KeyQuery` command: Provides dark modal dialog with an 8s timer/countdown (resets on keypress) to capture physical keystrokes/modifiers and look up associated HotWinAHK commands, running continuously until ESC is pressed
+- [x] Created `Settings` command: Provides interactive dark-themed configuration dialog (checkboxes) allowing the user to configure 'Silence All' (suppresses all audio beeps), 'Silent on Windows Commands' (silences movement sounds), and 'Tip Windows Commands' (shows/hides quick tip robot cursor tooltips). Writes preferences instantly to the `[Settings]` section in `HotWinAHK.ini`
+- [x] Fixed `DragWindow` command bugs: Eliminated opaque milky-white overlays on background windows by updating the tracking loop to only adjust the transparency (specifically: gentle 200 opacity) of the active dragged window itself
 
 ## [x] Errors
 - [x] lint 1: Resolved warning where `ExecuteActionWithCondition` was considered an unassigned local variable. Fixed by placing the `#Include "HotWinAHK_aux.ahk"` statement at the bottom of `HotWinAHK.ahk` after the global function definitions.
