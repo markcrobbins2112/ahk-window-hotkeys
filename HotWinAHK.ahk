@@ -562,6 +562,7 @@ EnsureAllCommandsInIni() {
         return
     }
     
+    sc := ";"
     iniText := FileRead(g_sIniFile)
     
     ; Map of lowercase command name -> { orig: "[SectionName]", keys: "keys1=...\r\n" }
@@ -727,14 +728,14 @@ EnsureAllCommandsInIni() {
     writtenCommands := Map()
     newIniText := headerComments
     for outerCat in iniStructure {
-        newIniText .= ";   #region " . outerCat.name . "`r`n"
+        newIniText .= sc . "   #region " . outerCat.name . "`r`n"
         if (outerCat.HasOwnProp("desc")) {
-            newIniText .= ";   " . outerCat.desc . "`r`n"
+            newIniText .= sc . "   " . outerCat.desc . "`r`n"
         }
         for subCat in outerCat.subs {
-            newIniText .= "    ;   #region " . subCat.name . "`r`n"
+            newIniText .= "    " . sc . "   #region " . subCat.name . "`r`n"
             if (subCat.HasOwnProp("desc")) {
-                newIniText .= "    ;   " . subCat.desc . "`r`n"
+                newIniText .= "    " . sc . "   " . subCat.desc . "`r`n"
             }
             for cmdName in subCat.cmds {
                 cleanCmd := StrLower(cmdName)
@@ -764,24 +765,24 @@ EnsureAllCommandsInIni() {
                         }
                     }
                     if (rowDesc != "") {
-                        newIniText .= "            ; " . rowDesc . "`r`n"
+                        newIniText .= "            " . sc . " " . rowDesc . "`r`n"
                     }
                     newIniText .= "        [-" . cmdName . "]`r`n"
                     defaultBinding := rowKey
                     if (defaultBinding == "Custom" || defaultBinding == "Edge Bump" || defaultBinding == "Edge Click/Drag" || defaultBinding == "Auto Indicator") {
                         defaultBinding := ""
                     }
-                    newIniText .= "            ;keys1=" . defaultBinding . "`r`n"
+                    newIniText .= "            " . sc . "keys1=" . defaultBinding . "`r`n"
                 }
             }
-            newIniText .= "    ; #endregion " . subCat.name . "`r`n"
+            newIniText .= "    " . sc . " #endregion " . subCat.name . "`r`n"
         }
-        newIniText .= "; #endregion " . outerCat.name . "`r`n"
+        newIniText .= sc . " #endregion " . outerCat.name . "`r`n"
     }
     if (sectionsMap.Count > 0) {
-        newIniText .= ";   #region Preferences`r`n"
-        newIniText .= ";   User preferences, custom defaults, and localized setup settings.`r`n"
-        newIniText .= "    ;   #region Settings`r`n"
+        newIniText .= sc . "   #region Preferences`r`n"
+        newIniText .= sc . "   User preferences, custom defaults, and localized setup settings.`r`n"
+        newIniText .= "    " . sc . "   #region Settings`r`n"
         for key, value in sectionsMap {
             newIniText .= "        " . value.orig . "`r`n"
             Loop Parse, value.keys, "`n", "`r" {
@@ -792,8 +793,8 @@ EnsureAllCommandsInIni() {
                 newIniText .= "            " . line . "`r`n"
             }
         }
-        newIniText .= "    ; #endregion Settings`r`n"
-        newIniText .= "; #endregion Preferences`r`n"
+        newIniText .= "    " . sc . " #endregion Settings`r`n"
+        newIniText .= sc . " #endregion Preferences`r`n"
     }
     if (Trim(newIniText) != Trim(iniText)) {
         FileDelete(g_sIniFile)

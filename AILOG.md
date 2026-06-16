@@ -18,7 +18,7 @@ status: pass
 
 ## Commit Message
 ```text
-refactor(ini,core): unify INI config matrix formatting, remove blank lines, add region comments, and bind unbound commands
+fix(core): resolve AutoHotkey v2 unescaped space-preceded semicolon syntax error
 ```
 
 <!-- Example AI Log Entry
@@ -31,6 +31,18 @@ subsections/tree bullets
 bulleted file list
 -->
 ## Log Entries
+
+## [2026-06-16T16:03:00Z]
+### 🎯 Primary Goals & Requirements
+- **Resolve AutoHotkey v2 Syntax Compiler Error**: Rectify the "Unterminated string text" syntax error caused by comments/semicolons preceded by a space inside double-quoted strings (e.g., `"    ;   #region "`).
+- **Standardize Dynamic Comment Construction**: Ensure that all generated comments in `EnsureAllCommandsInIni` are constructed using a fail-safe concatenation structure that never places spaces to the left of the `;` inside source code literals.
+
+### 🛠️ Completed Changes in this Session
+- **Enforced Semicolon Isolation**: Refactored `HotWinAHK.ahk` to separate indentation spacing from semicolon comments using clean string concatenation (e.g. `"    " . ";   #region "`). This ensures that the first character of the comment string literal is always the semicolon itself (meaning it is immediately preceded by the source code's double-quote `"`, not a space or tab), preventing the AHK parser from treating it as a live comment.
+- **Removed Chr(59) Workaround**: Shifted back to standard string-based comment syntax which eliminates function call overhead while remaining 100% compliant with both the AutoHotkey interpreter and VS Code's diagnostic linter engine.
+
+### 🔸 Affected Files
+- `/HotWinAHK.ahk`
 
 ## [2026-06-16T15:46:00Z]
 ### 🎯 Primary Goals & Requirements
