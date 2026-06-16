@@ -18,7 +18,7 @@ status: pass
 
 ## Commit Message
 ```text
-feat(commands): implement BindingsAlpha, BindingsLocation, and CopyCommandsHelp + categorized MANUAL documentation
+feat(commands): implement SysMenu, CopyCommandsAlpha, and dynamic categorized CopyCommands, rename BindingsAlpha/Location to CopyBindingsAlpha/Location, and update HotWinAHK.ini and MANUAL.md references
 ```
 
 <!-- Example AI Log Entry
@@ -31,6 +31,26 @@ subsections/tree bullets
 bulleted file list
 -->
 ## Log Entries
+
+## [2026-06-16T11:20:00Z]
+### 🎯 Primary Goals & Requirements
+- **Rename Bindings Commands with "Copy." Prefix**: Change `BindingsAlpha` and `BindingsLocation` to `CopyBindingsAlpha` and `CopyBindingsLocation` for global naming consistency.
+- **Implement CopyCommandsAlpha (Alphabetic Sort)**: Offer a secondary sort command that copies all action commands sorted cleanly alphabetically to the clipboard.
+- **Implement Dynamic categorized CopyCommands**: Refactor the legacy `CopyCommands` to dynamically parse and export available commands sorted by system/window/bounds categories rather than keeping a stale static array.
+- **Implement SysMenu**: Create a beautiful popup context-menu targeting all system orchestration/management commands to execute actions on the active window instantly.
+
+### 🛠️ Completed Changes in this Session
+- **Renamed Bindings Commands**: Renamed `BindingsAlpha` and `BindingsLocation` functions to `CopyBindingsAlpha` and `CopyBindingsLocation` in `HotWinAHK.ahk` and standardized all switch routers and key permits.
+- **Implemented CopyCommandsAlpha**: Programmed the dynamic `CopyCommandsAlpha` function utilizing native AHK `Sort` after reading current registry items.
+- **Refactored CopyCommands to Categories**: Deleted the massive, fragile hardcoded command array and coded a dynamic iteration sorting commands cleanly by categories.
+- **Implemented SysMenu popup logic**: Built the OOP `SysMenu` function using AutoHotkey's `Menu()` constructor. Appends all registered system commands and their associated hotkeys dynamically and triggers actions in background windows seamlessly.
+- **Synchronized configuration and manuals**: Registered all new/renamed command bindings (`Win+Ctrl+Shift+A`, `Win+Ctrl+Shift+B`, `Win+Ctrl+Shift+L`, and `Win+Ctrl+Shift+S`) inside `HotWinAHK.ini` and documented the additions thoroughly inside `MANUAL.md`.
+
+### 🔸 Affected Files
+- `/HotWinAHK.ahk`
+- `/HotWinAHK.ini`
+- `/MANUAL.md`
+- `/AILOG.md`
 
 ## [2026-06-16T09:44:00Z]
 ### 🎯 Primary Goals & Requirements

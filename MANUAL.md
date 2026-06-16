@@ -67,11 +67,13 @@ Every action from simple moves to grid mapping is indexed inside the INI command
 - **CmdPalette**: Display the interactive fuzzy-search Command Palette for manual trigger / dry-run testing.
 - **WinInfo**: Display active window physical bounds, handle ID, class name, and executable system path.
 - **PeekUnderMouse**: Show context of window beneath mouse cursor coordinates.
-- **CopyCommands**: Copy all available action commands name dictionary to system clipboard.
-- **CopyBindings**: Copy all active hotkeys keybindings dictionary map to system clipboard.
-- **CopyCommandsHelp**: Copy this fully categorized action commands reference with descriptions to system clipboard.
-- **BindingsAlpha**: Copy active keybindings map sorted alphabetically by command name to system clipboard.
-- **BindingsLocation**: Copy active keybindings map grouped by keyboard hardware location to system clipboard.
+- **CopyCommands**: Copy all available action commands sorted by category to the system clipboard.
+- **CopyCommandsAlpha**: Copy all available action commands sorted alphabetically to the system clipboard.
+- **CopyBindings**: Copy all active hotkeys keybindings dictionary map to the system clipboard.
+- **CopyCommandsHelp**: Copy this fully categorized action commands reference with descriptions to the system clipboard.
+- **CopyBindingsAlpha**: Copy active keybindings map sorted alphabetically by command name to the system clipboard.
+- **CopyBindingsLocation**: Copy active keybindings map grouped by keyboard hardware location to the system clipboard.
+- **SysMenu**: Display a popup context menu of all system commands to quickly select and run.
 - **ToggleSuspension**: Suspend or resume all HotWinAHK modifier triggers and mouse gestures instantly.
 - **ReloadConfig**: Hot-reload preferences from HotWinAHK.ini and compile hotkeys dynamically.
 - **EditConfig**: Open HotWinAHK.ini configurations in system default text editor.

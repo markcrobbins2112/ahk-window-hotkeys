@@ -506,7 +506,7 @@ CompileIniToStaticHotkeys() {
                 sPrefix := ""
             }
             ScriptBuffer .= sPrefix sAHKStroke ":: {`n"
-            if (sCmd == "ToggleSuspension" || sCmd == "ExitProgram" || sCmd == "RestartProgram" || sCmd == "ReloadConfig" || sCmd == "EditConfig" || sCmd == "HelpScreen" || sCmd == "WinInfo" || sCmd == "CopyCommands" || sCmd == "CopyBindings" || sCmd == "CopyCommandsHelp" || sCmd == "BindingsAlpha" || sCmd == "BindingsLocation" || sCmd == "PeekTucked" || sCmd == "Untuck" || sCmd == "CmdPalette") {
+            if (sCmd == "ToggleSuspension" || sCmd == "ExitProgram" || sCmd == "RestartProgram" || sCmd == "ReloadConfig" || sCmd == "EditConfig" || sCmd == "HelpScreen" || sCmd == "WinInfo" || sCmd == "CopyCommands" || sCmd == "CopyBindings" || sCmd == "CopyCommandsHelp" || sCmd == "CopyCommandsAlpha" || sCmd == "CopyBindingsAlpha" || sCmd == "CopyBindingsLocation" || sCmd == "SysMenu" || sCmd == "PeekTucked" || sCmd == "Untuck" || sCmd == "CmdPalette") {
                 ScriptBuffer .= '    try Suspend("Permit")`n'
             }
             ScriptBuffer .= '    ExecuteActionWithCondition("' sCmd '", "' sCond '")`n'
@@ -577,7 +577,7 @@ LoadHotkeysAtRuntime() {
 ; #region  _engine 
 IsMetaCommand(sCmd) {
     ; Add your untuck commands to the meta-command bypass list
-    if (InStr(sCmd, "BumpEdgeUntuck") || InStr(sCmd, "HelpScreen") || InStr(sCmd, "ReloadConfig") || InStr(sCmd, "CopyCommands") || InStr(sCmd, "CopyBindings") || InStr(sCmd, "CopyCommandsHelp") || InStr(sCmd, "BindingsAlpha") || InStr(sCmd, "BindingsLocation") || InStr(sCmd, "PeekTucked") || InStr(sCmd, "Untuck") || InStr(sCmd, "CmdPalette")) {
+    if (InStr(sCmd, "BumpEdgeUntuck") || InStr(sCmd, "HelpScreen") || InStr(sCmd, "ReloadConfig") || InStr(sCmd, "CopyCommands") || InStr(sCmd, "CopyBindings") || InStr(sCmd, "CopyCommandsHelp") || InStr(sCmd, "CopyCommandsAlpha") || InStr(sCmd, "CopyBindingsAlpha") || InStr(sCmd, "CopyBindingsLocation") || InStr(sCmd, "SysMenu") || InStr(sCmd, "PeekTucked") || InStr(sCmd, "Untuck") || InStr(sCmd, "CmdPalette")) {
         return true
     }
 
@@ -667,8 +667,10 @@ ExecuteCommandRegistry(sCmd, hWnd) {
         case "CopyCommands": CopyCommands()
         case "CopyBindings": CopyBindings()
         case "CopyCommandsHelp": CopyCommandsHelp()
-        case "BindingsAlpha": BindingsAlpha()
-        case "BindingsLocation": BindingsLocation()
+        case "CopyCommandsAlpha": CopyCommandsAlpha()
+        case "CopyBindingsAlpha": CopyBindingsAlpha()
+        case "CopyBindingsLocation": CopyBindingsLocation()
+        case "SysMenu": SysMenu()
     }
 
     ; --- DYNAMIC POSITION PIXEL SHIFT MOVEMENT MATRIX ---
@@ -3120,11 +3122,13 @@ GetGlobalCommandList() {
         {cat: "SYSTEM", cmd: "CmdPalette", key: "Win + Ctrl + Shift + C", desc: "Display the interactive fuzzy-search Command Palette for manual trigger / dry run testing."},
         {cat: "SYSTEM", cmd: "WinInfo", key: "Win + Ctrl + /", desc: "Display active window physical bounds, handle ID, class, and executable name."},
         {cat: "SYSTEM", cmd: "PeekUnderMouse", key: "Double + LWin + P", desc: "Display class of window beneath mouse cursor."},
-        {cat: "SYSTEM", cmd: "CopyCommands", key: "Win + Ctrl + C", desc: "Copy all available action commands dictionary to clipboard."},
+        {cat: "SYSTEM", cmd: "CopyCommands", key: "Win + Ctrl + C", desc: "Copy all available action commands sorted by category to clipboard."},
         {cat: "SYSTEM", cmd: "CopyBindings", key: "Win + Alt + C", desc: "Copy active keybindings dictionary map to clipboard."},
         {cat: "SYSTEM", cmd: "CopyCommandsHelp", key: "Win + Ctrl + Shift + H", desc: "Copy all categorized action commands with full explanations to clipboard."},
-        {cat: "SYSTEM", cmd: "BindingsAlpha", key: "Win + Ctrl + Shift + A", desc: "Copy active keybindings map sorted alphabetically by command name to clipboard."},
-        {cat: "SYSTEM", cmd: "BindingsLocation", key: "Win + Ctrl + Shift + L", desc: "Copy active keybindings map grouped by keyboard hardware location to clipboard."},
+        {cat: "SYSTEM", cmd: "CopyCommandsAlpha", key: "Win + Ctrl + Shift + A", desc: "Copy all available action commands sorted alphabetically to clipboard."},
+        {cat: "SYSTEM", cmd: "CopyBindingsAlpha", key: "Win + Ctrl + Shift + B", desc: "Copy active keybindings map sorted alphabetically by command name to clipboard."},
+        {cat: "SYSTEM", cmd: "CopyBindingsLocation", key: "Win + Ctrl + Shift + L", desc: "Copy active keybindings map grouped by keyboard hardware location to clipboard."},
+        {cat: "SYSTEM", cmd: "SysMenu", key: "Win + Ctrl + Shift + S", desc: "Show popup menu of all system commands to quickly select and run."},
         {cat: "SYSTEM", cmd: "ToggleSuspension", key: "Win + Alt + S", desc: "Suspend or resume all HotWinAHK modifier triggers instantly."},
         {cat: "SYSTEM", cmd: "ReloadConfig", key: "Win + F12", desc: "Hot-reload preferences from HotWinAHK.ini and compile hotkeys dynamically."},
         {cat: "SYSTEM", cmd: "EditConfig", key: "Win + Alt + E", desc: "Open HotWinAHK.ini configurations in system default text editor."},
@@ -3671,52 +3675,36 @@ HandleTuckedDrag() {
 }
 
 CopyCommands() {
-    commandsList := "=== HotWinAHK Available Action Commands ===`r`n`r`n"
-    commands := [
-        "HelpScreen", "WinInfo", "ToggleSuspension", "ReloadConfig", "EditConfig", 
-        "ExitProgram", "RestartProgram", "AlwaysOnTop", "SetOpacity70", "RemoveOpacity", 
-        "SendToBack", "MinimizeToTray", "PickFromTray", "PeekUnderMouse", 
-        "MoveLeft10px", "MoveRight10px", "MoveUp10px", "MoveDown10px", 
-        "MoveLeft1px", "MoveRight1px", "MoveUp1px", "MoveDown1px", 
-        "EdgeLeft", "EdgeRight", "EdgeTop", "EdgeBottom", "EdgeTopLeft", 
-        "EdgeTopRight", "EdgeBottomLeft", "EdgeBottomRight", "EdgeCenter", 
-        "ScaleExpand10px", "ScaleReduce10px", "ScaleExpandGridPart", "ScaleReduceGridPart", "TrimTop", "TrimBottom", 
-        "TrimLeft", "TrimRight", "TrimAll", 
-        "TrimTopLeft", "TrimTopRight", "TrimBottomLeft", "TrimBottomRight",
-        "AddTop", "AddBottom", "AddLeft", "AddRight", 
-        "AddTopLeft", "AddTopRight", "AddBottomLeft", "AddBottomRight",
-        "GrowLeft", "GrowRight", "GrowTop", "GrowBottom", "GrowAll",
-        "GrowTopLeft", "GrowTopRight", "GrowBottomLeft", "GrowBottomRight",
-        "SubtractTop", "SubtractBottom", "SubtractLeft", "SubtractRight", 
-        "SubtractTopLeft", "SubtractTopRight", "SubtractBottomLeft", "SubtractBottomRight",
-        "SetHome", "ClearHome", "GoHome", "Home", "HomePeek", 
-        "MouseRelativeSize", "HalfSizeLeft", "HalfSizeRight", "HalfSizeTop", "HalfSizeBottom", 
-        "DoubleSizeLeft", "DoubleSizeRight", "DoubleSizeTop", "DoubleSizeBottom", 
-        "NextWindow", "PrevWindow", "NextClassWindow", "PrevClassWindow", 
-        "JumpGridLeft", "JumpGridRight", "JumpGridUp", "JumpGridDown", 
-        "JumpGridTopLeft", "JumpGridTopRight", "JumpGridBottomLeft", "JumpGridBottomRight",
-        "MouseToGrid", 
-        "SnapToGridEnlarge", "SnapToGridShrink", "Center", 
-        "MoveToGridLeft", "MoveToGridRight", "MoveToGridUp", "MoveToGridDown", 
-        "MoveToGridTopLeft", "MoveToGridTopRight", "MoveToGridBottomLeft", "MoveToGridBottomRight",
-        "StretchToGridLeft", "StretchToGridRight", "StretchToGridUp", "StretchToGridDown", 
-        "StretchToGridTopLeft", "StretchToGridTopRight", "StretchToGridBottomLeft", "StretchToGridBottomRight",
-        "PullToGridLeft", "PullToGridRight", "PullToGridUp", "PullToGridDown", 
-        "PullToGridTopLeft", "PullToGridTopRight", "PullToGridBottomLeft", "PullToGridBottomRight",
-        "StretchLeft", "StretchRight", "StretchTop", "StretchBottom",
-        "StretchTopLeft", "StretchTopRight", "StretchBottomLeft", "StretchBottomRight", "TuckLeft", "TuckRight", 
-        "TuckUp", "TuckDown", "BumpEdgeUntuck", "BumpEdgeUntuckActivate", 
-        "UntuckLeft", "UntuckRight", "UntuckTop", "UntuckBottom",
-        "TuckPeekLeft", "TuckPeekRight", "TuckPeekTop", "TuckPeekBottom",
-        "EdgeInLeft", "EdgeInRight", "EdgeInTop", "EdgeInBottom", "EdgeInTopLeft", "EdgeInTopRight", "EdgeInBottomLeft", "EdgeInBottomRight",
-        "DragWindow",
-        "FocusDeepestWindow", "CopyCommands", "CopyBindings", "CopyCommandsHelp", "BindingsAlpha", "BindingsLocation"
-    ]
-    for cmd in commands {
-        commandsList .= cmd . "`r`n"
+    commandList := GetGlobalCommandList()
+    outText := "=== HotWinAHK Available Action Commands by Category ===`r`n`r`n"
+    currentCategory := ""
+    
+    for item in commandList {
+        if (item.cat != currentCategory) {
+            currentCategory := item.cat
+            outText .= "== " . currentCategory . " ==`r`n"
+        }
+        outText .= item.cmd . "`r`n"
     }
-    A_Clipboard := commandsList
-    ShowTargetToolTip("Copied Available Commands to Clipboard!")
+    
+    outText := RTrim(outText, "`r`n ") . "`r`n"
+    A_Clipboard := outText
+    ShowTargetToolTip("Copied Available Commands by Category to Clipboard!")
+}
+
+CopyCommandsAlpha() {
+    commandList := GetGlobalCommandList()
+    flatText := ""
+    
+    for item in commandList {
+        flatText .= item.cmd . "`r`n"
+    }
+    flatText := RTrim(flatText, "`r`n")
+    sortedText := Sort(flatText)
+    
+    outText := "=== HotWinAHK Available Action Commands Alphabetical ===`r`n`r`n" . sortedText . "`r`n"
+    A_Clipboard := outText
+    ShowTargetToolTip("Copied Alphabetic Commands to Clipboard!")
 }
 
 CopyCommandsHelp() {
@@ -3771,7 +3759,7 @@ CopyBindings() {
     ShowTargetToolTip("Copied Active Bindings to Clipboard!")
 }
 
-BindingsAlpha() {
+CopyBindingsAlpha() {
     global g_sIniFile
     if !FileExist(g_sIniFile) {
         ShowTargetToolTip("INI File not found!")
@@ -3815,7 +3803,7 @@ BindingsAlpha() {
     ShowTargetToolTip("Copied Alphabetic Bindings to Clipboard!")
 }
 
-BindingsLocation() {
+CopyBindingsLocation() {
     global g_sIniFile
     if !FileExist(g_sIniFile) {
         ShowTargetToolTip("INI File not found!")
@@ -3937,6 +3925,28 @@ BindingsLocation() {
     outText := RTrim(outText, "`r`n ") . "`r`n"
     A_Clipboard := outText
     ShowTargetToolTip("Copied Bindings by Location to Clipboard!")
+}
+
+SysMenu() {
+    sysCmds := []
+    commandList := GetGlobalCommandList()
+    for item in commandList {
+        if (item.cat == "SYSTEM") {
+            sysCmds.Push(item)
+        }
+    }
+    
+    sysMenu := Menu()
+    for item in sysCmds {
+        targetCmd := item.cmd
+        displayName := targetCmd
+        if (item.key != "" && item.key != "Custom" && item.key != "Auto Indicator") {
+            displayName .= "  (" . item.key . ")"
+        }
+        sysMenu.Add(displayName, (itemName, itemPos, actualMenu) => ExecuteActionWithCondition(targetCmd, ""))
+    }
+    
+    sysMenu.Show()
 }
 
 GetModifierGroupCode(sStroke) {
