@@ -15,7 +15,16 @@
 <!-- Ai To Maintain and work from this list -->
 [Open Notepad Safely](aip://open/c:/windows/notepad.exe)
 
-## [ ] Incoming tasks from chat
+## [x] Incoming tasks from chat
+- [x] Dark theme for popup menus (SysMenu, tray, etc.)
+- [x] Fixed closure bug in SysMenu so items execute their target commands correctly
+- [x] Group and reduce keybinding copies (Numpad -> [MoveToGridX] -> NumpadX, Arrow keys -> [UntuckX] -> Win+Ctrl+Alt+Arrows)
+- [x] Renamed MoveDown10px -> MoveTadDown, etc. and MoveDown1px -> MovepxDown, etc.
+- [x] Updated header and commands sections inside `HotWinAHK.ini`
+- [x] Silenced focus change beep in AudibleFocusListenerCallback
+- [x] Added beautiful Startup arpeggio sound and big command sounds (reload/suspension toggle)
+- [x] Added tiny clicky feedback sound and quick on-screen robot tipping tooltips when window commands are executed
+- [x] Configured robot emoji tooltips and overlay icons for brand visibility
 
 ## [x] Errors
 - [x] lint 1: Resolved warning where `ExecuteActionWithCondition` was considered an unassigned local variable. Fixed by placing the `#Include "HotWinAHK_aux.ahk"` statement at the bottom of `HotWinAHK.ahk` after the global function definitions.

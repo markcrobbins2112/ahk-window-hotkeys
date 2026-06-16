@@ -100,6 +100,8 @@ if (wasAlreadyRunning && A_Args.Length > 0) {
     g_bIsSilentRestart := true
 }
 
+SetProcessDarkMode()
+A_IconTip := "🤖 HotWinAHK"
 SetTimer(CheckScreenEdgeBumps, 25)
 SetTimer(UpdateActiveWindowDot, 100)
 SetTimer(UpdateHomeIndicators, 250)
@@ -117,7 +119,7 @@ UpdateSavedHomesCache()
 CompileIniToStaticHotkeys()
 ; Sound confirmation beep on successful loading
 if (!g_bIsSilentRestart) {
-    SoundBeep(1000, 300)
+    PlayStartupSound()
     try TrayTip("Engine Reloaded", "Window Nudger Active", 1)
 }
 
@@ -206,18 +208,61 @@ InitializeGlobalFocusBeeper() {
         , "uint", 0, "uint", 0, "uint", 0)
 }
 AudibleFocusListenerCallback(hWinEventHook, event, hwnd, idObject, idChild, dwEventThread, dwmsEventTime) {
-    ; Skip processing if the event object isn't a core window frame
-    if (idObject != 0) {
-        return
-    }
-
+    ; Silencing focus changes as requested by user
+    return
+}
+SetProcessDarkMode() {
     try {
-        ; EMIT AUDIBLE TONE: 750Hz frequency for a snappy 40 milliseconds duration
-        SoundBeep(750, 40)
+        ; PreferredAppMode values: 0 = Default, 1 = AllowDark, 2 = ForceDark, 3 = ForceLight, 4 = Max
+        DllCall("uxtheme\SetPreferredAppMode", "int", 2) ; ForceDark
+        DllCall("uxtheme\FlushMenuThemes")
     } catch {
-        ; Emit a lower diagnostic warning beep if the focused window is a hidden system node
-        SoundBeep(400, 30)
+        try {
+            DllCall("uxtheme\AllowDarkModeForApp", "int", 1)
+            DllCall("uxtheme\FlushMenuThemes")
+        } catch {
+            ; ignore
+        }
     }
+}
+PlayStartupSound() {
+    if (g_bIsSilentRestart)
+        return
+    ; A beautiful upbeat major triad arpeggio (A4, C#5, E5, A5)
+    SoundBeep(440, 80)
+    Sleep(30)
+    SoundBeep(554, 80)
+    Sleep(30)
+    SoundBeep(659, 80)
+    Sleep(30)
+    SoundBeep(880, 150)
+}
+PlayBigCommandSound() {
+    ; Ascending dual-tone sweep for administrative commands
+    SoundBeep(880, 80)
+    Sleep(40)
+    SoundBeep(1320, 120)
+}
+PlayToggleSuspensionSound(bSuspended) {
+    if (bSuspended) {
+        ; Descending sad tones for suspension (deactivation)
+        SoundBeep(700, 60)
+        Sleep(30)
+        SoundBeep(500, 100)
+    } else {
+        ; Ascending happy tones for activation
+        SoundBeep(500, 60)
+        Sleep(30)
+        SoundBeep(700, 100)
+    }
+}
+PlayTinyFeedbackSound() {
+    ; Snappy feedback click/tone
+    SoundBeep(1600, 15)
+}
+ShowQuickTip(sText) {
+    ToolTip(sText)
+    SetTimer(() => ToolTip(), -800) ; Clear tooltip after 800ms
 }
 SquareRoot(val) {
     return val ** 0.5
@@ -258,7 +303,7 @@ AnimateWinMove(targetX, targetY, hWnd) {
 
 ; #region  _ini 
 ReloadIniConfig() {
-    SoundBeep(600, 150)
+    PlayBigCommandSound()
     ShowTargetToolTip("Re-Compiling Matrix...")
     CompileIniToStaticHotkeys()
 }
@@ -585,9 +630,6 @@ IsMetaCommand(sCmd) {
     return false
 }
 ExecuteActionWithCondition(sCmd, sCond) {
-    TraceLogString := "Command: [" . sCmd . "] | Filter: [" . (sCond == "" ? "NONE" : sCond) . "]"
-    ShowTargetToolTip("RUNNING ENGINE ACTION`n" . TraceLogString, -2500)
-
     if IsMetaCommand(sCmd) {
         ExecuteCommandRegistry(sCmd, 0)
         return
@@ -595,6 +637,10 @@ ExecuteActionWithCondition(sCmd, sCond) {
 
     if g_bSuspended
         return
+
+    ; Play a snappy retro click tone and show an elegant cursor tooltip
+    PlayTinyFeedbackSound()
+    ShowQuickTip("🤖 " . sCmd)
 
     hWndTarget := InStr(sCmd, "UnderMouse") ? MouseGetWindowHWND() : DllCall("user32\GetForegroundWindow", "ptr")
 
@@ -675,9 +721,9 @@ ExecuteCommandRegistry(sCmd, hWnd) {
 
     ; --- DYNAMIC POSITION PIXEL SHIFT MOVEMENT MATRIX ---
     ; --- DYNAMIC POSITION PIXEL SHIFT MOVEMENT MATRIX (INSTANT WARP) ---
-    if RegExMatch(sCmd, "i)^Move(?!ToGrid)") {
+    if RegExMatch(sCmd, "i)^(MoveTad|Movepx)") {
         ; 1. Determine base macro step scale parameter
-        iStep := InStr(sCmd, "10px") ? g_z : 1
+        iStep := InStr(sCmd, "MoveTad") ? g_z : 1
 
         ; 2. Corrected Independent Axis Evaluation (Enables flawless compound diagonal tracking)
         dX := 0
@@ -2158,7 +2204,7 @@ ShutdownEngine() {
 ToggleSuspension() {
     global g_bSuspended := !g_bSuspended
     try Suspend(g_bSuspended ? 1 : 0)
-    SoundBeep(g_bSuspended ? 400 : 900, 200)
+    PlayToggleSuspensionSound(g_bSuspended)
     ShowTargetToolTip(g_bSuspended ? "Suspended" : "Active")
 }
 ; #endregion
@@ -2433,7 +2479,7 @@ ShowTargetToolTip(sText, duration := -1800) {
     g_OverlayGui.BackColor := "121214" ; Deep premium dark charcoal
     
     ; Select pretty icon depending on the message context
-    iconChar := "✦"
+    iconChar := "🤖"
     iconColor := "00FFCC" ; Vibrant cyan
     if (InStr(sText, "Save") || InStr(sText, "Saved") || InStr(sText, "Added")) {
         iconChar := "✔"
@@ -2972,7 +3018,7 @@ ShowHelpScreen(hWnd := 0) {
     }
 
     ; Create a highly polished, dark themed AHK v2 GUI window conforming exactly to user color scheme and dimensions
-    helpGui := Gui("+AlwaysOnTop -MaximizeBox -MinimizeBox +ToolWindow", "HotWinAHK - Commands & Gestures Reference")
+    helpGui := Gui("+AlwaysOnTop -MaximizeBox -MinimizeBox +ToolWindow", "🤖 HotWinAHK - Commands & Gestures Reference")
     helpGui.BackColor := "121214"
     helpGui.SetFont("s10 cE0E0E6", "Segoe UI")
 
@@ -3022,11 +3068,11 @@ ShowHelpScreen(hWnd := 0) {
 
     ; --- COLUMN 2: ARROW MOVEMENT ---
     helpGui.SetFont("s9 bold c4476ff", "Segoe UI")
-    helpGui.Add("Text", "x425 y80 w110", "Move10px")
+    helpGui.Add("Text", "x425 y80 w110", "MoveTad")
     helpGui.Add("Text", "x545 y80 w110", "Win + Alt + Arrows")
 
     helpGui.SetFont("s9 bold cFFCC00", "Segoe UI")
-    helpGui.Add("Text", "x425 y98 w110", "Move1px")
+    helpGui.Add("Text", "x425 y98 w110", "Movepx")
     helpGui.Add("Text", "x545 y98 w110", "Win + Shift + Arrows")
 
     helpGui.SetFont("s9 bold c44FF44", "Segoe UI")
@@ -3177,14 +3223,14 @@ GetGlobalCommandList() {
 
         ; == MOVE ==
         {cat: "MOVE", cmd: "Center", key: "Numpad5", desc: "Move active window to center of screen without sizing changes."},
-        {cat: "MOVE", cmd: "MoveLeft10px", key: "Win + Alt + Left", desc: "Shift active window left by 10 pixels coarse-scale."},
-        {cat: "MOVE", cmd: "MoveRight10px", key: "Win + Alt + Right", desc: "Shift active window right by 10 pixels coarse-scale."},
-        {cat: "MOVE", cmd: "MoveUp10px", key: "Win + Alt + Up", desc: "Shift active window up by 10 pixels coarse-scale."},
-        {cat: "MOVE", cmd: "MoveDown10px", key: "Win + Alt + Down", desc: "Shift active window down by 10 pixels coarse-scale."},
-        {cat: "MOVE", cmd: "MoveLeft1px", key: "Win + Shift + Left", desc: "Nudge active window left with 1 pixel fine precision."},
-        {cat: "MOVE", cmd: "MoveRight1px", key: "Win + Shift + Right", desc: "Nudge active window right with 1 pixel fine precision."},
-        {cat: "MOVE", cmd: "MoveUp1px", key: "Win + Shift + Up", desc: "Nudge active window up with 1 pixel fine precision."},
-        {cat: "MOVE", cmd: "MoveDown1px", key: "Win + Shift + Down", desc: "Nudge active window down with 1 pixel fine precision."},
+        {cat: "MOVE", cmd: "MoveTadLeft", key: "Win + Alt + Left", desc: "Shift active window left by 10 pixels coarse-scale."},
+        {cat: "MOVE", cmd: "MoveTadRight", key: "Win + Alt + Right", desc: "Shift active window right by 10 pixels coarse-scale."},
+        {cat: "MOVE", cmd: "MoveTadUp", key: "Win + Alt + Up", desc: "Shift active window up by 10 pixels coarse-scale."},
+        {cat: "MOVE", cmd: "MoveTadDown", key: "Win + Alt + Down", desc: "Shift active window down by 10 pixels coarse-scale."},
+        {cat: "MOVE", cmd: "MovepxLeft", key: "Win + Shift + Left", desc: "Nudge active window left with 1 pixel fine precision."},
+        {cat: "MOVE", cmd: "MovepxRight", key: "Win + Shift + Right", desc: "Nudge active window right with 1 pixel fine precision."},
+        {cat: "MOVE", cmd: "MovepxUp", key: "Win + Shift + Up", desc: "Nudge active window up with 1 pixel fine precision."},
+        {cat: "MOVE", cmd: "MovepxDown", key: "Win + Shift + Down", desc: "Nudge active window down with 1 pixel fine precision."},
         {cat: "MOVE", cmd: "EdgeLeft", key: "Custom", desc: "Align window to the screen's left border."},
         {cat: "MOVE", cmd: "EdgeRight", key: "Custom", desc: "Align window to the screen's right border."},
         {cat: "MOVE", cmd: "EdgeTop", key: "Custom", desc: "Align window to the screen's top border."},
@@ -3733,9 +3779,8 @@ CopyBindings() {
         return
     }
     
-    bindingsList := "=== HotWinAHK Active Keybindings ===`r`n`r`n"
+    rawLines := []
     sectionsText := IniRead(g_sIniFile)
-    count := 0
     
     loop parse, sectionsText, "`n", "`r" {
         sCmd := Trim(A_LoopField)
@@ -3750,9 +3795,15 @@ CopyBindings() {
                 break
             }
             
-            bindingsList .= "[" . sCmd . "] -> " . keyValue . "`r`n"
-            count++
+            rawLines.Push("[" . sCmd . "] -> " . keyValue)
         }
+    }
+    
+    reducedArray := ReduceBindingsArray(rawLines)
+    
+    bindingsList := "=== HotWinAHK Active Keybindings ===`r`n`r`n"
+    for item in reducedArray {
+        bindingsList .= item . "`r`n"
     }
     
     A_Clipboard := bindingsList
@@ -3766,7 +3817,7 @@ CopyBindingsAlpha() {
         return
     }
     
-    lines := []
+    rawLines := []
     sectionsText := IniRead(g_sIniFile)
     
     loop parse, sectionsText, "`n", "`r" {
@@ -3782,17 +3833,19 @@ CopyBindingsAlpha() {
                 break
             }
             
-            lines.Push("[" . sCmd . "] -> " . keyValue)
+            rawLines.Push("[" . sCmd . "] -> " . keyValue)
         }
     }
     
-    if (lines.Length == 0) {
+    if (rawLines.Length == 0) {
         ShowTargetToolTip("No active bindings found!")
         return
     }
     
+    reducedArray := ReduceBindingsArray(rawLines)
+    
     flatText := ""
-    for idx, line in lines {
+    for idx, line in reducedArray {
         flatText .= line . "`r`n"
     }
     flatText := RTrim(flatText, "`r`n")
@@ -3827,6 +3880,7 @@ CopyBindingsLocation() {
         numpadMap[modGrp] := []
     }
     
+    rawLines := []
     loop parse, sectionsText, "`n", "`r" {
         sCmd := Trim(A_LoopField)
         if (sCmd == "" || SubStr(sCmd, 1, 1) == "-") {
@@ -3839,24 +3893,34 @@ CopyBindingsLocation() {
             if (keyValue == "") {
                 break
             }
-            
-            sStroke := keyValue
-            if InStr(keyValue, "|") {
-                aSplit := StrSplit(keyValue, "|")
-                sStroke := Trim(aSplit[1])
-            }
-            
-            modGrp := GetModifierGroupCode(sStroke)
-            category := GetHardwareCategory(sStroke)
-            lineStr := "[" . sCmd . "] -> " . keyValue
-            
-            if (category == "Arrows") {
-                arrowsMap[modGrp].Push(lineStr)
-            } else if (category == "Numpad") {
-                numpadMap[modGrp].Push(lineStr)
-            } else {
-                alphanumericMap[modGrp].Push(lineStr)
-            }
+            rawLines.Push("[" . sCmd . "] -> " . keyValue)
+        }
+    }
+    
+    reducedArray := ReduceBindingsArray(rawLines)
+    
+    for lineStr in reducedArray {
+        if !RegExMatch(lineStr, "^\[([^\]]+)\]\s*->\s*(.+)$", &match)
+            continue
+        
+        sCmd := match[1]
+        keyValue := match[2]
+        
+        sStroke := keyValue
+        if InStr(keyValue, "|") {
+            aSplit := StrSplit(keyValue, "|")
+            sStroke := Trim(aSplit[1])
+        }
+        
+        modGrp := GetModifierGroupCode(sStroke)
+        category := GetHardwareCategory(sStroke)
+        
+        if (category == "Arrows") {
+            arrowsMap[modGrp].Push(lineStr)
+        } else if (category == "Numpad") {
+            numpadMap[modGrp].Push(lineStr)
+        } else {
+            alphanumericMap[modGrp].Push(lineStr)
         }
     }
     
@@ -3927,6 +3991,132 @@ CopyBindingsLocation() {
     ShowTargetToolTip("Copied Bindings by Location to Clipboard!")
 }
 
+ReduceBindingsArray(bindingsArray) {
+    reduced := []
+    
+    parsed := []
+    for line in bindingsArray {
+        if RegExMatch(line, "^\[([^\]]+)\]\s*->\s*(.+)$", &m) {
+            parsed.Push({line: line, cmd: m[1], key: m[2]})
+        } else {
+            parsed.Push({line: line, cmd: "", key: ""})
+        }
+    }
+    
+    numpadDirections := Map(
+        "BottomLeft", "1",
+        "Down", "2",
+        "BottomRight", "3",
+        "Left", "4",
+        "Center", "5",
+        "Right", "6",
+        "TopLeft", "7",
+        "Up", "8",
+        "TopRight", "9"
+    )
+    
+    arrowDirections := Map(
+        "Left", "Left",
+        "Right", "Right",
+        "Up", "Up",
+        "Down", "Down",
+        "Bottom", "Down",
+        "Top", "Up"
+    )
+    
+    groupsNumpad := Map()
+    groupsArrows := Map()
+    
+    for idx, p in parsed {
+        if (p.cmd == "")
+            continue
+            
+        foundNumpad := false
+        for suffix, digit in numpadDirections {
+            if (SubStr(p.cmd, -StrLen(suffix)) == suffix) {
+                base := SubStr(p.cmd, 1, StrLen(p.cmd) - StrLen(suffix))
+                keyPattern := "i)^(.*)Numpad" . digit . "$"
+                if RegExMatch(p.key, keyPattern, &keyMatch) {
+                    prefix := keyMatch[1]
+                    gKey := base . "`a" . prefix
+                    if !groupsNumpad.Has(gKey)
+                        groupsNumpad[gKey] := []
+                    groupsNumpad[gKey].Push({index: idx, suffix: suffix, digit: digit})
+                    foundNumpad := true
+                    break
+                }
+            }
+        }
+        
+        if (foundNumpad)
+            continue
+            
+        for suffix, dirKey in arrowDirections {
+            if (SubStr(p.cmd, -StrLen(suffix)) == suffix) {
+                base := SubStr(p.cmd, 1, StrLen(p.cmd) - StrLen(suffix))
+                keyPattern := "i)^(.*)" . dirKey . "$"
+                if RegExMatch(p.key, keyPattern, &keyMatch) {
+                    prefix := keyMatch[1]
+                    gKey := base . "`a" . prefix
+                    if !groupsArrows.Has(gKey)
+                        groupsArrows[gKey] := []
+                    groupsArrows[gKey].Push({index: idx, suffix: suffix, dirKey: dirKey})
+                    break
+                }
+            }
+        }
+    }
+    
+    skipIndices := Map()
+    replaceMap := Map()
+    
+    for gKey, items in groupsNumpad {
+        if (items.Length >= 3) {
+            firstIdx := 999999
+            for item in items {
+                if (item.index < firstIdx)
+                    firstIdx := item.index
+                skipIndices[item.index] := true
+            }
+            parts := StrSplit(gKey, "`a")
+            base := parts[1]
+            prefix := parts[2]
+            
+            replaceMap[firstIdx] := "[" . base . "X] -> " . prefix . "NumpadX"
+            skipIndices.Delete(firstIdx)
+        }
+    }
+    
+    for gKey, items in groupsArrows {
+        if (items.Length >= 3) {
+            firstIdx := 999999
+            for item in items {
+                if (item.index < firstIdx)
+                    firstIdx := item.index
+                skipIndices[item.index] := true
+            }
+            parts := StrSplit(gKey, "`a")
+            base := parts[1]
+            prefix := parts[2]
+            
+            replaceMap[firstIdx] := "[" . base . "X] -> " . prefix . "Arrows"
+            skipIndices.Delete(firstIdx)
+        }
+    }
+    
+    for idx, p in parsed {
+        if skipIndices.Has(idx)
+            continue
+        if replaceMap.Has(idx) {
+            reduced.Push(replaceMap[idx])
+        } else {
+            reduced.Push(p.line)
+        }
+    }
+    
+    return reduced
+}
+
 SysMenu() {
     sysCmds := []
     commandList := GetGlobalCommandList()
@@ -3943,10 +4133,13 @@ SysMenu() {
         if (item.key != "" && item.key != "Custom" && item.key != "Auto Indicator") {
             displayName .= "  (" . item.key . ")"
         }
-        sysMenu.Add(displayName, (itemName, itemPos, actualMenu) => ExecuteActionWithCondition(targetCmd, ""))
+        sysMenu.Add(displayName, SysMenuHandler.Bind(targetCmd))
     }
     
     sysMenu.Show()
+}
+SysMenuHandler(targetCmd, itemName, itemPos, actualMenu) {
+    ExecuteActionWithCondition(targetCmd, "")
 }
 
 GetModifierGroupCode(sStroke) {
@@ -3983,7 +4176,7 @@ GetHardwareCategory(sStroke) {
     sCleanKey := StrReplace(sCleanKey, " ", "")
     sCleanLower := StrLower(sCleanKey)
     
-    if (sCleanLower == "left" || sCleanLower == "right" || sCleanLower == "up" || sCleanLower == "down") {
+    if (sCleanLower == "left" || sCleanLower == "right" || sCleanLower == "up" || sCleanLower == "down" || sCleanLower == "arrows") {
         return "Arrows"
     } else if (InStr(sCleanLower, "numpad") == 1) {
         return "Numpad"

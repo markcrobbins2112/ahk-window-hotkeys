@@ -167,35 +167,35 @@ $^#f4:: {
 }
 
 $!#left:: {
-    ExecuteActionWithCondition("MoveLeft10px", "")
+    ExecuteActionWithCondition("MoveTadLeft", "")
 }
 
 $!#right:: {
-    ExecuteActionWithCondition("MoveRight10px", "")
+    ExecuteActionWithCondition("MoveTadRight", "")
 }
 
 $!#up:: {
-    ExecuteActionWithCondition("MoveUp10px", "")
+    ExecuteActionWithCondition("MoveTadUp", "")
 }
 
 $!#down:: {
-    ExecuteActionWithCondition("MoveDown10px", "")
+    ExecuteActionWithCondition("MoveTadDown", "")
 }
 
 $+#left:: {
-    ExecuteActionWithCondition("MoveLeft1px", "")
+    ExecuteActionWithCondition("MovepxLeft", "")
 }
 
 $+#right:: {
-    ExecuteActionWithCondition("MoveRight1px", "")
+    ExecuteActionWithCondition("MovepxRight", "")
 }
 
 $+#up:: {
-    ExecuteActionWithCondition("MoveUp1px", "")
+    ExecuteActionWithCondition("MovepxUp", "")
 }
 
 $+#down:: {
-    ExecuteActionWithCondition("MoveDown1px", "")
+    ExecuteActionWithCondition("MovepxDown", "")
 }
 
 $+numpad4:: {
