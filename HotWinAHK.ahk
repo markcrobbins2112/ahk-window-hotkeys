@@ -579,7 +579,7 @@ EnsureAllCommandsInIni() {
         if (InStr(line, "#region") || InStr(line, "#endregion")) {
             continue
         }
-        if (RegExMatch(line, "^\[([^\]]+)\]$", &match)) {
+        if (RegExMatch(line, "^\[([^\]]+)\](?:\s*;.*)?$", &match)) {
             hasHitSection := true
             if (currSectionMain != "") {
                 sectionsMap[StrLower(currSectionMain)] := { orig: currSectionRaw, keys: currSectionKeys }
@@ -693,7 +693,7 @@ EnsureAllCommandsInIni() {
             name: "Tuck",
             desc: "Marginal docking, off-screen hiding, tactile peek actions, and pop-up picker menus.",
             subs: [
-                { name: "Actions", desc: "Folds containers under screen edges keeping small peek boundaries visible.", cmds: ["TuckLeft", "TuckRight", "TuckUp", "TuckDown", "BumpEdgeUntuck", "BumpEdgeUntuckActivate", "PeekTucked", "Untuck", "UntuckLeft", "UntuckRight", "UntuckTop", "UntuckBottom", "TuckPeekLeft", "TuckPeekRight", "TuckPeekTop", "TuckPeekBottom", "TuckedPeekAll", "TuckedPeekLeft", "TuckedPeekRight", "TuckedPeekTop", "TuckedPeekBottom"] }
+                { name: "Actions", desc: "Folds containers under screen edges keeping small peek boundaries visible.", cmds: ["TuckLeft", "TuckRight", "TuckUp", "TuckDown", "BumpEdgeUntuck", "BumpEdgeUntuckActivate", "PeekTucked", "Untuck", "UntuckLeft", "UntuckRight", "UntuckTop", "UntuckBottom", "TuckPeekLeft", "TuckPeekRight", "TuckPeekTop", "TuckPeekBottom", "TuckPeekAll", "TuckedPeekLeft", "TuckedPeekRight", "TuckedPeekTop", "TuckedPeekBottom"] }
             ]
         }
     ]
@@ -730,12 +730,12 @@ EnsureAllCommandsInIni() {
     for outerCat in iniStructure {
         newIniText .= sc . "   #region " . outerCat.name . "`r`n"
         if (outerCat.HasOwnProp("desc")) {
-            newIniText .= sc . "   " . outerCat.desc . "`r`n"
+            newIniText .= "    " . sc . " " . outerCat.desc . "`r`n"
         }
         for subCat in outerCat.subs {
             newIniText .= "    " . sc . "   #region " . subCat.name . "`r`n"
             if (subCat.HasOwnProp("desc")) {
-                newIniText .= "    " . sc . "   " . subCat.desc . "`r`n"
+                newIniText .= "        " . sc . " " . subCat.desc . "`r`n"
             }
             for cmdName in subCat.cmds {
                 cleanCmd := StrLower(cmdName)
@@ -743,31 +743,43 @@ EnsureAllCommandsInIni() {
                     continue
                 }
                 writtenCommands[cleanCmd] := true
+                
+                ; Look up original built-in pattern details
+                rowDesc := ""
+                rowKey := ""
+                for row in localRows {
+                    if (StrLower(row.cmd) == cleanCmd) {
+                        rowDesc := row.desc
+                        rowKey := row.key
+                        break
+                    }
+                }
+                
                 if (sectionsMap.Has(cleanCmd)) {
                     secData := sectionsMap[cleanCmd]
                     sectionsMap.Delete(cleanCmd)
-                    newIniText .= "        " . secData.orig . "`r`n"
+                    
+                    ; Canonicalize section header (e.g. [HelpScreen] or [-HelpScreen])
+                    sectionHeader := secData.orig
+                    if (RegExMatch(sectionHeader, "^\[([^\]]+)\]", &mHead)) {
+                        sectionHeader := "[" . mHead[1] . "]"
+                    }
+                    
+                    commentPart := (rowDesc != "") ? (" " . sc . " " . rowDesc) : ""
+                    newIniText .= "        " . sectionHeader . commentPart . "`r`n"
+                    
                     Loop Parse, secData.keys, "`n", "`r" {
                         line := Trim(A_LoopField)
-                        if (line == "") {
+                        ; Exclude comment lines and blank lines to avoid duplication/clutter within keys block
+                        if (line == "" || SubStr(line, 1, 1) == sc) {
                             continue
                         }
                         newIniText .= "            " . line . "`r`n"
                     }
                 } else {
-                    rowDesc := ""
-                    rowKey := ""
-                    for row in localRows {
-                        if (StrLower(row.cmd) == cleanCmd) {
-                            rowDesc := row.desc
-                            rowKey := row.key
-                            break
-                        }
-                    }
-                    if (rowDesc != "") {
-                        newIniText .= "            " . sc . " " . rowDesc . "`r`n"
-                    }
-                    newIniText .= "        [-" . cmdName . "]`r`n"
+                    commentPart := (rowDesc != "") ? (" " . sc . " " . rowDesc) : ""
+                    newIniText .= "        [-" . cmdName . "]" . commentPart . "`r`n"
+                    
                     defaultBinding := rowKey
                     if (defaultBinding == "Custom" || defaultBinding == "Edge Bump" || defaultBinding == "Edge Click/Drag" || defaultBinding == "Auto Indicator") {
                         defaultBinding := ""
@@ -781,7 +793,7 @@ EnsureAllCommandsInIni() {
     }
     if (sectionsMap.Count > 0) {
         newIniText .= sc . "   #region Preferences`r`n"
-        newIniText .= sc . "   User preferences, custom defaults, and localized setup settings.`r`n"
+        newIniText .= "    " . sc . " User preferences, custom defaults, and localized setup settings.`r`n"
         newIniText .= "    " . sc . "   #region Settings`r`n"
         for key, value in sectionsMap {
             newIniText .= "        " . value.orig . "`r`n"
@@ -1159,7 +1171,7 @@ ExecuteCommandRegistry(sCmd, hWnd) {
         case "CmdPalette":
             ShowCmdPalette(hWnd)
 
-        case "TuckedPeekAll":
+        case "TuckPeekAll":
             Menu_TuckedPeek()
 
         case "TuckedPeekLeft":
@@ -3828,7 +3840,7 @@ GetGlobalCommandList() {
         {cat: "TUCK", cmd: "TuckPeekRight", key: "Custom", desc: "Reveal/peek tucked windows on the right edge sequentially."},
         {cat: "TUCK", cmd: "TuckPeekTop", key: "Custom", desc: "Reveal/peek tucked windows on the top edge sequentially."},
         {cat: "TUCK", cmd: "TuckPeekBottom", key: "Custom", desc: "Reveal/peek tucked windows on the bottom edge sequentially."},
-        {cat: "TUCK", cmd: "TuckedPeekAll", key: "Custom", desc: "Show interactive popup menu of all tucked windows formatted with HWND labels."},
+        {cat: "TUCK", cmd: "TuckPeekAll", key: "Custom", desc: "Show interactive popup menu of all tucked windows formatted with HWND labels."},
         {cat: "TUCK", cmd: "TuckedPeekLeft", key: "Custom", desc: "Show popup menu of Left tucked windows formatted with HWND labels."},
         {cat: "TUCK", cmd: "TuckedPeekRight", key: "Custom", desc: "Show popup menu of Right tucked windows formatted with HWND labels."},
         {cat: "TUCK", cmd: "TuckedPeekTop", key: "Custom", desc: "Show popup menu of Top tucked windows formatted with HWND labels."},
@@ -4961,43 +4973,44 @@ StartSettingsDialog() {
     settingsGui.SetFont("s10 cE0E0E6", "Segoe UI")
 
     settingsGui.SetFont("s14 bold c4476ff")
-    settingsGui.Add("Text", "x20 y20 w360 Center", "🤖 Engine Settings Configurations")
+    settingsGui.Add("Text", "x20 y20 w560 Center", "🤖 Engine Settings Configurations")
 
     ; Separator
-    settingsGui.Add("Text", "x20 y50 w360 h2 BackgroundTrans Center c33333A", "__________________________________________________")
+    settingsGui.Add("Text", "x20 y50 w560 h2 BackgroundTrans Center c33333A", "_______________________________________________________________________________")
 
     ; Checkboxes
     settingsGui.SetFont("s10 cE0E0E6")
-    chkSilenceAll := settingsGui.Add("Checkbox", "x50 y80 w300 h22" . (g_SettingsSilenceAll ? " Checked" : ""), "Silence All Audio Cues / SoundBeeps")
-    chkSilentOnWinCmds := settingsGui.Add("Checkbox", "x50 y110 w300 h22" . (g_SettingsSilentOnWinCmds ? " Checked" : ""), "Silent on Window Movement Commands")
-    chkTipWinCmds := settingsGui.Add("Checkbox", "x50 y140 w300 h22" . (g_SettingsTipWinCmds ? " Checked" : ""), "Show Cursor Tooltips for Window Commands")
+    chkSilenceAll := settingsGui.Add("Checkbox", "x50 y80 w500 h22" . (g_SettingsSilenceAll ? " Checked" : ""), "Silence All Audio Cues / SoundBeeps")
+    chkSilentOnWinCmds := settingsGui.Add("Checkbox", "x50 y110 w500 h22" . (g_SettingsSilentOnWinCmds ? " Checked" : ""), "Silent on Window Movement Commands")
+    chkTipWinCmds := settingsGui.Add("Checkbox", "x50 y140 w500 h22" . (g_SettingsTipWinCmds ? " Checked" : ""), "Show Cursor Tooltips for Window Commands")
     
     ; granular beep options
-    chkDisableStartup := settingsGui.Add("Checkbox", "x50 y170 w300 h22" . (g_SettingsDisableStartupBeep ? " Checked" : ""), "Silence Startup Major Triad Arpeggio Beep")
-    chkDisableSuspension := settingsGui.Add("Checkbox", "x50 y200 w300 h22" . (g_SettingsDisableSuspensionBeep ? " Checked" : ""), "Silence Toggle-Suspension Beeps")
+    chkDisableStartup := settingsGui.Add("Checkbox", "x50 y170 w500 h22" . (g_SettingsDisableStartupBeep ? " Checked" : ""), "Silence Startup Major Triad Arpeggio Beep")
+    chkDisableSuspension := settingsGui.Add("Checkbox", "x50 y200 w500 h22" . (g_SettingsDisableSuspensionBeep ? " Checked" : ""), "Silence Toggle-Suspension Beeps")
 
     ; Separator
-    settingsGui.Add("Text", "x20 y230 w360 h2 BackgroundTrans Center c33333A", "__________________________________________________")
+    settingsGui.Add("Text", "x20 y230 w560 h2 BackgroundTrans Center c33333A", "_______________________________________________________________________________")
 
     ; Editor path setting row
     settingsGui.SetFont("s10 bold c00FFCC")
     settingsGui.Add("Text", "x30 y255 w100 h22", "Editor Path:")
     settingsGui.SetFont("s9.5 norm cFFFFFF")
-    txtEditorPath := settingsGui.Add("Edit", "x130 y252 w240 h24 Background1E1E22 cFFFFFF Border", g_SettingsEditorPath)
+    txtEditorPath := settingsGui.Add("Edit", "x130 y252 w440 h24 Background1E1E22 cFFFFFF Border", g_SettingsEditorPath)
 
     ; Separator
-    settingsGui.Add("Text", "x20 y285 w360 h2 BackgroundTrans Center c33333A", "__________________________________________________")
+    settingsGui.Add("Text", "x20 y285 w560 h2 BackgroundTrans Center c33333A", "_______________________________________________________________________________")
 
     ; Buttons
     settingsGui.SetFont("s10")
-    btnSave := settingsGui.Add("Button", "x60 y310 w120 h35", "Save Settings")
-    btnCancel := settingsGui.Add("Button", "x220 y310 w120 h35", "Cancel")
+    btnSave := settingsGui.Add("Button", "x150 y310 w120 h35", "Save Settings")
+    btnCancel := settingsGui.Add("Button", "x330 y310 w120 h35", "Cancel")
 
     ; Callbacks
     btnSave.OnEvent("Click", SaveClick)
     btnCancel.OnEvent("Click", CancelClick)
+    settingsGui.OnEvent("Escape", CancelClick)
 
-    settingsGui.Show("w400 h365 Center")
+    settingsGui.Show("w600 h365 Center")
 
     SaveClick(*) {
         isSilenceAll := chkSilenceAll.Value

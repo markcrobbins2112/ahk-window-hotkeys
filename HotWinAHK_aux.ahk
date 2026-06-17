@@ -18,6 +18,10 @@ $^#/:: {
     ExecuteActionWithCondition("WinInfo", "")
 }
 
+$+#/:: {
+    ExecuteActionWithCondition("PeekUnderMouse", "")
+}
+
 $^+#s:: {
     try Suspend("Permit")
     ExecuteActionWithCondition("SysMenu", "")
