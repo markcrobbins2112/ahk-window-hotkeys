@@ -245,35 +245,67 @@ $numpadclear:: {
     ExecuteActionWithCondition("Center", "")
 }
 
-$!#left:: {
+$!numpad4:: {
     ExecuteActionWithCondition("MoveTadLeft", "")
 }
 
-$!#right:: {
+$!numpadleft:: {
+    ExecuteActionWithCondition("MoveTadLeft", "")
+}
+
+$!numpad6:: {
     ExecuteActionWithCondition("MoveTadRight", "")
 }
 
-$!#up:: {
+$!numpadright:: {
+    ExecuteActionWithCondition("MoveTadRight", "")
+}
+
+$!numpad8:: {
     ExecuteActionWithCondition("MoveTadUp", "")
 }
 
-$!#down:: {
+$!numpadup:: {
+    ExecuteActionWithCondition("MoveTadUp", "")
+}
+
+$!numpad2:: {
     ExecuteActionWithCondition("MoveTadDown", "")
 }
 
-$+#left:: {
+$!numpaddown:: {
+    ExecuteActionWithCondition("MoveTadDown", "")
+}
+
+$!+numpad4:: {
     ExecuteActionWithCondition("MovepxLeft", "")
 }
 
-$+#right:: {
+$!+numpadleft:: {
+    ExecuteActionWithCondition("MovepxLeft", "")
+}
+
+$!+numpad6:: {
     ExecuteActionWithCondition("MovepxRight", "")
 }
 
-$+#up:: {
+$!+numpadright:: {
+    ExecuteActionWithCondition("MovepxRight", "")
+}
+
+$!+numpad8:: {
     ExecuteActionWithCondition("MovepxUp", "")
 }
 
-$+#down:: {
+$!+numpadup:: {
+    ExecuteActionWithCondition("MovepxUp", "")
+}
+
+$!+numpad2:: {
+    ExecuteActionWithCondition("MovepxDown", "")
+}
+
+$!+numpaddown:: {
     ExecuteActionWithCondition("MovepxDown", "")
 }
 
@@ -600,139 +632,67 @@ $^numpadsub:: {
     ExecuteActionWithCondition("ScaleReduceGridPart", "")
 }
 
-$+#numpad8:: {
-    ExecuteActionWithCondition("TrimTop", "")
-}
-
-$+#numpadup:: {
-    ExecuteActionWithCondition("TrimTop", "")
-}
-
-$+#numpad2:: {
-    ExecuteActionWithCondition("TrimBottom", "")
-}
-
-$+#numpaddown:: {
-    ExecuteActionWithCondition("TrimBottom", "")
-}
-
-$+#numpad4:: {
-    ExecuteActionWithCondition("TrimLeft", "")
-}
-
-$+#numpadleft:: {
-    ExecuteActionWithCondition("TrimLeft", "")
-}
-
-$+#numpad6:: {
-    ExecuteActionWithCondition("TrimRight", "")
-}
-
-$+#numpadright:: {
-    ExecuteActionWithCondition("TrimRight", "")
-}
-
-$+#numpad5:: {
-    ExecuteActionWithCondition("TrimAll", "")
-}
-
-$+#numpadclear:: {
-    ExecuteActionWithCondition("TrimAll", "")
-}
-
-$+#numpad7:: {
-    ExecuteActionWithCondition("TrimTopLeft", "")
-}
-
-$+#numpadhome:: {
-    ExecuteActionWithCondition("TrimTopLeft", "")
-}
-
-$+#numpad9:: {
-    ExecuteActionWithCondition("TrimTopRight", "")
-}
-
-$+#numpadpgup:: {
-    ExecuteActionWithCondition("TrimTopRight", "")
-}
-
-$+#numpad1:: {
-    ExecuteActionWithCondition("TrimBottomLeft", "")
-}
-
-$+#numpadend:: {
-    ExecuteActionWithCondition("TrimBottomLeft", "")
-}
-
-$+#numpad3:: {
-    ExecuteActionWithCondition("TrimBottomRight", "")
-}
-
-$+#numpadpgdn:: {
-    ExecuteActionWithCondition("TrimBottomRight", "")
-}
-
-$!+#numpad8:: {
+$!#numpadup:: {
     ExecuteActionWithCondition("AddTop", "")
 }
 
-$!+#numpadup:: {
+$!#numpad8:: {
     ExecuteActionWithCondition("AddTop", "")
 }
 
-$!+#numpad2:: {
+$!#numpaddown:: {
     ExecuteActionWithCondition("AddBottom", "")
 }
 
-$!+#numpaddown:: {
+$!#numpad2:: {
     ExecuteActionWithCondition("AddBottom", "")
 }
 
-$!+#numpad4:: {
+$!#numpadleft:: {
     ExecuteActionWithCondition("AddLeft", "")
 }
 
-$!+#numpadleft:: {
+$!#numpad4:: {
     ExecuteActionWithCondition("AddLeft", "")
 }
 
-$!+#numpad6:: {
+$!#numpadright:: {
     ExecuteActionWithCondition("AddRight", "")
 }
 
-$!+#numpadright:: {
+$!#numpad6:: {
     ExecuteActionWithCondition("AddRight", "")
 }
 
-$!+#numpad7:: {
+$!#numpadhome:: {
     ExecuteActionWithCondition("AddTopLeft", "")
 }
 
-$!+#numpadhome:: {
+$!#numpad7:: {
     ExecuteActionWithCondition("AddTopLeft", "")
 }
 
-$!+#numpad9:: {
+$!#numpadpgup:: {
     ExecuteActionWithCondition("AddTopRight", "")
 }
 
-$!+#numpadpgup:: {
+$!#numpad9:: {
     ExecuteActionWithCondition("AddTopRight", "")
 }
 
-$!+#numpad1:: {
+$!#numpadend:: {
     ExecuteActionWithCondition("AddBottomLeft", "")
 }
 
-$!+#numpadend:: {
+$!#numpad1:: {
     ExecuteActionWithCondition("AddBottomLeft", "")
 }
 
-$!+#numpad3:: {
+$!#numpadpgdn:: {
     ExecuteActionWithCondition("AddBottomRight", "")
 }
 
-$!+#numpadpgdn:: {
+$!#numpad3:: {
     ExecuteActionWithCondition("AddBottomRight", "")
 }
 
@@ -872,43 +832,11 @@ $^!#numpadpgdn:: {
     ExecuteActionWithCondition("SubtractBottomRight", "")
 }
 
-$^!+#numpad4:: {
-    ExecuteActionWithCondition("HalfSizeLeft", "")
-}
-
-$^!+#numpadleft:: {
-    ExecuteActionWithCondition("HalfSizeLeft", "")
-}
-
-$^!+#numpad6:: {
-    ExecuteActionWithCondition("HalfSizeRight", "")
-}
-
-$^!+#numpadright:: {
-    ExecuteActionWithCondition("HalfSizeRight", "")
-}
-
-$^!+#numpad8:: {
-    ExecuteActionWithCondition("HalfSizeTop", "")
-}
-
-$^!+#numpadup:: {
-    ExecuteActionWithCondition("HalfSizeTop", "")
-}
-
-$^!+#numpad2:: {
-    ExecuteActionWithCondition("HalfSizeBottom", "")
-}
-
-$^!+#numpaddown:: {
-    ExecuteActionWithCondition("HalfSizeBottom", "")
-}
-
-$#numpad4:: {
+$#numpadleft:: {
     ExecuteActionWithCondition("StretchToGridLeft", "")
 }
 
-$#numpadleft:: {
+$#numpad4:: {
     ExecuteActionWithCondition("StretchToGridLeft", "")
 }
 
@@ -966,70 +894,6 @@ $#numpad3:: {
 
 $#numpadpgdn:: {
     ExecuteActionWithCondition("StretchToGridBottomRight", "")
-}
-
-$!#numpad4:: {
-    ExecuteActionWithCondition("PullToGridLeft", "")
-}
-
-$!#numpadleft:: {
-    ExecuteActionWithCondition("PullToGridLeft", "")
-}
-
-$!#numpad6:: {
-    ExecuteActionWithCondition("PullToGridRight", "")
-}
-
-$!#numpadright:: {
-    ExecuteActionWithCondition("PullToGridRight", "")
-}
-
-$!#numpad8:: {
-    ExecuteActionWithCondition("PullToGridUp", "")
-}
-
-$!#numpadup:: {
-    ExecuteActionWithCondition("PullToGridUp", "")
-}
-
-$!#numpad2:: {
-    ExecuteActionWithCondition("PullToGridDown", "")
-}
-
-$!#numpaddown:: {
-    ExecuteActionWithCondition("PullToGridDown", "")
-}
-
-$!#numpad7:: {
-    ExecuteActionWithCondition("PullToGridTopLeft", "")
-}
-
-$!#numpadhome:: {
-    ExecuteActionWithCondition("PullToGridTopLeft", "")
-}
-
-$!#numpad9:: {
-    ExecuteActionWithCondition("PullToGridTopRight", "")
-}
-
-$!#numpadpgup:: {
-    ExecuteActionWithCondition("PullToGridTopRight", "")
-}
-
-$!#numpad1:: {
-    ExecuteActionWithCondition("PullToGridBottomLeft", "")
-}
-
-$!#numpadend:: {
-    ExecuteActionWithCondition("PullToGridBottomLeft", "")
-}
-
-$!#numpad3:: {
-    ExecuteActionWithCondition("PullToGridBottomRight", "")
-}
-
-$!#numpadpgdn:: {
-    ExecuteActionWithCondition("PullToGridBottomRight", "")
 }
 
 $^+#numpad4:: {

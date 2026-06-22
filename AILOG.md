@@ -18,7 +18,7 @@ status: pass
 
 ## Commit Message
 ```text
-fix(test-suite): disable auto-execute and prioritize numpad/arrows commands in walkthrough sequence
+fix(alignment): repair coordinate finder boundaries and unified fall-through cases for StretchToGrid/PullToGrid snaps
 ```
 
 <!-- Example AI Log Entry
@@ -26,6 +26,24 @@ fix(test-suite): disable auto-execute and prioritize numpad/arrows commands in w
 ...
 -->
 ## Log Entries
+
+## [2026-06-22T14:08:00Z]
+### 🎯 Primary Goals & Requirements
+- **Fix StretchToGrid and PullToGrid Bounds Snapping**: Address the issue where direction-oriented boundary stretching and pulling failed walkthrough ratings due to coordinate and layout math discrepancies.
+- **Support Negative & Zero Monitor Bound Snap Indices**: Correct boundary finder logic to support workspace boundaries on multi-monitor configurations in coordinates below 0.
+- **Clean Up Sizing Command Syntax**: Eliminate duplicate function signatures on active layout moves.
+
+### 🛠️ Completed Changes in this Session
+- **Corrected Coordinate Snap Finders**:
+  - Removed logic filters within `FindLineX`, `FindRightX`, `FindLineY`, and `FindBottomY` that skipped negative indices (`if (testIdx < 0) continue`), allowing full-range positioning adjacent to negative multi-monitor locations.
+- **Unified Sizing and Stretch Snaps**:
+  - Consolidated case selectors for `StretchToGrid...` and `PullToGrid...` commands to fall into the same coordinate index mapping pipeline as `Add` and `Subtract` commands.
+  - Eliminated a layout execution bug from `ExecuteCommandRegistry` where `SafeMove` was called with a duplicate syntax suffix.
+
+### 🔸 Affected Files
+- `/HotWinAHK.ahk`
+- `/AITASKS.md`
+- `/AILOG.md`
 
 ## [2026-06-22T13:38:00Z]
 ### 🎯 Primary Goals & Requirements

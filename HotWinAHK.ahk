@@ -2362,198 +2362,112 @@ ExecuteCommandRegistry(sCmd, hWnd) {
             pX := 424
             pY := 232
 
-            ; Find closest half-grid indices
-            iLeft := FindLineX(X, gX, pX)
-            jRight := FindRightX(X + W, gX, pX)
-            kTop := FindLineY(Y, gY, pY)
-            lBottom := FindBottomY(Y + H, gY, pY)
+            nX := X
+            nY := Y
+            nW := W
+            nH := H
 
-            ; Ideal half-grid reference positions mapped from these indices
-            snapX := gX + Floor(iLeft / 2) * pX + (Mod(iLeft, 2) == 0 ? 0 : 209)
-            snapRight := gX + Floor(jRight / 2) * pX + (Mod(jRight, 2) == 0 ? -6 : 209)
-            snapY := gY + Floor(kTop / 2) * pY + (Mod(kTop, 2) == 0 ? 0 : 113)
-            snapBottom := gY + Floor(lBottom / 2) * pY + (Mod(lBottom, 2) == 0 ? -6 : 113)
-
-            switch sCmd {
-                case "StretchToGridLeft", "AddLeft":
+            if (InStr(sCmd, "Left") || InStr(sCmd, "All")) {
+                iLeft := FindLineX(X, gX, pX)
+                snapX := gX + Floor(iLeft / 2) * pX + (Mod(iLeft, 2) == 0 ? 0 : 209)
+                
+                if (InStr(sCmd, "StretchToGrid") || InStr(sCmd, "Add")) {
                     if (snapX >= X - 2) {
                         iLeft := iLeft - 1
+                        snapX := gX + Floor(iLeft / 2) * pX + (Mod(iLeft, 2) == 0 ? 0 : 209)
                     }
-                case "StretchToGridRight", "AddRight":
-                    if (snapRight <= (X + W) + 2) {
-                        jRight := jRight + 1
-                    }
-                case "StretchToGridUp", "AddTop":
-                    if (snapY >= Y - 2) {
-                        kTop := kTop - 1
-                    }
-                case "StretchToGridDown", "AddBottom":
-                    if (snapBottom <= (Y + H) + 2) {
-                        lBottom := lBottom + 1
-                    }
-                case "StretchToGridTopLeft", "AddTopLeft":
-                    if (snapX >= X - 2) {
-                        iLeft := iLeft - 1
-                    }
-                    if (snapY >= Y - 2) {
-                        kTop := kTop - 1
-                    }
-                case "StretchToGridTopRight", "AddTopRight":
-                    if (snapRight <= (X + W) + 2) {
-                        jRight := jRight + 1
-                    }
-                    if (snapY >= Y - 2) {
-                        kTop := kTop - 1
-                    }
-                case "StretchToGridBottomLeft", "AddBottomLeft":
-                    if (snapX >= X - 2) {
-                        iLeft := iLeft - 1
-                    }
-                    if (snapBottom <= (Y + H) + 2) {
-                        lBottom := lBottom + 1
-                    }
-                case "StretchToGridBottomRight", "AddBottomRight":
-                    if (snapRight <= (X + W) + 2) {
-                        jRight := jRight + 1
-                    }
-                    if (snapBottom <= (Y + H) + 2) {
-                        lBottom := lBottom + 1
-                    }
-                case "PullToGridLeft", "SubtractLeft":
+                } else if (InStr(sCmd, "PullToGrid") || InStr(sCmd, "Subtract")) {
                     if (snapX <= X + 2) {
                         iLeft := iLeft + 1
+                        snapX := gX + Floor(iLeft / 2) * pX + (Mod(iLeft, 2) == 0 ? 0 : 209)
                     }
-                    if (iLeft >= jRight) {
-                        iLeft := jRight - 1
-                    }
-                case "PullToGridRight", "SubtractRight":
-                    if (snapRight >= (X + W) - 2) {
-                        jRight := jRight - 1
-                    }
-                    if (jRight <= iLeft) {
-                        jRight := iLeft + 1
-                    }
-                case "PullToGridUp", "SubtractTop":
-                    if (snapY <= Y + 2) {
-                        kTop := kTop + 1
-                    }
-                    if (kTop >= lBottom) {
-                        kTop := lBottom - 1
-                    }
-                case "PullToGridDown", "SubtractBottom":
-                    if (snapBottom >= (Y + H) - 2) {
-                        lBottom := lBottom - 1
-                    }
-                    if (lBottom <= kTop) {
-                        lBottom := kTop + 1
-                    }
-                case "PullToGridTopLeft", "SubtractTopLeft":
-                    if (snapY <= Y + 2) {
-                        kTop := kTop + 1
-                    }
-                    if (kTop >= lBottom) {
-                        kTop := lBottom - 1
-                    }
-                    if (snapX <= X + 2) {
-                        iLeft := iLeft + 1
-                    }
-                    if (iLeft >= jRight) {
-                        iLeft := jRight - 1
-                    }
-                case "PullToGridTopRight", "SubtractTopRight":
-                    if (snapY <= Y + 2) {
-                        kTop := kTop + 1
-                    }
-                    if (kTop >= lBottom) {
-                        kTop := lBottom - 1
-                    }
-                    if (snapRight >= (X + W) - 2) {
-                        jRight := jRight - 1
-                    }
-                    if (jRight <= iLeft) {
-                        jRight := iLeft + 1
-                    }
-                case "PullToGridBottomLeft", "SubtractBottomLeft":
-                    if (snapBottom >= (Y + H) - 2) {
-                        lBottom := lBottom - 1
-                    }
-                    if (lBottom <= kTop) {
-                        lBottom := kTop + 1
-                    }
-                    if (snapX <= X + 2) {
-                        iLeft := iLeft + 1
-                    }
-                    if (iLeft >= jRight) {
-                        iLeft := jRight - 1
-                    }
-                case "PullToGridBottomRight", "SubtractBottomRight":
-                    if (snapBottom >= (Y + H) - 2) {
-                        lBottom := lBottom - 1
-                    }
-                    if (lBottom <= kTop) {
-                        lBottom := kTop + 1
-                    }
-                    if (snapRight >= (X + W) - 2) {
-                        jRight := jRight - 1
-                    }
-                    if (jRight <= iLeft) {
-                        jRight := iLeft + 1
-                    }
-                case "StretchToGridAll", "AddAll":
-                    if (snapX >= X - 2) {
-                        iLeft := iLeft - 1
-                    }
-                    if (snapRight <= (X + W) + 2) {
-                        jRight := jRight + 1
-                    }
-                    if (snapY >= Y - 2) {
-                        kTop := kTop - 1
-                    }
-                    if (snapBottom <= (Y + H) + 2) {
-                        lBottom := lBottom + 1
-                    }
-                case "PullToGridAll", "SubtractAll":
-                    if (snapX <= X + 2) {
-                        iLeft := iLeft + 1
-                    }
-                    if (snapRight >= (X + W) - 2) {
-                        jRight := jRight - 1
-                    }
-                    if (iLeft >= jRight) {
-                        iLeft := jRight - 1
-                    }
-                    if (jRight <= iLeft) {
-                        jRight := iLeft + 1
-                    }
-                    if (snapY <= Y + 2) {
-                        kTop := kTop + 1
-                    }
-                    if (snapBottom >= (Y + H) - 2) {
-                        lBottom := lBottom - 1
-                    }
-                    if (kTop >= lBottom) {
-                        kTop := lBottom - 1
-                    }
-                    if (lBottom <= kTop) {
-                        lBottom := kTop + 1
-                    }
+                }
+                
+                ; Calculate new Left boundary and check safety minimum width of 150
+                targetX := snapX
+                rightEdge := X + W
+                if (targetX > rightEdge - 150) {
+                    targetX := rightEdge - 150
+                }
+                nX := targetX
+                nW := rightEdge - nX
             }
 
-            ; Ensure minimum of 0 for indices to avoid going off screen left/top
-            if (iLeft < 0) {
-                jRight -= iLeft  ; Maintain the width
-                iLeft := 0
-            }
-            if (kTop < 0) {
-                lBottom -= kTop  ; Maintain the height
-                kTop := 0
+            if (InStr(sCmd, "Right") || InStr(sCmd, "All")) {
+                jRight := FindRightX(X + W, gX, pX)
+                snapRight := gX + Floor(jRight / 2) * pX + (Mod(jRight, 2) == 0 ? -6 : 209)
+                
+                if (InStr(sCmd, "StretchToGrid") || InStr(sCmd, "Add")) {
+                    if (snapRight <= (X + W) + 2) {
+                        jRight := jRight + 1
+                        snapRight := gX + Floor(jRight / 2) * pX + (Mod(jRight, 2) == 0 ? -6 : 209)
+                    }
+                } else if (InStr(sCmd, "PullToGrid") || InStr(sCmd, "Subtract")) {
+                    if (snapRight >= (X + W) - 2) {
+                        jRight := jRight - 1
+                        snapRight := gX + Floor(jRight / 2) * pX + (Mod(jRight, 2) == 0 ? -6 : 209)
+                    }
+                }
+                
+                ; Calculate new Right boundary and check safety minimum width of 150
+                targetRight := snapRight
+                leftEdge := nX  ; uses the new nX if already calculated
+                if (targetRight < leftEdge + 150) {
+                    targetRight := leftEdge + 150
+                }
+                nW := targetRight - nX
             }
 
-            ; Re-translate indices into final pixel footprint
-            nX := gX + Floor(iLeft / 2) * pX + (Mod(iLeft, 2) == 0 ? 0 : 209)
-            nY := gY + Floor(kTop / 2) * pY + (Mod(kTop, 2) == 0 ? 0 : 113)
-            nW := (gX + Floor(jRight / 2) * pX + (Mod(jRight, 2) == 0 ? -6 : 209)) - nX
-            nH := (gY + Floor(lBottom / 2) * pY + (Mod(lBottom, 2) == 0 ? -6 : 113)) - nY
+            if (InStr(sCmd, "Up") || InStr(sCmd, "Top") || InStr(sCmd, "All")) {
+                kTop := FindLineY(Y, gY, pY)
+                snapY := gY + Floor(kTop / 2) * pY + (Mod(kTop, 2) == 0 ? 0 : 113)
+                
+                if (InStr(sCmd, "StretchToGrid") || InStr(sCmd, "Add")) {
+                    if (snapY >= Y - 2) {
+                        kTop := kTop - 1
+                        snapY := gY + Floor(kTop / 2) * pY + (Mod(kTop, 2) == 0 ? 0 : 113)
+                    }
+                } else if (InStr(sCmd, "PullToGrid") || InStr(sCmd, "Subtract")) {
+                    if (snapY <= Y + 2) {
+                        kTop := kTop + 1
+                        snapY := gY + Floor(kTop / 2) * pY + (Mod(kTop, 2) == 0 ? 0 : 113)
+                    }
+                }
+                
+                ; Calculate new Top boundary and check safety minimum height of 150
+                targetY := snapY
+                bottomEdge := Y + H
+                if (targetY > bottomEdge - 150) {
+                    targetY := bottomEdge - 150
+                }
+                nY := targetY
+                nH := bottomEdge - nY
+            }
+
+            if (InStr(sCmd, "Down") || InStr(sCmd, "Bottom") || InStr(sCmd, "All")) {
+                lBottom := FindBottomY(Y + H, gY, pY)
+                snapBottom := gY + Floor(lBottom / 2) * pY + (Mod(lBottom, 2) == 0 ? -6 : 113)
+                
+                if (InStr(sCmd, "StretchToGrid") || InStr(sCmd, "Add")) {
+                    if (snapBottom <= (Y + H) + 2) {
+                        lBottom := lBottom + 1
+                        snapBottom := gY + Floor(lBottom / 2) * pY + (Mod(lBottom, 2) == 0 ? -6 : 113)
+                    }
+                } else if (InStr(sCmd, "PullToGrid") || InStr(sCmd, "Subtract")) {
+                    if (snapBottom >= (Y + H) - 2) {
+                        lBottom := lBottom - 1
+                        snapBottom := gY + Floor(lBottom / 2) * pY + (Mod(lBottom, 2) == 0 ? -6 : 113)
+                    }
+                }
+                
+                ; Calculate new Bottom boundary and check safety minimum height of 150
+                targetBottom := snapBottom
+                topEdge := nY  ; uses the new nY if already calculated
+                if (targetBottom < topEdge + 150) {
+                    targetBottom := topEdge + 150
+                }
+                nH := targetBottom - nY
+            }
 
             SafeMove(nX, nY, nW, nH, hWnd)
 
@@ -6269,8 +6183,6 @@ FindLineX(coord, gX, pX) {
     approx := Round((coord - gX) / (pX / 2))
     Loop 5 {
         testIdx := approx - 3 + A_Index
-        if (testIdx < 0)
-            continue
         diff := Abs(coord - (gX + Floor(testIdx / 2) * pX + (Mod(testIdx, 2) == 0 ? 0 : 209)))
         if (diff < minDiff) {
             minDiff := diff
@@ -6286,8 +6198,6 @@ FindRightX(coord, gX, pX) {
     approx := Round((coord + 6 - gX) / (pX / 2))
     Loop 5 {
         testIdx := approx - 3 + A_Index
-        if (testIdx < 0)
-            continue
         diff := Abs(coord - (gX + Floor(testIdx / 2) * pX + (Mod(testIdx, 2) == 0 ? -6 : 209)))
         if (diff < minDiff) {
             minDiff := diff
@@ -6303,8 +6213,6 @@ FindLineY(coord, gY, pY) {
     approx := Round((coord - gY) / (pY / 2))
     Loop 5 {
         testIdx := approx - 3 + A_Index
-        if (testIdx < 0)
-            continue
         diff := Abs(coord - (gY + Floor(testIdx / 2) * pY + (Mod(testIdx, 2) == 0 ? 0 : 113)))
         if (diff < minDiff) {
             minDiff := diff
@@ -6320,8 +6228,6 @@ FindBottomY(coord, gY, pY) {
     approx := Round((coord + 6 - gY) / (pY / 2))
     Loop 5 {
         testIdx := approx - 3 + A_Index
-        if (testIdx < 0)
-            continue
         diff := Abs(coord - (gY + Floor(testIdx / 2) * pY + (Mod(testIdx, 2) == 0 ? -6 : 113)))
         if (diff < minDiff) {
             minDiff := diff
