@@ -54,6 +54,9 @@ Global g_SavedHomesList := []
 Global g_HomeIndicators := Map()
 Global g_OverlayGui := ""
 Global g_OverlayTimer := ""
+Global g_CommandTestTargetHwnd := 0
+Global g_CommandTestCurrentIndex := 1
+Global g_KeyboardTestCurrentIndex := 1
 
 Global g_TuckPeekList := []
 Global g_TuckPeekIndex := 0
@@ -661,7 +664,7 @@ EnsureAllCommandsInIni() {
             subs: [
                 { name: "Utilities", desc: "Diagnostic overlay displays, command palettes, and custom context menus.", cmds: ["HelpScreen", "CmdPalette", "WinInfo", "PeekUnderMouse", "SysMenu"] },
                 { name: "Clipboard", desc: "Fast extraction of system shortcuts, active layout bounds, and command help definitions.", cmds: ["CopyCommands", "CopyBindings", "CopyCommandsHelp", "CopyCommandsAlpha", "CopyBindingsAlpha", "CopyBindingsLocation"] },
-                { name: "Engine", desc: "Processes controlling suspension toggles, configuration updates, and preference properties.", cmds: ["ToggleSuspension", "ReloadConfig", "EditConfig", "ExitProgram", "RestartProgram", "KeyDiagnostics", "KeyQuery", "Settings"] }
+                { name: "Engine", desc: "Processes controlling suspension toggles, configuration updates, and preference properties.", cmds: ["ToggleSuspension", "ReloadConfig", "EditConfig", "ExitProgram", "RestartProgram", "KeyDiagnostics", "KeyQuery", "Settings", "CommandTest", "KeyboardTest"] }
             ]
         },
         {
@@ -1165,6 +1168,8 @@ ExecuteCommandRegistry(sCmd, hWnd) {
         case "KeyDiagnostics": StartKeyDiagnostics()
         case "KeyQuery": StartKeyQuery()
         case "Settings": StartSettingsDialog()
+        case "CommandTest": StartCommandTestDialog()
+        case "KeyboardTest": StartKeyboardTestDialog()
         case "SysMenu": SysMenu()
     }
 
@@ -3886,6 +3891,8 @@ GetGlobalCommandList() {
         {cat: "SYSTEM", cmd: "KeyDiagnostics", key: "Win + Ctrl + Shift + K", desc: "Verify and test physical modifier combos on keypad and arrow keys."},
         {cat: "SYSTEM", cmd: "KeyQuery", key: "Win + Ctrl + Shift + Q", desc: "Fuzzy query real-time keyboard strokes to identify active command bindings."},
         {cat: "SYSTEM", cmd: "Settings", key: "Win + Ctrl + Shift + I", desc: "Open the interactive configurations panel to customize sounds, clicks, and tooltips."},
+        {cat: "SYSTEM", cmd: "CommandTest", key: "Win + Ctrl + Alt + Shift + T", desc: "Start or resume the interactive command-by-command testing walkthrough."},
+        {cat: "SYSTEM", cmd: "KeyboardTest", key: "Win + Ctrl + Alt + Shift + K", desc: "Start or resume the interactive keyboard keybinding verification test."},
         {cat: "SYSTEM", cmd: "Active Window Dot", key: "Auto Indicator", desc: "Draws green dot at active window's top-left (yellow when program is suspended)."},
 
         ; == WINDOW ==
@@ -5143,6 +5150,8 @@ StartSettingsDialog() {
             IniWrite(isDisableStartup ? "true" : "false", g_sIniFile, "Settings", "DisableStartupBeep")
             IniWrite(isDisableSuspension ? "true" : "false", g_sIniFile, "Settings", "DisableSuspensionBeep")
             IniWrite(editorPathStr, g_sIniFile, "Settings", "EditorPath")
+        } catch {
+            ; ignore write errors
         }
 
         global g_SettingsSilenceAll := isSilenceAll
@@ -5363,6 +5372,555 @@ StartKeyQuery() {
 
     ShowTargetToolTip("Key Query Complete.")
 }
+
+StartCommandTestDialog() {
+    global g_sIniFile, g_CommandTestCurrentIndex, g_CommandTestTargetHwnd
+    
+    targetHwnd := WinExist("A")
+    if (targetHwnd == 0 || targetHwnd == WinExist("ahk_class Shell_TrayWnd") || targetHwnd == WinExist("ahk_class Progman")) {
+        MsgBox("Please activate the application window you want to test HotWinAHK commands on first, then trigger Command Test.", "🤖 Target Window Required", "Iconi AlwaysOnTop")
+        return
+    }
+    g_CommandTestTargetHwnd := targetHwnd
+    
+    lastIdxStr := IniRead(g_sIniFile, "CommandTestState", "CurrentIndex", "1")
+    lastIdx := 1
+    try {
+        lastIdx := Integer(lastIdxStr)
+    } catch {
+        lastIdx := 1
+    }
+    
+    commandList := GetGlobalCommandList()
+    if (lastIdx < 1 || lastIdx > commandList.Length) {
+        lastIdx := 1
+    }
+    
+    g_CommandTestCurrentIndex := lastIdx
+    
+    if (lastIdx > 1) {
+        lastCmd := commandList[lastIdx]
+        res := MsgBox("A previous Command Test session was found.`n`nStep: " . lastIdx . " / " . commandList.Length . "`nCommand: " . lastCmd.cmd . "`nCategory: " . lastCmd.cat . "`n`nWould you like to resume from where you left off?", "🤖 Resume Command Test?", "YesNoCancel Icon? AlwaysOnTop")
+        if (res == "No") {
+            g_CommandTestCurrentIndex := 1
+        } else if (res == "Cancel") {
+            return
+        }
+    }
+    
+    ShowCommandTestGui()
+}
+
+ShowCommandTestGui() {
+    global g_sIniFile, g_CommandTestCurrentIndex, g_CommandTestTargetHwnd
+    static cmdTestGui := ""
+    
+    if (cmdTestGui != "") {
+        try cmdTestGui.Destroy()
+    }
+    
+    commandList := GetGlobalCommandList()
+    activeItem := commandList[g_CommandTestCurrentIndex]
+    
+    ; Capture target window state before testing begins
+    if (g_CommandTestTargetHwnd && WinExist(g_CommandTestTargetHwnd)) {
+        SaveTargetWindowState(g_CommandTestTargetHwnd)
+    }
+    
+    cmdTestGui := Gui("+AlwaysOnTop -MaximizeBox -MinimizeBox +ToolWindow", "🤖 HotWinAHK - Interactive Command Suite Test")
+    cmdTestGui.BackColor := "121214"
+    cmdTestGui.SetFont("s10 cE0E0E6", "Segoe UI")
+    
+    cmdTestGui.SetFont("s14 bold c4476ff")
+    cmdTestGui.Add("Text", "x20 y15 w560 Center", "🧪 Engine Direct Command Verification Walkthrough")
+    
+    cmdTestGui.Add("Text", "x20 y42 w560 h2 BackgroundTrans Center c33333A", "_______________________________________________________________________________")
+    
+    targetTitle := ""
+    try {
+        targetTitle := WinGetTitle(g_CommandTestTargetHwnd)
+    } catch {
+        targetTitle := "[Invalid Hwnd or Closed Window]"
+    }
+    if (StrLen(targetTitle) > 50) {
+        targetTitle := SubStr(targetTitle, 1, 47) . "..."
+    }
+    
+    cmdTestGui.SetFont("s9 bold c00FFCC")
+    cmdTestGui.Add("Text", "x30 y55 w540", "🎯 Test Target Window: " . targetTitle . " (HWND: " . Format("0x{:X}", g_CommandTestTargetHwnd) . ")")
+    
+    cmdTestGui.SetFont("s10 norm c88888D")
+    cmdTestGui.Add("Text", "x430 y55 w140 Right", "Step " . g_CommandTestCurrentIndex . " of " . commandList.Length)
+    
+    cmdTestGui.Add("Text", "x20 y70 w560 h2 BackgroundTrans Center c33333A", "_______________________________________________________________________________")
+    
+    cmdTestGui.SetFont("s11 bold cFFCC00")
+    cmdTestGui.Add("Text", "x30 y90 w150", "Command:")
+    cmdTestGui.SetFont("s12 bold cFFFFFF")
+    cmdTestGui.Add("Text", "x150 y90 w420", activeItem.cmd)
+    
+    cmdTestGui.SetFont("s11 bold cFFCC00")
+    cmdTestGui.Add("Text", "x30 y115 w150", "Category:")
+    cmdTestGui.SetFont("s10 cFFFFFF")
+    cmdTestGui.Add("Text", "x150 y115 w420", activeItem.cat)
+    
+    cmdTestGui.SetFont("s11 bold cFFCC00")
+    cmdTestGui.Add("Text", "x30 y140 w150", "Binding:")
+    cmdTestGui.SetFont("s10 italic c00FF55")
+    cmdTestGui.Add("Text", "x150 y140 w420", (activeItem.key != "" ? activeItem.key : "[N/A]"))
+    
+    cmdTestGui.SetFont("s11 bold cFFCC00")
+    cmdTestGui.Add("Text", "x30 y165 w150", "Description:")
+    cmdTestGui.SetFont("s10 norm cE0E0E6")
+    cmdTestGui.Add("Text", "x150 y165 w420 h60 W", activeItem.desc)
+    
+    cmdTestGui.SetFont("s10 bold cFF5555")
+    statusText := cmdTestGui.Add("Text", "x30 y230 w540 Center", "")
+    
+    cmdTestGui.Add("Text", "x20 y245 w560 h2 BackgroundTrans Center c33333A", "_______________________________________________________________________________")
+    
+    cmdTestGui.SetFont("s10 bold cE0E0E6")
+    btnApply := cmdTestGui.Add("Button", "x30 y265 w160 h30", "&Apply Command")
+    btnRevert := cmdTestGui.Add("Button", "x200 y265 w160 h30", "🔄 &Restore/Revert")
+    btnPrev := cmdTestGui.Add("Button", "x370 y265 w100 h30", "&Back")
+    
+    cmdTestGui.SetFont("s10 bold cFFFFFF")
+    btnYes := cmdTestGui.Add("Button", "x30 y305 w110 h35", "&Worked (Yes)")
+    btnNo := cmdTestGui.Add("Button", "x150 y305 w110 h35", "&Failed (No)")
+    btnUnsure := cmdTestGui.Add("Button", "x270 y305 w110 h35", "&Unsure")
+    btnSkip := cmdTestGui.Add("Button", "x390 y305 w80 h35", "&Skip")
+    btnCancel := cmdTestGui.Add("Button", "x480 y305 w90 h35", "&Cancel")
+    
+    btnYes.SetFont("c00FF55")
+    btnNo.SetFont("cFF3333")
+    
+    btnApply.OnEvent("Click", ApplyCommand)
+    btnRevert.OnEvent("Click", RevertCommand)
+    btnYes.OnEvent("Click", (*) => SaveResultAndAdvance("Yes"))
+    btnNo.OnEvent("Click", (*) => SaveResultAndAdvance("No"))
+    btnUnsure.OnEvent("Click", (*) => SaveResultAndAdvance("Unsure"))
+    btnSkip.OnEvent("Click", (*) => SaveResultAndAdvance("Skipped"))
+    btnPrev.OnEvent("Click", GoBackStep)
+    btnCancel.OnEvent("Click", CloseGui)
+    cmdTestGui.OnEvent("Escape", CloseGui)
+    cmdTestGui.OnEvent("Close", CloseGui)
+    
+    ApplyCommand(0)
+    
+    cmdTestGui.Show("w600 h360 Center")
+    return
+    
+    ApplyCommand(*) {
+        if (!WinExist(g_CommandTestTargetHwnd)) {
+            statusText.Text := "⚠️ ERROR: Target window was closed or is invalid!"
+            return
+        }
+        
+        skipAutomated := ["ExitProgram", "RestartProgram", "ReloadConfig", "CommandTest", "KeyboardTest"]
+        isSkip := false
+        for sa in skipAutomated {
+            if (activeItem.cmd = sa) {
+                isSkip := true
+                break
+            }
+        }
+        
+        if (isSkip) {
+            statusText.Text := "⚙️ Safety: Auto-apply skipped for system/test control commands."
+            return
+        }
+        
+        statusText.Text := "Applying command: " . activeItem.cmd . "..."
+        try {
+            WinActivate(g_CommandTestTargetHwnd)
+            WinWaitActive(g_CommandTestTargetHwnd, , 1.5)
+            Sleep(100)
+            
+            ExecuteCommandRegistry(activeItem.cmd, g_CommandTestTargetHwnd)
+            Sleep(150)
+        } catch as err {
+            statusText.Text := "❌ Error running command: " . err.Message
+        }
+        
+        try {
+            cmdTestGui.Opt("+AlwaysOnTop")
+            cmdTestGui.Show()
+        } catch {
+            ; ignore show errors
+        }
+        
+        statusText.Text := "Command applied! Did it work as expected?"
+    }
+    
+    RevertCommand(*) {
+        if (!WinExist(g_CommandTestTargetHwnd)) {
+            statusText.Text := "⚠️ Error: Active target window no longer exists!"
+            return
+        }
+        
+        statusText.Text := "Attempting to restore window state..."
+        RestoreTargetWindowState(g_CommandTestTargetHwnd)
+        statusText.Text := "Window state restored back to pre-test baseline!"
+        
+        try {
+            cmdTestGui.Show()
+        } catch {
+            ; ignore show errors
+        }
+    }
+    
+    SaveResultAndAdvance(result) {
+        if (g_CommandTestTargetHwnd && WinExist(g_CommandTestTargetHwnd)) {
+            RestoreTargetWindowState(g_CommandTestTargetHwnd)
+        }
+        
+        timeStr := FormatTime(, "yyyy-MM-dd HH:mm:ss")
+        IniWrite(result . " [" . timeStr . "]", g_sIniFile, "CommandTestLogs", activeItem.cmd)
+        
+        if (g_CommandTestCurrentIndex >= commandList.Length) {
+            IniWrite("1", g_sIniFile, "CommandTestState", "CurrentIndex")
+            MsgBox("🎉 Command suite walkthrough testing fully complete!`n`nAll " . commandList.Length . " command results have been permanently saved in HotWinAHK.ini.", "🤖 Walkthrough Testing Finished", "AlwaysOnTop Iconi")
+            cmdTestGui.Destroy()
+            return
+        }
+        
+        g_CommandTestCurrentIndex += 1
+        IniWrite(String(g_CommandTestCurrentIndex), g_sIniFile, "CommandTestState", "CurrentIndex")
+        ShowCommandTestGui()
+    }
+    
+    GoBackStep(*) {
+        if (g_CommandTestTargetHwnd && WinExist(g_CommandTestTargetHwnd)) {
+            RestoreTargetWindowState(g_CommandTestTargetHwnd)
+        }
+        
+        if (g_CommandTestCurrentIndex > 1) {
+            g_CommandTestCurrentIndex -= 1
+            IniWrite(String(g_CommandTestCurrentIndex), g_sIniFile, "CommandTestState", "CurrentIndex")
+            ShowCommandTestGui()
+        } else {
+            statusText.Text := "⚠️ Already at the very start of test (Step 1)."
+        }
+    }
+    
+    CloseGui(*) {
+        if (g_CommandTestTargetHwnd && WinExist(g_CommandTestTargetHwnd)) {
+            RestoreTargetWindowState(g_CommandTestTargetHwnd)
+        }
+        
+        IniWrite(String(g_CommandTestCurrentIndex), g_sIniFile, "CommandTestState", "CurrentIndex")
+        cmdTestGui.Destroy()
+        ShowTargetToolTip("Command test progress saved at step " . g_CommandTestCurrentIndex)
+    }
+}
+
+StartKeyboardTestDialog() {
+    global g_sIniFile, g_KeyboardTestCurrentIndex, g_KeyboardTestTargetHwnd, g_CommandTestTargetHwnd
+    
+    targetHwnd := WinExist("A")
+    if (targetHwnd == 0 || targetHwnd == WinExist("ahk_class Shell_TrayWnd") || targetHwnd == WinExist("ahk_class Progman")) {
+        try {
+            if (g_KeyboardTestTargetHwnd && WinExist(g_KeyboardTestTargetHwnd)) {
+                targetHwnd := g_KeyboardTestTargetHwnd
+            } else if (g_CommandTestTargetHwnd && WinExist(g_CommandTestTargetHwnd)) {
+                targetHwnd := g_CommandTestTargetHwnd
+            }
+        } catch {
+            ; ignore window resolution errors
+        }
+    }
+    
+    if (targetHwnd == 0 || targetHwnd == WinExist("ahk_class Shell_TrayWnd") || targetHwnd == WinExist("ahk_class Progman")) {
+        MsgBox("Please activate the application window you want to test HotWinAHK keybindings on first, then trigger Keyboard Test.", "🤖 Target Window Required", "Iconi AlwaysOnTop")
+        return
+    }
+    g_KeyboardTestTargetHwnd := targetHwnd
+    
+    lastIdxStr := IniRead(g_sIniFile, "KeyboardTestState", "CurrentIndex", "1")
+    lastIdx := 1
+    try {
+        lastIdx := Integer(lastIdxStr)
+    } catch {
+        lastIdx := 1
+    }
+    
+    commandList := GetGlobalCommandList()
+    if (lastIdx < 1 || lastIdx > commandList.Length) {
+        lastIdx := 1
+    }
+    
+    g_KeyboardTestCurrentIndex := lastIdx
+    
+    if (lastIdx > 1) {
+        lastCmd := commandList[lastIdx]
+        res := MsgBox("A previous Keyboard Test session was found.`n`nStep: " . lastIdx . " / " . commandList.Length . "`nCommand: " . lastCmd.cmd . "`n`nWould you like to resume from where you left off?", "🤖 Resume Keyboard Test?", "YesNoCancel Icon? AlwaysOnTop")
+        if (res == "No") {
+            g_KeyboardTestCurrentIndex := 1
+        } else if (res == "Cancel") {
+            return
+        }
+    }
+    
+    ShowKeyboardTestGui()
+}
+
+ShowKeyboardTestGui() {
+    global g_sIniFile, g_KeyboardTestCurrentIndex, g_KeyboardTestTargetHwnd
+    static kbTestGui := ""
+    
+    if (kbTestGui != "") {
+        try kbTestGui.Destroy()
+    }
+    
+    commandList := GetGlobalCommandList()
+    activeItem := commandList[g_KeyboardTestCurrentIndex]
+    
+    ; Capture target window state before testing begins
+    if (g_KeyboardTestTargetHwnd && WinExist(g_KeyboardTestTargetHwnd)) {
+        SaveTargetWindowState(g_KeyboardTestTargetHwnd)
+    }
+    
+    kbTestGui := Gui("+AlwaysOnTop -MaximizeBox -MinimizeBox +ToolWindow", "🤖 HotWinAHK - Keyboard Keybinding Verification Test")
+    kbTestGui.BackColor := "121214"
+    kbTestGui.SetFont("s10 cE0E0E6", "Segoe UI")
+    
+    kbTestGui.SetFont("s14 bold cFFCC00")
+    kbTestGui.Add("Text", "x20 y15 w560 Center", "⌨️ Physical Keyboard Hotkey Trigger Verification")
+    
+    kbTestGui.Add("Text", "x20 y42 w560 h2 BackgroundTrans Center c33333A", "_______________________________________________________________________________")
+    
+    kbTestGui.SetFont("s10 norm c88888D")
+    kbTestGui.Add("Text", "x430 y55 w140 Right", "Step " . g_KeyboardTestCurrentIndex . " of " . commandList.Length)
+    
+    targetTitle := ""
+    try {
+        targetTitle := WinGetTitle(g_KeyboardTestTargetHwnd)
+    } catch {
+        targetTitle := "[Invalid Hwnd or Closed Window]"
+    }
+    if (StrLen(targetTitle) > 50) {
+        targetTitle := SubStr(targetTitle, 1, 47) . "..."
+    }
+    
+    kbTestGui.SetFont("s9 bold c00FFCC")
+    kbTestGui.Add("Text", "x30 y55 w390", "🎯 Test Target Window: " . targetTitle . " (HWND: " . Format("0x{:X}", g_KeyboardTestTargetHwnd) . ")")
+    
+    kbTestGui.Add("Text", "x20 y70 w560 h2 BackgroundTrans Center c33333A", "_______________________________________________________________________________")
+    
+    kbTestGui.SetFont("s11 bold cFFCC00")
+    kbTestGui.Add("Text", "x30 y90 w150", "Command:")
+    kbTestGui.SetFont("s12 bold cFFFFFF")
+    kbTestGui.Add("Text", "x150 y90 w420", activeItem.cmd)
+    
+    kbTestGui.SetFont("s11 bold cFFCC00")
+    kbTestGui.Add("Text", "x30 y115 w150", "Description:")
+    kbTestGui.SetFont("s10 norm cE0E0E6")
+    kbTestGui.Add("Text", "x150 y115 w420 h40 W", activeItem.desc)
+    
+    kbTestGui.SetFont("s11 bold cFFCC00")
+    kbTestGui.Add("Text", "x30 y155 w150", "Expected Hotkey:")
+    expectedKeyStr := (activeItem.key != "" ? activeItem.key : "[N/A]")
+    kbTestGui.SetFont("s13 bold c00FF55")
+    kbTestGui.Add("Text", "x150 y153 w420", expectedKeyStr)
+    
+    kbTestGui.Add("Text", "x20 y180 w560 h2 BackgroundTrans Center c33333A", "_______________________________________________________________________________")
+    
+    kbTestGui.SetFont("s11 bold cFF9900")
+    statusLabel := kbTestGui.Add("Text", "x30 y205 w540 Center", "👉 Target window focused. Press the hotkey then click rating below.")
+    
+    kbTestGui.Add("Text", "x20 y245 w560 h2 BackgroundTrans Center c33333A", "_______________________________________________________________________________")
+    
+    kbTestGui.SetFont("s10 bold cE0E0E6")
+    btnPrev := kbTestGui.Add("Button", "x110 y265 w110 h30", "&Back")
+    btnRetry := kbTestGui.Add("Button", "x235 y265 w130 h30", "&Restore/Retry")
+    btnCancel := kbTestGui.Add("Button", "x380 y265 w110 h30", "&Cancel")
+    
+    kbTestGui.SetFont("s10 bold cFFFFFF")
+    btnYes := kbTestGui.Add("Button", "x30 y305 w130 h35", "&Worked (Yes)")
+    btnNo := kbTestGui.Add("Button", "x170 y305 w130 h35", "&Failed (No)")
+    btnUnsure := kbTestGui.Add("Button", "x310 y305 w115 h35", "&Unsure")
+    btnSkip := kbTestGui.Add("Button", "x435 y305 w135 h35", "&Skip Step")
+    
+    btnYes.SetFont("c00FF55")
+    btnNo.SetFont("cFF3333")
+    
+    btnPrev.OnEvent("Click", GoBackStep)
+    btnRetry.OnEvent("Click", RetryVerification)
+    btnYes.OnEvent("Click", (*) => SaveResultAndAdvance("Yes"))
+    btnNo.OnEvent("Click", (*) => SaveResultAndAdvance("No"))
+    btnUnsure.OnEvent("Click", (*) => SaveResultAndAdvance("Unsure"))
+    btnSkip.OnEvent("Click", (*) => SaveResultAndAdvance("Skipped"))
+    btnCancel.OnEvent("Click", CloseGui)
+    
+    kbTestGui.OnEvent("Escape", CloseGui)
+    kbTestGui.OnEvent("Close", CloseGui)
+    
+    kbTestGui.Show("w600 h360 Center")
+    
+    ; Activate target window right away so they can fire the hotkey
+    ActivateTargetWindow()
+    return
+    
+    ActivateTargetWindow() {
+        if (g_KeyboardTestTargetHwnd && WinExist(g_KeyboardTestTargetHwnd)) {
+            try {
+                WinActivate(g_KeyboardTestTargetHwnd)
+            } catch {
+                ; ignore activation errors
+            }
+        }
+    }
+    
+    RetryVerification(*) {
+        if (g_KeyboardTestTargetHwnd && WinExist(g_KeyboardTestTargetHwnd)) {
+            RestoreTargetWindowState(g_KeyboardTestTargetHwnd)
+            statusLabel.Text := "🔄 Window state reset. Focused. Press " . expectedKeyStr . " now."
+            ActivateTargetWindow()
+        } else {
+            statusLabel.Text := "⚠️ Target window does not exist or got closed!"
+        }
+    }
+    
+    SaveResultAndAdvance(result) {
+        if (g_KeyboardTestTargetHwnd && WinExist(g_KeyboardTestTargetHwnd)) {
+            RestoreTargetWindowState(g_KeyboardTestTargetHwnd)
+        }
+        
+        timeStr := FormatTime(, "yyyy-MM-dd HH:mm:ss")
+        IniWrite(result . " [" . timeStr . "]", g_sIniFile, "KeyboardTestLogs", activeItem.cmd)
+        
+        if (g_KeyboardTestCurrentIndex >= commandList.Length) {
+            IniWrite("1", g_sIniFile, "KeyboardTestState", "CurrentIndex")
+            MsgBox("🎉 Keyboard keybinding walkthrough testing fully complete!`n`nAll " . commandList.Length . " verification results have been permanently saved in HotWinAHK.ini.", "🤖 Walkthrough Testing Finished", "AlwaysOnTop Iconi")
+            kbTestGui.Destroy()
+            return
+        }
+        
+        g_KeyboardTestCurrentIndex += 1
+        IniWrite(String(g_KeyboardTestCurrentIndex), g_sIniFile, "KeyboardTestState", "CurrentIndex")
+        ShowKeyboardTestGui()
+    }
+    
+    GoBackStep(*) {
+        if (g_KeyboardTestTargetHwnd && WinExist(g_KeyboardTestTargetHwnd)) {
+            RestoreTargetWindowState(g_KeyboardTestTargetHwnd)
+        }
+        
+        if (g_KeyboardTestCurrentIndex > 1) {
+            g_KeyboardTestCurrentIndex -= 1
+            IniWrite(String(g_KeyboardTestCurrentIndex), g_sIniFile, "KeyboardTestState", "CurrentIndex")
+            ShowKeyboardTestGui()
+        } else {
+            statusLabel.Text := "⚠️ Already at the very start of testing (Step 1)."
+        }
+    }
+    
+    CloseGui(*) {
+        if (g_KeyboardTestTargetHwnd && WinExist(g_KeyboardTestTargetHwnd)) {
+            RestoreTargetWindowState(g_KeyboardTestTargetHwnd)
+        }
+        
+        IniWrite(String(g_KeyboardTestCurrentIndex), g_sIniFile, "KeyboardTestState", "CurrentIndex")
+        kbTestGui.Destroy()
+        ShowTargetToolTip("Keyboard test progress saved at step " . g_KeyboardTestCurrentIndex)
+    }
+}
+
+Global g_TestOrigX := ""
+Global g_TestOrigY := ""
+Global g_TestOrigW := ""
+Global g_TestOrigH := ""
+Global g_TestOrigMinMax := 0
+Global g_TestOrigAlwaysOnTop := 0
+Global g_TestOrigOpacity := ""
+Global g_TestStateSaved := false
+
+SaveTargetWindowState(hWnd) {
+    global g_TestOrigX, g_TestOrigY, g_TestOrigW, g_TestOrigH
+    global g_TestOrigMinMax, g_TestOrigAlwaysOnTop, g_TestOrigOpacity
+    global g_TestStateSaved
+    
+    if (!hWnd || !WinExist(hWnd)) {
+        g_TestStateSaved := false
+        return false
+    }
+    
+    try {
+        WinGetPos(&x, &y, &w, &h, hWnd)
+        g_TestOrigX := x
+        g_TestOrigY := y
+        g_TestOrigW := w
+        g_TestOrigH := h
+        
+        g_TestOrigMinMax := WinGetMinMax(hWnd)
+        g_TestOrigAlwaysOnTop := (WinGetExStyle(hWnd) & 0x8) ? 1 : 0
+        
+        try {
+            g_TestOrigOpacity := WinGetTransparent(hWnd)
+        } catch {
+            g_TestOrigOpacity := ""
+        }
+        
+        g_TestStateSaved := true
+        return true
+    } catch {
+        g_TestStateSaved := false
+        return false
+    }
+}
+
+RestoreTargetWindowState(hWnd) {
+    global g_TestOrigX, g_TestOrigY, g_TestOrigW, g_TestOrigH
+    global g_TestOrigMinMax, g_TestOrigAlwaysOnTop, g_TestOrigOpacity
+    global g_TestStateSaved
+    
+    if (!g_TestStateSaved || !hWnd || !WinExist(hWnd)) {
+        return false
+    }
+    
+    try {
+        ; Restore AlwaysOnTop
+        currAot := (WinGetExStyle(hWnd) & 0x8) ? 1 : 0
+        if (currAot != g_TestOrigAlwaysOnTop) {
+            WinSetAlwaysOnTop(g_TestOrigAlwaysOnTop, hWnd)
+        }
+        
+        ; Restore Opacity
+        try {
+            if (g_TestOrigOpacity == "" || g_TestOrigOpacity == 255) {
+                WinSetTranslucent("Off", hWnd)
+            } else {
+                WinSetTransparent(g_TestOrigOpacity, hWnd)
+            }
+        } catch {
+            ; ignore opacity errors
+        }
+        
+        ; Restore Min/Max / Position
+        currMinMax := WinGetMinMax(hWnd)
+        if (g_TestOrigMinMax == 1) {
+            if (currMinMax != 1) {
+                WinMaximize(hWnd)
+            }
+        } else if (g_TestOrigMinMax == -1) {
+            if (currMinMax != -1) {
+                WinMinimize(hWnd)
+            }
+        } else {
+            if (currMinMax != 0) {
+                WinRestore(hWnd)
+            }
+            if (g_TestOrigX != "" && g_TestOrigY != "" && g_TestOrigW != "" && g_TestOrigH != "") {
+                WinMove(g_TestOrigX, g_TestOrigY, g_TestOrigW, g_TestOrigH, hWnd)
+            }
+        }
+        return true
+    } catch {
+        return false
+    }
+}
+
+
 
 SysMenu() {
     sysCmds := []

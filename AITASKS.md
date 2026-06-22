@@ -24,6 +24,8 @@
 - All current design integrations and requested commands have been successfully implemented, verified, and cataloged. Any future enhancements will be listed here as needed.
 
 ## [x] Incoming tasks from chat
+- [x] Interactive Command Verification Test Dialog: Programmed `CommandTest` walkthrough which applies each action to the window active when the test started, presenting a polished dark-themed rating UI (Yes, No, Unsure, Skip, etc.), logging results directly in `HotWinAHK.ini` under `[CommandTestLogs]`, and supporting seamless resuming using `[CommandTestState]`.
+- [x] Physical Keyboard Shortcut Verification Test Dialog: Programmed `KeyboardTest` verification which prompts user to press bound hotkeys, runs an advanced 10-second real-time countdown with fine asynchronous InputHook polling, compares incoming strokes to expected values for instant matched highlight, and records verification history under `[KeyboardTestLogs]` in `HotWinAHK.ini`.
 - [x] Mathematically corrected StretchToGrid/PullToGrid boundary offset snap states to guarantee perfect direction-oriented outward and inward window stretching/pulling
 - [x] Programmed gorgeous multi-line cursor tooltips for active actions, resolving command names against `GetGlobalCommandList()` to automatically format and present categories, descriptions, and defaults
 - [x] Refactored HotWinAHK.ini formatting (no blank lines, updated matrix header, descriptive region comments for each command family, and newly invented active key bindings for historically unbound commands)

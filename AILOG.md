@@ -18,7 +18,7 @@ status: pass
 
 ## Commit Message
 ```text
-feat(hotkeys): eliminate Custom bindings and map all physical modifiers for a fully-bound window suite
+fix(syntax): resolve missing catch blocks in newly introduced try blocks
 ```
 
 <!-- Example AI Log Entry
@@ -26,6 +26,36 @@ feat(hotkeys): eliminate Custom bindings and map all physical modifiers for a fu
 ...
 -->
 ## Log Entries
+
+## [2026-06-22T12:50:00Z]
+### 🎯 Primary Goals & Requirements
+- **Resolve Parser Syntax Errors**: Correct the syntax compilation issue `Error: Missing """` occurring in the AHK v2 parser by ensuring all newly introduced `try` statement blocks are matched with corresponding `catch` block enclosures.
+
+### 🛠️ Completed Changes in this Session
+- **Rectified Block-Level `try` Syntaxes**:
+  - Appended `catch` block definitions to `try` configurations in `Settings` save (`line 5146`), `StartCommandTestDialog` index parser (`line 5388`), `ShowCommandTestGui` re-activation events (`lines 5545, 5563`), `StartKeyboardTestDialog` window resolution (`line 5622`) & index parser (`line 5639`), and `ActivateTargetWindow` (`line 5766`).
+  - Added short comments or simple placeholder statements in catch blocks to gracefully handle potential runtime failures on GUI re-activation and target focus changes.
+
+### 🔸 Affected Files
+- `/HotWinAHK.ahk`
+- `/AILOG.md`
+
+## [2026-06-22T12:35:00Z]
+### 🎯 Primary Goals & Requirements
+- **Interactive Command Verification Test Walkthrough**: Develop a test suite (`CommandTest`) that walks through each HotWinAHK command, executes it on the window that was active upon starting, prompts the user with a dark rating dialog (Worked/Failed/Unsure/Skip), logs execution history under `[CommandTestLogs]` in `HotWinAHK.ini`, and gracefully tracks progress in `[CommandTestState]` to allow resuming on reload.
+- **Physical Keyboard Shortcut Trigger Verification**: Build a walkthrough (`KeyboardTest`) that informs and prompts the user to physically invoke expected default bindings on their tested application, allowing standard OS Hotkeys to trigger without active interception.
+- **Pristine State Snapshot and Restorations**: Implement robust pre-test window coordinate and state snapshots so that whichever window was manipulated immediately snaps back to its original position/size when the user moves between steps, retries, or closes testing.
+
+### 🛠️ Completed Changes in this Session
+- **Programmed `SaveTargetWindowState` & `RestoreTargetWindowState` Helpers**: Built robust error-wrapped geometry, Min/Max state, AlwaysOnTop, and opacity/translucency snapshot routines. Enables both test suites to guarantee a perfectly clean, non-disruptive desktop state by automatically reversing transformations when rating, skipping, going back, retrying, or canceling.
+- **Refactored `ShowKeyboardTestGui`**: Re-engineered the keyboard test to completely bypass intrusive polling loops/InputHooks. It now focuses the active target window and prompts the user to fire standard hotkeys, rendering keyboard-navigable shortcut-ampersand buttons (`Alt+W` for Worked, `Alt+F` for Failed, `Alt+R` for Retry, `Alt+B` for Back, `Alt+C` for Cancel) for effortless hands-on-keyboard execution.
+- **Refactored `ShowCommandTestGui` Window Logic**: Integrated direct target window state restoration on transition and reset events.
+- **Created INI States & Logging Entries**: Connected direct state writing into `HotWinAHK.ini` across sections `CommandTestState`, `CommandTestLogs`, `KeyboardTestState`, and `KeyboardTestLogs`.
+
+### 🔸 Affected Files
+- `/HotWinAHK.ahk`
+- `/AITASKS.md`
+- `/AILOG.md`
 
 ## [2026-06-22T12:25:00Z]
 ### 🎯 Primary Goals & Requirements
