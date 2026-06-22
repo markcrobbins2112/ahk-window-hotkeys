@@ -54,6 +54,7 @@
 
 
 ## [x] Errors
+- [x] WinSetTranslucent local variable warning: Resolved compiler/linter diagnostics warning where `WinSetTranslucent` was flagged as an unassigned local variable. Corrected to the correct built-in function `WinSetTransparent` on line 5891 of `HotWinAHK.ahk` during opacity/translucency cleanup. ✅ 2026-06-22
 - [x] Unexpected Reserved Word in `ShowWindowPicker`: Fixed runtime compiler crash by replacing invalid block fat-arrow syntax (`(params) => { ... }`), which is unsupported in AutoHotkey v2, with proper native nested function blocks (`UpdateList(searchText) { ... }` and `ActivateSelection(*) { ... }`).
 - [x] lint 1: Resolved warning where `ExecuteActionWithCondition` was considered an unassigned local variable. Fixed by placing the `#Include "HotWinAHK_aux.ahk"` statement at the bottom of `HotWinAHK.ahk` after the global function definitions.
 - [x] lint 2: Resolved warning where `ShowHelpScreen` was flagged as an unassigned local variable inside case `HelpScreen`. Built a fully-featured, dark-themed interactive help dashboard in `HotWinAHK.ahk`.

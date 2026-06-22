@@ -3932,7 +3932,7 @@ GetGlobalCommandList() {
         {cat: "FOCUS", cmd: "Desk3d", key: "Win + Ctrl + D", desc: "Enable 3D workspace parallax rotation mode, shifting restored windows based on multi-layered depth."},
         {cat: "FOCUS", cmd: "WindowHistoryPrev", key: "Win + Alt + Backspace", desc: "Go to the active window's previous position and state in history."},
         {cat: "FOCUS", cmd: "WindowHistoryNext", key: "Win + Alt + Shift + Backspace", desc: "Go to the active window's next position and state in history."},
-        {cat: "FOCUS", cmd: "WindowHistoryPick", key: "Win + Alt + `", desc: "Open a menu of past recorded positions and states to pick and apply."},
+        {cat: "FOCUS", cmd: "WindowHistoryPick", key: "Win + Alt + ``", desc: "Open a menu of past recorded positions and states to pick and apply."},
         {cat: "MOVE", cmd: "Swap", key: "Win + Alt + W", desc: "Swap current active window position and size with the window under mouse cursor."},
         {cat: "MOVE", cmd: "SwapSize", key: "Win + Alt + Z", desc: "Swap current active window size with the window under mouse cursor."},
         {cat: "MOVE", cmd: "SwapPosition", key: "Win + Alt + P", desc: "Swap current active window position with the window under mouse cursor."},
@@ -5888,7 +5888,7 @@ RestoreTargetWindowState(hWnd) {
         ; Restore Opacity
         try {
             if (g_TestOrigOpacity == "" || g_TestOrigOpacity == 255) {
-                WinSetTranslucent("Off", hWnd)
+                WinSetTransparent("Off", hWnd)
             } else {
                 WinSetTransparent(g_TestOrigOpacity, hWnd)
             }
