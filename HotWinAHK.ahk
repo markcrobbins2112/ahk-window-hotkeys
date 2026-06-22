@@ -529,10 +529,10 @@ IsValidAhkKey(keyString) {
 CompileStrokeToAHK(sStroke) {
     sStroke := StrReplace(sStroke, " ", "")
 
-    bCtrl := RegExMatch(sStroke, "i)(Ctrl|LCtrl|RCtrl)")
-    bAlt := RegExMatch(sStroke, "i)(Alt|LAlt|RAlt)")
-    bShift := RegExMatch(sStroke, "i)(Shift|LShift|RShift)")
-    bWin := RegExMatch(sStroke, "i)(Win|LWin|RWin)")
+    bCtrl := InStr(sStroke, "Ctrl") || InStr(sStroke, "Control") || InStr(sStroke, "LCtrl") || InStr(sStroke, "RCtrl")
+    bAlt := InStr(sStroke, "Alt") || InStr(sStroke, "LAlt") || InStr(sStroke, "RAlt")
+    bShift := InStr(sStroke, "Shift") || InStr(sStroke, "LShift") || InStr(sStroke, "RShift")
+    bWin := InStr(sStroke, "Win") || InStr(sStroke, "LWin") || InStr(sStroke, "RWin")
 
     sCleanKey := RegExReplace(sStroke, "i)(LCtrl\+|RCtrl\+|Ctrl\+|LAlt\+|RAlt\+|Alt\+|LShift\+|RShift\+|Shift\+|LWin\+|RWin\+|Win\+)", "")
     if (sCleanKey == "")

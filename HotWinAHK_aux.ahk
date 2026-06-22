@@ -1,4 +1,4 @@
-﻿; =======================================================================================
+; =======================================================================================
 ;          AUTOMATICALLY GENERATED NATIVE SHELL HOTKEYS - DO NOT EDIT DIRECTLY
 ; =======================================================================================
 #Requires AutoHotkey v2.0
@@ -339,6 +339,14 @@ $+numpad3:: {
 
 $+numpadpgdn:: {
     ExecuteActionWithCondition("EdgeBottomRight", "")
+}
+
+$+numpad5:: {
+    ExecuteActionWithCondition("EdgeCenter", "")
+}
+
+$+numpadclear:: {
+    ExecuteActionWithCondition("EdgeCenter", "")
 }
 
 $^+numpad4:: {

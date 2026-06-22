@@ -18,7 +18,7 @@ status: pass
 
 ## Commit Message
 ```text
-feat(test): add skip-with-no-revert to command tester and replace standard tooltips with dark themed focus-free custom ones
+fix: resolve StretchToGrid and PullToGrid hotkey compilation collisions and implement robust modifier parsing
 ```
 
 <!-- Example AI Log Entry
@@ -26,6 +26,21 @@ feat(test): add skip-with-no-revert to command tester and replace standard toolt
 ...
 -->
 ## Log Entries
+
+## [2026-06-22T15:15:00Z]
+### 🎯 Primary Goals & Requirements
+- **Resolve StretchToGrid and PullToGrid Commands Doing Nothing**: Identify and resolve key registration blockages where the commands did not trigger active window manipulation.
+- **Implement Robust Modifier Parsing**: Fix the hotkey compiler logic in `CompileStrokeToAHK` where Shift combinations were drop-matched, causing key hijacking / collision overrides.
+
+### 🛠️ Completed Changes in this Session
+- **Overhauled Modifier Parsing with `InStr` Checks**:
+  - Replaced the regex modifier parses with built-in case-insensitive `InStr` exact substring match sweeps for `Ctrl`, `Alt`, `Shift`, and `Win`.
+  - This guarantees that keys like `Win + Alt + Shift + Numpad4` (`AddLeft`) are compiled with full modifier signatures (e.g. `$!+#numpad4`) rather than dropping the Shift modifier.
+- **Resolved Hotkey Collisions**:
+  - Confirmed and resolved overlaps where `$!#numpad4` (`PullToGridLeft`) was receiving collision hijackings due to incomplete compiles of neighboring keys.
+  - Symmetrically compiled all layout hotkeys (`AddRight`/`PullToGridRight`, etc.) into their respective, separate registrations.
+- **Full Hotkey Table Regeneration**:
+  - Successfully regenerated `/HotWinAHK_aux.ahk` to perfectly register the complete slate of 1200+ distinct default hotkey lines, fully prepared for immediate user execution.
 
 ## [2026-06-22T14:50:00Z]
 ### 🎯 Primary Goals & Requirements
