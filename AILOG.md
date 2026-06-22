@@ -18,7 +18,7 @@ status: pass
 
 ## Commit Message
 ```text
-fix(msgbox): change invalid AlwaysOnTop option to numeric style 262144
+fix(test-suite): disable auto-execute and prioritize numpad/arrows commands in walkthrough sequence
 ```
 
 <!-- Example AI Log Entry
@@ -26,6 +26,24 @@ fix(msgbox): change invalid AlwaysOnTop option to numeric style 262144
 ...
 -->
 ## Log Entries
+
+## [2026-06-22T13:38:00Z]
+### 🎯 Primary Goals & Requirements
+- **Disable Automated Command Execution**: Update the Command Test suite walkthrough (`CommandTest`) to prevent auto-application of the active command when loading a step. Give users explicit manual control via an "Apply Command" button.
+- **Prioritize Numpad & Arrow Commands**: Partition the walkthrough order dynamically so all Numpad and Arrow keys layout commands are executed first in the walkthrough suite.
+
+### 🛠️ Completed Changes in this Session
+- **Created Dynamic Helper for Walkthrough Sequence**:
+  - Coded `GetCommandTestList()` in `HotWinAHK.ahk` to sort `GetGlobalCommandList()` items based on physical keybinding strings.
+  - Placed commands with keybindings containing `"numpad"`, `"left"`, `"right"`, `"up"`, or `"down"` (filtered to exclude page navigation modifiers) at the top of the test suite list, ensuring they are tested first.
+- **Removed Automated Application**:
+  - Removed `ApplyCommand(0)` call on step construction within `ShowCommandTestGui()`.
+  - Added user instructions in step status text: `"Click 'Apply Command' to execute this action."` so users can manually invoke and observe action outputs.
+
+### 🔸 Affected Files
+- `/HotWinAHK.ahk`
+- `/AITASKS.md`
+- `/AILOG.md`
 
 ## [2026-06-22T13:22:00Z]
 ### 🎯 Primary Goals & Requirements

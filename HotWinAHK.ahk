@@ -5373,6 +5373,40 @@ StartKeyQuery() {
     ShowTargetToolTip("Key Query Complete.")
 }
 
+GetCommandTestList() {
+    static orderedTestList := ""
+    if (orderedTestList != "") {
+        return orderedTestList
+    }
+    
+    baseList := GetGlobalCommandList()
+    numpadAndArrows := []
+    others := []
+    
+    for item in baseList {
+        keyLower := Format("{:L}", String(item.key))
+        
+        isNumpad := InStr(keyLower, "numpad")
+        isArrow := InStr(keyLower, "left") || InStr(keyLower, "right") || InStr(keyLower, "up") || InStr(keyLower, "down")
+        
+        if (isNumpad || (isArrow && !InStr(keyLower, "pgup") && !InStr(keyLower, "pgdn"))) {
+            numpadAndArrows.Push(item)
+        } else {
+            others.Push(item)
+        }
+    }
+    
+    orderedTestList := []
+    for item in numpadAndArrows {
+        orderedTestList.Push(item)
+    }
+    for item in others {
+        orderedTestList.Push(item)
+    }
+    
+    return orderedTestList
+}
+
 StartCommandTestDialog() {
     global g_sIniFile, g_CommandTestCurrentIndex, g_CommandTestTargetHwnd
     
@@ -5391,7 +5425,7 @@ StartCommandTestDialog() {
         lastIdx := 1
     }
     
-    commandList := GetGlobalCommandList()
+    commandList := GetCommandTestList()
     if (lastIdx < 1 || lastIdx > commandList.Length) {
         lastIdx := 1
     }
@@ -5419,7 +5453,7 @@ ShowCommandTestGui() {
         try cmdTestGui.Destroy()
     }
     
-    commandList := GetGlobalCommandList()
+    commandList := GetCommandTestList()
     activeItem := commandList[g_CommandTestCurrentIndex]
     
     ; Capture target window state before testing begins
@@ -5475,7 +5509,7 @@ ShowCommandTestGui() {
     cmdTestGui.Add("Text", "x150 y165 w420 h60 Wrap", activeItem.desc)
     
     cmdTestGui.SetFont("s10 bold cFF5555")
-    statusText := cmdTestGui.Add("Text", "x30 y230 w540 Center", "")
+    statusText := cmdTestGui.Add("Text", "x30 y230 w540 Center", "Click 'Apply Command' to execute this action.")
     
     cmdTestGui.Add("Text", "x20 y245 w560 h2 BackgroundTrans Center c33333A", "_______________________________________________________________________________")
     
@@ -5504,8 +5538,6 @@ ShowCommandTestGui() {
     btnCancel.OnEvent("Click", CloseGui)
     cmdTestGui.OnEvent("Escape", CloseGui)
     cmdTestGui.OnEvent("Close", CloseGui)
-    
-    ApplyCommand(0)
     
     cmdTestGui.Show("w600 h360 Center")
     return
