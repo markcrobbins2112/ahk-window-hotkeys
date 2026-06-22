@@ -18,7 +18,7 @@ status: pass
 
 ## Commit Message
 ```text
-fix(grid): resolve StretchToGrid and PullToGrid verification failures by implementing multi-monitor work-area bounding and strict index clamping
+feat(test): add skip-with-no-revert to command tester and replace standard tooltips with dark themed focus-free custom ones
 ```
 
 <!-- Example AI Log Entry
@@ -26,6 +26,20 @@ fix(grid): resolve StretchToGrid and PullToGrid verification failures by impleme
 ...
 -->
 ## Log Entries
+
+## [2026-06-22T14:50:00Z]
+### 🎯 Primary Goals & Requirements
+- **Skip-With-No-Revert in Command tester**: Add an alternative "no-revert" skip capability allowing automated tests to progress without reverting any changes applied during test walkthrough.
+- **Custom Dark-Themed Focus-Free Tooltips**: Upgrade all small on-screen tooltip cues with a dark themed custom GUI tooltip helper that is totally click-through and non-focusable.
+
+### 🛠️ Completed Changes in this Session
+- **Integrated `CustomToolTip` Functionality**:
+  - Engineered `CustomToolTip(sText, x, y)` built on top of native GUI overlays styled with a deep charcoal background (`#19191C`) and elegant gray Segoe UI text.
+  - Set extended window attributes (`WS_EX_NOACTIVATE` 0x08000000 and `WS_EX_TRANSPARENT` 0x20) using `+E0x08000020` to prevent the tooltips from capturing window focus or disrupting mouse cursor events.
+  - Replaced all default, system-style `ToolTip` script triggers with `CustomToolTip(...)` to provide a unified visual system.
+- **Engineered No-Revert Skip Option in CommandTest**:
+  - Reorganized ratings dialog horizontal button bounds so an extra option button fit gracefully within the 600px pane.
+  - Connected the new "No-Revert Skip" button directly to `SaveResultAndAdvance("SkippedNoRevert", false)` to skip and log data without resetting the baseline position of the transient window target.
 
 ## [2026-06-22T14:45:00Z]
 ### 🎯 Primary Goals & Requirements

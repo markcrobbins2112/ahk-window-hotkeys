@@ -24,6 +24,8 @@
 - All current design integrations and requested commands have been successfully implemented, verified, and cataloged. Any future enhancements will be listed here as needed.
 
 ## [x] Incoming tasks from chat
+- [x] Dark themed, focus-free CustomToolTip: Made a custom, slick dark themed tooltip built as a non-activate, fully transparent click-through GUI tooltip helper replacing all default standard AHK `ToolTip` calls across the code, ensuring they never steal window focus. ✅ 2026-06-22
+- [x] Skip-With-No-Revert to Command Tester Walkthrough: Restructured `CommandTest` ratings layout to fit a "No-Revert Skip" button, colored in cyber Amber, which bypasses the target window restore-baseline state phase when advancing to more test cases. ✅ 2026-06-22
 - [x] Symmetrized StretchToGrid & PullToGrid Multi-Monitor Snapping: Integrated a robust, multi-monitor work-area bounding algorithm that dynamically retrieves active monitor footprints (`MonitorFromWindow`/`GetMonitorInfo`), scales coordinate grids, and clamps indices to prevent erratic off-screen overshooting or alignment mismatch on multi-monitor nodes. ✅ 2026-06-22
 - [x] Symmetrical SysMenu Overhaul: Re-arranged, formatted, and logically segmented the `SysMenu` popup list with custom section separators and customized `.wcas` format key labels, matching requested groupings exactly. ✅ 2026-06-22
 - [x] Compact .wcas Hotkey Format Notation: Implemented `FormatKeyToWcas()` and `GetActiveWcasKey()` mapping helpers, cleanly displaying modifier patterns like `S.wcs`, `/.w` across SysMenu, HelpScreen, and Command Palette instead of verbose keyboard modifier layouts. ✅ 2026-06-22

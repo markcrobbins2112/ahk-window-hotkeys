@@ -394,8 +394,8 @@ ShowQuickTip(sCmd) {
         tipText := "🤖 Running: " . sCmd
     }
 
-    ToolTip(tipText)
-    SetTimer(() => ToolTip(), -2000)
+    CustomToolTip(tipText)
+    SetTimer(() => CustomToolTip(), -2000)
 }
 SquareRoot(val) {
     return val ** 0.5
@@ -2809,7 +2809,7 @@ ExecuteCommandRegistry(sCmd, hWnd) {
 }
 ShutdownEngine() {
     ; Clear any lingering tooltips on the screen instantly
-    ToolTip()
+    CustomToolTip()
     ClearCustomOverlay()
 
     ; Destroy active window dot indicator
@@ -3193,7 +3193,7 @@ ShowTargetToolTip(sText, duration := -1800) {
     }
 }
 ClearToolTip() {
-    ToolTip()
+    CustomToolTip()
     ClearCustomOverlay()
 }
 ClearCustomOverlay() {
@@ -3202,6 +3202,77 @@ ClearCustomOverlay() {
         try g_OverlayGui.Destroy()
         g_OverlayGui := ""
     }
+}
+Global g_CustomTipGui := ""
+
+CustomToolTip(sText := "", x := "", y := "") {
+    Global g_CustomTipGui
+    
+    ; If empty, destroy/hide any existing custom tooltip
+    if (sText == "") {
+        if (g_CustomTipGui != "") {
+            try g_CustomTipGui.Destroy()
+            g_CustomTipGui := ""
+        }
+        return
+    }
+    
+    ; Create Gui if not already existing
+    if (g_CustomTipGui == "") {
+        g_CustomTipGui := Gui("+AlwaysOnTop -Caption +ToolWindow +E0x08000000 +E0x20") ; WS_EX_NOACTIVATE and WS_EX_TRANSPARENT (click-through)
+        g_CustomTipGui.BackColor := "19191C" ; Deep dark gray matching theme
+        g_CustomTipGui.SetFont("s9 cE0E0E6", "Segoe UI")
+        g_CustomTipGui.Add("Text", "vTipText x10 y6 w500 Left", "")
+    }
+    
+    ; Calculate width and height dynamically
+    lines := StrSplit(sText, "`n")
+    maxLen := 0
+    for line in lines {
+        if (StrLen(line) > maxLen) {
+            maxLen := StrLen(line)
+        }
+    }
+    
+    w := Max(130, maxLen * 7.5 + 20)
+    h := lines.Length * 17 + 12
+    
+    ; Ensure safe bounds
+    if (w > 600) {
+        w := 600
+    }
+    
+    ; Update target text control of tooltip
+    g_CustomTipGui["TipText"].Move(, , w - 20, h - 12)
+    g_CustomTipGui["TipText"].Text := sText
+    
+    ; Determine placement coordinates
+    if (x == "" || y == "") {
+        CoordMode("Mouse", "Screen")
+        MouseGetPos(&mX, &mY)
+        if (x == "") {
+            x := mX + 15
+        }
+        if (y == "") {
+            y := mY + 15
+        }
+    }
+    
+    ; Clamp to screen boundaries to keep it visible
+    if (x + w > A_ScreenWidth) {
+        x := A_ScreenWidth - w - 8
+    }
+    if (y + h > A_ScreenHeight) {
+        y := A_ScreenHeight - h - 8
+    }
+    if (x < 0) {
+        x := 8
+    }
+    if (y < 0) {
+        y := 8
+    }
+    
+    g_CustomTipGui.Show("x" . x . " y" . y . " w" . w . " h" . h . " NoActivate")
 }
 ; #endregion
 ; ----
@@ -4367,7 +4438,7 @@ HandleTuckedDrag() {
                 }
             }
             
-            ToolTip() ; Clear any pull progress tooltips
+            CustomToolTip() ; Clear any pull progress tooltips
             WinMove(startWinX + deltaX, startWinY + deltaY, wW, wH, g_ActiveUntuckedHwnd)
             
         } else {
@@ -4391,7 +4462,7 @@ HandleTuckedDrag() {
                     if (g_TuckedWindows.Has(g_ActiveUntuckedHwnd)) {
                         g_TuckedWindows.Delete(g_ActiveUntuckedHwnd)
                     }
-                    ToolTip()
+                    CustomToolTip()
                 } else {
                     ; UNDER PULL THRESHOLD:
                     ; Moves 1:1 with NO motion resistance!
@@ -4401,7 +4472,7 @@ HandleTuckedDrag() {
                     pct := Max(0, Min(pullDist / 120, 1))
                     pctPct := Round(pct * 100)
                     progressBar := MakeProgressBarStr(pullDist, 120)
-                    ToolTip("Pull to Free: " . pctPct . "%`n" . progressBar, curX + 15, curY + 15)
+                    CustomToolTip("Pull to Free: " . pctPct . "%`n" . progressBar, curX + 15, curY + 15)
                 }
             }
             
@@ -4465,7 +4536,7 @@ HandleTuckedDrag() {
         }
     }
     
-    ToolTip() ; Clear pull indicator tooltip
+    CustomToolTip() ; Clear pull indicator tooltip
     dockIndicatorGui.Destroy()
     
     if (isPoppedOff) {
@@ -5547,21 +5618,24 @@ ShowCommandTestGui() {
     btnPrev := cmdTestGui.Add("Button", "x370 y265 w100 h30", "&Back")
     
     cmdTestGui.SetFont("s10 bold cFFFFFF")
-    btnYes := cmdTestGui.Add("Button", "x30 y305 w110 h35", "&Worked (Yes)")
-    btnNo := cmdTestGui.Add("Button", "x150 y305 w110 h35", "&Failed (No)")
-    btnUnsure := cmdTestGui.Add("Button", "x270 y305 w110 h35", "&Unsure")
-    btnSkip := cmdTestGui.Add("Button", "x390 y305 w80 h35", "&Skip")
-    btnCancel := cmdTestGui.Add("Button", "x480 y305 w90 h35", "&Cancel")
+    btnYes := cmdTestGui.Add("Button", "x20 y305 w100 h35", "&Worked")
+    btnNo := cmdTestGui.Add("Button", "x125 y305 w100 h35", "&Failed")
+    btnUnsure := cmdTestGui.Add("Button", "x230 y305 w90 h35", "&Unsure")
+    btnSkip := cmdTestGui.Add("Button", "x325 y305 w70 h35", "&Skip")
+    btnSkipNoRevert := cmdTestGui.Add("Button", "x400 y305 w110 h35", "&No-Revert Skip")
+    btnCancel := cmdTestGui.Add("Button", "x515 y305 w65 h35", "&Cancel")
     
     btnYes.SetFont("c00FF55")
     btnNo.SetFont("cFF3333")
+    btnSkipNoRevert.SetFont("cFFB300")
     
     btnApply.OnEvent("Click", ApplyCommand)
     btnRevert.OnEvent("Click", RevertCommand)
     btnYes.OnEvent("Click", (*) => SaveResultAndAdvance("Yes"))
     btnNo.OnEvent("Click", (*) => SaveResultAndAdvance("No"))
     btnUnsure.OnEvent("Click", (*) => SaveResultAndAdvance("Unsure"))
-    btnSkip.OnEvent("Click", (*) => SaveResultAndAdvance("Skipped"))
+    btnSkip.OnEvent("Click", (*) => SaveResultAndAdvance("Skipped", true))
+    btnSkipNoRevert.OnEvent("Click", (*) => SaveResultAndAdvance("SkippedNoRevert", false))
     btnPrev.OnEvent("Click", GoBackStep)
     btnCancel.OnEvent("Click", CloseGui)
     cmdTestGui.OnEvent("Escape", CloseGui)
@@ -5629,8 +5703,8 @@ ShowCommandTestGui() {
         }
     }
     
-    SaveResultAndAdvance(result) {
-        if (g_CommandTestTargetHwnd && WinExist(g_CommandTestTargetHwnd)) {
+    SaveResultAndAdvance(result, doRevert := true) {
+        if (doRevert && g_CommandTestTargetHwnd && WinExist(g_CommandTestTargetHwnd)) {
             RestoreTargetWindowState(g_CommandTestTargetHwnd)
         }
         
