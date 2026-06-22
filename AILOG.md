@@ -18,19 +18,40 @@ status: pass
 
 ## Commit Message
 ```text
-feat(symmetrical): implement symmetrical bulk actions and four-sided grid snaps
+feat(hotkeys): eliminate Custom bindings and map all physical modifiers for a fully-bound window suite
 ```
 
 <!-- Example AI Log Entry
 ## [2026-05-31T16:12:00Z]
-### 🎯 Primary Goals & Requirements
-subsections/tree bullets
-### 🛠️ Completed Changes in this Session
-subsections/tree bullets
-### 🔸 Affected Files
-bulleted file list
+...
 -->
 ## Log Entries
+
+## [2026-06-22T12:25:00Z]
+### 🎯 Primary Goals & Requirements
+- **Complete Default Hotkey Bindings**: Resolve outstanding occurrences of unassigned default keys (`"Custom"`) inside `GetGlobalCommandList` for diagonals, edge snapping, resizing, and tucking, so that every single action in the HotWinAHK suite is fully bound to a physical key.
+- **Harmonize Layout Patterns**: Enforce strict modifier consistency to group commands naturally (e.g. `Win + Alt + Shift` for Add/Trim, `Win + Ctrl + Alt + Shift` for Trim-Diagonals, `Ctrl + Numpad` for JumpGrid, and `Shift + Numpad` for Edge snapping).
+- **Update Documentation & Layout Maps**: Synchronize the newly active physical keys in `breakdown.txt` to align with the complete, fully cohesive default profile.
+
+### 🛠️ Completed Changes in this Session
+- **Eliminated `"Custom"` Key Declarations**: Modified the global registry in `HotWinAHK.ahk` to assign high-performance physical combinations to all unassigned commands.
+- **Unified Diagonal Movement Layout**: Assigned Numpad corners 7, 9, 1, and 3 to `MoveToGridTopLeft/TopRight/BottomLeft/BottomRight` default bindings, completing the 8-directional movement grid.
+- **Harmonized Edge Alignments**: Assigned `EdgeTopLeft/TopRight/BottomLeft/BottomRight` to corresponding `Shift + Numpad` layouts, and assigned `JumpGridTopLeft/TopRight/BottomLeft/BottomRight` to `Ctrl + Numpad` combinations, aligning exactly with the INI structure.
+- **Configured Symmetric Sizing & Resizing Diagonals**:
+  - Bound `TrimTopLeft/...` diagonal commands to `Win + Ctrl + Alt + Shift + Numpad 7/9/1/3`.
+  - Bound `AddTopLeft/...` diagonal commands to `Win + Alt + Shift + Numpad 7/9/1/3`, resolving any overlap.
+  - Bound `GrowTopLeft/...` to `Win + Ctrl + Shift + Numpad 7/9/1/3` and `SubtractTopLeft/...` to `Win + Ctrl + Alt + Numpad 7/9/1/3`.
+  - Bound axis Halving (`HalfSizeLeft/...`) to `Win + Ctrl + Numpad 4/6/8/2` and axis Doubling (`DoubleSizeLeft/...`) to `Win + Ctrl + Alt + Numpad 4/6/8/2`.
+  - Configured diagonal Stretch `StretchToGridTopLeft/...` to `Win + Numpad 7/9/1/3` and diagonal Pull `PullToGridTopLeft/...` to `Win + Alt + Numpad 7/9/1/3`.
+  - Mapped manual axis Stretches (`StretchLeft/...`) to `Win + Shift + Numpad 4/6/8/2/7/9/1/3`.
+- **Cleaned Up tuck and swap configurations**: Configured sequential Tuck and Peek pop-up commands (`TuckPeekLeft`, etc.) to elegant unified `Win + Alt + Shift + Arrows` and `Win + Ctrl + Alt + Shift + Arrows` sequences.
+- **Updated Breakdown File**: Modified `breakdown.txt` to remove assigned commands from the "UNASSIGNED & CONSERVED" lists, establishing a complete unified layout documentation.
+
+### 🔸 Affected Files
+- `/HotWinAHK.ahk`
+- `/breakdown.txt`
+- `/AITASKS.md`
+- `/AILOG.md`
 
 ## [2026-06-22T12:15:00Z]
 ### 🎯 Primary Goals & Requirements

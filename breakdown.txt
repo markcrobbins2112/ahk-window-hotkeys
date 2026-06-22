@@ -145,30 +145,66 @@ The following hotkey combinations are now vacant or reserved to conserve Arrow a
    - a.was (Win+Alt+Shift + Arrows) - vacated DoubleSize family (Left, Right, Up, Down) -> Kept strictly on physical Numpad keys
    - a.wcas (Win+Ctrl+Alt+Shift + Arrows) - vacated HalfSize family (Left, Right, Up, Down) -> Kept strictly on physical Numpad keys
 
-4. Non-Standard Diagonals & Unmapped Code-Only Commands (Unassigned in INI):
-   - Diagonal Alignment / Edge Snapping: EdgeTopLeft, EdgeTopRight, EdgeBottomLeft, EdgeBottomRight
-   - Diagonal Grid Shifting: JumpGridTopLeft, JumpGridTopRight, JumpGridBottomLeft, JumpGridBottomRight, MoveToGridTopLeft, MoveToGridTopRight, MoveToGridBottomLeft, MoveToGridBottomRight
-   - Diagonal Boundary Trimming: TrimTopLeft, TrimTopRight, TrimBottomLeft, TrimBottomRight
-   - Diagonal Boundary Expanding: AddTopLeft, AddTopRight, AddBottomLeft, AddBottomRight, GrowTopLeft, GrowTopRight, GrowBottomLeft, GrowBottomRight
-   - Diagonal Grid Stretching: StretchToGridTopLeft, StretchToGridTopRight, StretchToGridBottomLeft, StretchToGridBottomRight
-   - Diagonal Grid Pulling: PullToGridTopLeft, PullToGridTopRight, PullToGridBottomLeft, PullToGridBottomRight
-   - Desktop Swapping Interactions: Swap, SwapSize, SwapPosition, SwapPick, SwapPickSize, SwapPickPosition
+
+================================================================================
+FULLY INTEGRATED DIAGONAL & ADVANCED GRID COMMANDS
+================================================================================
+All non-standard diagonal grid alignments, stretching, pulling, and swaps are now fully mapped to dedicated physical modifiers:
+
+1. Diagonal Alignment & Corner Snapping (Shift + Numpad corners 7, 9, 1, 3):
+   - EdgeTopLeft                [Shift+Numpad7]
+   - EdgeTopRight               [Shift+Numpad9]
+   - EdgeBottomLeft             [Shift+Numpad1]
+   - EdgeBottomRight            [Shift+Numpad3]
+
+2. Diagonal Grid Shifting (Ctrl + Numpad corners or Naked Numpad corners):
+   - JumpGridTopLeft            [Ctrl+Numpad7]
+   - JumpGridTopRight           [Ctrl+Numpad9]
+   - JumpGridBottomLeft         [Ctrl+Numpad1]
+   - JumpGridBottomRight        [Ctrl+Numpad3]
+   - MoveToGridTopLeft          [Numpad7]
+   - MoveToGridTopRight         [Numpad9]
+   - MoveToGridBottomLeft       [Numpad1]
+   - MoveToGridBottomRight      [Numpad3]
+
+3. Diagonal Symmetrical Sizing (Win + Modifiers + Numpad corners):
+   - TrimTopLeft / etc.         [Win+Ctrl+Alt+Shift+Numpad 7/9/1/3]
+   - AddTopLeft / etc.          [Win+Alt+Shift+Numpad 7/9/1/3]
+   - GrowTopLeft / etc.         [Win+Ctrl+Shift+Numpad 7/9/1/3]
+   - SubtractTopLeft / etc.     [Win+Ctrl+Alt+Numpad 7/9/1/3]
+
+4. Diagonal Grid Scaling (Win + Modifiers + Numpad corners):
+   - StretchToGridTopLeft / etc. [Win+Numpad 7/9/1/3]
+   - PullToGridTopLeft / etc.    [Win+Alt+Numpad 7/9/1/3]
+   - StretchTopLeft / etc.      [Win+Shift+Numpad 7/9/1/3]
+
+5. Desktop Swapping Interactions (Win + Alt + Letter/Space):
+   - Swap                       [Win+Alt+W]
+   - SwapSize                   [Win+Alt+Q]
+   - SwapPosition               [Win+Alt+P]
+   - SwapPick                   [Win+Alt+Space]
+   - SwapPickSize               [Win+Alt+Shift+Space]
+   - SwapPickPosition           [Win+Alt+Ctrl+Space]
 
 
 ================================================================================
-LOGICALLY MISSING COMMANDS (Architectural Framework Opportunities)
+FULLY INTEGRATED BULK & FOUR-SIDED SYMMETRICAL OPERATIONS
 ================================================================================
-These commands are defined conceptually in layout charts and matrices but currently remain unimplemented as first-class, individual actions in HotWinAHK.ahk's engine:
+Core bulk operations and four-sided symmetrical commands have been fully resolved and mapped:
 
-1. Bulk Symmetrical Window Restorations (Bulk-Restore)
-   - RestoreAll            - Symmetrically restores all desktop windows back to normal size, regardless of maximized/minimized status.
-   - RestoreAllMinimized   - Selectively restores minimized windows back to normal size while leaving maximized windows locked.
-   - MaximizeAll           - Symmetrically maximizes all open window handles, irrespective of whether they are minimized or restored.
+1. Bulk Symmetrical Window Restorations (Bulk-Restore):
+   - RestoreAll (Win + [)             - Symmetrically restores all desktop windows back to normal size.
+   - RestoreAllMinimized (Win+Ctrl+[) - Selectively restores minimized windows back to normal size.
+   - RestoreAllMaximized              - Selectively restores maximized windows back to normal size.
+   - MaximizeAll (Win + ])            - Symmetrically maximizes all open window handles.
+   - MaximizeAllRestored              - Selectively maximizes restored windows back to full size.
+   - MaximizeAllMinimized             - Selectively maximizes minimized windows back to full size.
 
-2. Four-Sided Symmetrical Grid-Snapping & Border Streches
-   - StretchToGridAll      - Symmetrically snaps and stretches all four borders of the active window outward to meet the nearest boundary grid line.
-   - PullToGridAll         - Symmetrically snaps and pulls all four borders of the active window inward to meet the nearest boundary grid line.
-   - AddAll                - Symmetrically grows all four window borders outward to the next set of cell coordinates.
-   - SubtractAll           - Symmetrically contracts all four window borders inward to the next set of cell coordinates.
-   - StretchAll            - Symmetrically extends all coordinates of the active window outward until all edges touch physical monitor boundaries.
+2. Four-Sided Symmetrical Grid-Snapping & Border Stretches (Win + Modifiers + Numpad 5):
+   - StretchToGridAll (Win+Numpad5)   - Symmetrically snaps and stretches all four borders outward to matching grid lines.
+   - PullToGridAll (Win+Ctrl+Alt+Shift+Numpad5) - Symmetrically snaps and pulls all four borders inward to matching grid lines.
+   - AddAll (Win+Alt+Shift+Numpad5)    - Symmetrically grows all four window borders outward.
+   - SubtractAll (Win+Ctrl+Alt+Numpad5)- Symmetrically contracts all four window borders inward.
+   - StretchAll (Win+Shift+Numpad5)   - Symmetrically extends active window boundaries to monitor limits.
+   - TrimAll (Win+Alt+Numpad5)        - Symmetrically trims active window borders inward.
 
