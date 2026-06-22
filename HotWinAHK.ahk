@@ -5472,7 +5472,7 @@ ShowCommandTestGui() {
     cmdTestGui.SetFont("s11 bold cFFCC00")
     cmdTestGui.Add("Text", "x30 y165 w150", "Description:")
     cmdTestGui.SetFont("s10 norm cE0E0E6")
-    cmdTestGui.Add("Text", "x150 y165 w420 h60 W", activeItem.desc)
+    cmdTestGui.Add("Text", "x150 y165 w420 h60 Wrap", activeItem.desc)
     
     cmdTestGui.SetFont("s10 bold cFF5555")
     statusText := cmdTestGui.Add("Text", "x30 y230 w540 Center", "")
@@ -5715,7 +5715,7 @@ ShowKeyboardTestGui() {
     kbTestGui.SetFont("s11 bold cFFCC00")
     kbTestGui.Add("Text", "x30 y115 w150", "Description:")
     kbTestGui.SetFont("s10 norm cE0E0E6")
-    kbTestGui.Add("Text", "x150 y115 w420 h40 W", activeItem.desc)
+    kbTestGui.Add("Text", "x150 y115 w420 h40 Wrap", activeItem.desc)
     
     kbTestGui.SetFont("s11 bold cFFCC00")
     kbTestGui.Add("Text", "x30 y155 w150", "Expected Hotkey:")

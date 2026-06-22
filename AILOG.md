@@ -18,7 +18,7 @@ status: pass
 
 ## Commit Message
 ```text
-fix(warnings): correct unassigned variable by renaming WinSetTranslucent to WinSetTransparent
+fix(gui-options): replace invalid W option with native Wrap option in Test GUIs
 ```
 
 <!-- Example AI Log Entry
@@ -26,6 +26,20 @@ fix(warnings): correct unassigned variable by renaming WinSetTranslucent to WinS
 ...
 -->
 ## Log Entries
+
+## [2026-06-22T13:13:00Z]
+### 🎯 Primary Goals & Requirements
+- **Resolve Invalid Option 'W' in GUI Elements**: Fix the compile/runtime error caused by an invalid option parameter `W` in GUI `Add("Text", ...)` statements for the Command and Keyboard Test dialogs inside `HotWinAHK.ahk`.
+
+### 🛠️ Completed Changes in this Session
+- **Corrected GUI Options**:
+  - Replaced `"x150 y165 w420 h60 W"` with `"x150 y165 w420 h60 Wrap"` in the Command Test description text control (`line 5475`).
+  - Replaced `"x150 y115 w420 h40 W"` with `"x150 y115 w420 h40 Wrap"` in the Keyboard Test description text control (`line 5718`).
+
+### 🔸 Affected Files
+- `/HotWinAHK.ahk`
+- `/AITASKS.md`
+- `/AILOG.md`
 
 ## [2026-06-22T13:10:00Z]
 ### 🎯 Primary Goals & Requirements
