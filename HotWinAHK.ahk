@@ -672,7 +672,7 @@ EnsureAllCommandsInIni() {
                 { name: "Attributes", desc: "Attributes including level toggles, frame transparency values, and layout stacking.", cmds: ["AlwaysOnTop", "SetOpacity70", "RemoveOpacity", "SendToBack"] },
                 { name: "Tray", desc: "State stowing and recovery interfaces driving custom system notification tasks.", cmds: ["MinimizeToTray", "PickFromTray"] },
                 { name: "Interactive", desc: "Direct user-interactive bounds manipulation features.", cmds: ["DragWindow"] },
-                { name: "Bulk", desc: "Symmetrical state actions applied across multiple target window containers simultaneously.", cmds: ["RestoreAllMaximized", "MaximizeAllRestored", "MaximizeAllMinimized", "SwapMaximizedRestored", "SwapMinimizedRestored", "MinimizeAll", "MinimizeAllRestored", "MinimizeAllMaximized"] }
+                { name: "Bulk", desc: "Symmetrical state actions applied across multiple target window containers simultaneously.", cmds: ["RestoreAll", "RestoreAllMinimized", "MaximizeAll", "RestoreAllMaximized", "MaximizeAllRestored", "MaximizeAllMinimized", "SwapMaximizedRestored", "SwapMinimizedRestored", "MinimizeAll", "MinimizeAllRestored", "MinimizeAllMaximized"] }
             ]
         },
         {
@@ -711,12 +711,12 @@ EnsureAllCommandsInIni() {
             subs: [
                 { name: "GridBinding", desc: "Direct mouse sizing, padding overrides, and scale factors.", cmds: ["MouseToGrid", "MouseRelativeSize", "SnapToGridEnlarge", "SnapToGridShrink", "ScaleExpand10px", "ScaleReduce10px", "ScaleExpandGridPart", "ScaleReduceGridPart"] },
                 { name: "Trim", desc: "Symmetry border trims matching target grid proportions.", cmds: ["TrimTop", "TrimBottom", "TrimLeft", "TrimRight", "TrimAll", "TrimTopLeft", "TrimTopRight", "TrimBottomLeft", "TrimBottomRight"] },
-                { name: "Grow", desc: "Symmetry border expansions enlarging target sizes.", cmds: ["AddTop", "AddBottom", "AddLeft", "AddRight", "AddTopLeft", "AddTopRight", "AddBottomLeft", "AddBottomRight", "GrowLeft", "GrowRight", "GrowTop", "GrowBottom", "GrowAll", "GrowTopLeft", "GrowTopRight", "GrowBottomLeft", "GrowBottomRight"] },
-                { name: "Shrink", desc: "Symmetry border contractions shrinking target dimensions.", cmds: ["SubtractTop", "SubtractBottom", "SubtractLeft", "SubtractRight", "SubtractTopLeft", "SubtractTopRight", "SubtractBottomLeft", "SubtractBottomRight"] },
+                { name: "Grow", desc: "Symmetry border expansions enlarging target sizes.", cmds: ["AddTop", "AddBottom", "AddLeft", "AddRight", "AddTopLeft", "AddTopRight", "AddBottomLeft", "AddBottomRight", "AddAll", "GrowLeft", "GrowRight", "GrowTop", "GrowBottom", "GrowAll", "GrowTopLeft", "GrowTopRight", "GrowBottomLeft", "GrowBottomRight"] },
+                { name: "Shrink", desc: "Symmetry border contractions shrinking target dimensions.", cmds: ["SubtractTop", "SubtractBottom", "SubtractLeft", "SubtractRight", "SubtractTopLeft", "SubtractTopRight", "SubtractBottomLeft", "SubtractBottomRight", "SubtractAll"] },
                 { name: "HalfDouble", desc: "Fast dimension updates scaling window size by 0.5x or 2.0x.", cmds: ["HalfSizeLeft", "HalfSizeRight", "HalfSizeTop", "HalfSizeBottom", "DoubleSizeLeft", "DoubleSizeRight", "DoubleSizeTop", "DoubleSizeBottom"] },
-                { name: "StretchGrid", desc: "Stretches target borders onto custom screen segments.", cmds: ["StretchToGridLeft", "StretchToGridRight", "StretchToGridUp", "StretchToGridDown", "StretchToGridTopLeft", "StretchToGridTopRight", "StretchToGridBottomLeft", "StretchToGridBottomRight"] },
-                { name: "PullGrid", desc: "Pulls target margins onto predicted grid lines.", cmds: ["PullToGridLeft", "PullToGridRight", "PullToGridUp", "PullToGridDown", "PullToGridTopLeft", "PullToGridTopRight", "PullToGridBottomLeft", "PullToGridBottomRight"] },
-                { name: "StretchScreenEdge", desc: "Expands window borders outward onto screen limits.", cmds: ["StretchLeft", "StretchRight", "StretchTop", "StretchBottom", "StretchTopLeft", "StretchTopRight", "StretchBottomLeft", "StretchBottomRight"] }
+                { name: "StretchGrid", desc: "Stretches target borders onto custom screen segments.", cmds: ["StretchToGridLeft", "StretchToGridRight", "StretchToGridUp", "StretchToGridDown", "StretchToGridTopLeft", "StretchToGridTopRight", "StretchToGridBottomLeft", "StretchToGridBottomRight", "StretchToGridAll"] },
+                { name: "PullGrid", desc: "Pulls target margins onto predicted grid lines.", cmds: ["PullToGridLeft", "PullToGridRight", "PullToGridUp", "PullToGridDown", "PullToGridTopLeft", "PullToGridTopRight", "PullToGridBottomLeft", "PullToGridBottomRight", "PullToGridAll"] },
+                { name: "StretchScreenEdge", desc: "Expands window borders outward onto screen limits.", cmds: ["StretchLeft", "StretchRight", "StretchTop", "StretchBottom", "StretchTopLeft", "StretchTopRight", "StretchBottomLeft", "StretchBottomRight", "StretchAll"] }
             ]
         },
         {
@@ -1065,7 +1065,7 @@ LoadHotkeysAtRuntime() {
 ; #region  _engine 
 IsMetaCommand(sCmd) {
     ; Add your untuck commands to the meta-command bypass list
-    if (InStr(sCmd, "BumpEdgeUntuck") || InStr(sCmd, "HelpScreen") || InStr(sCmd, "ReloadConfig") || InStr(sCmd, "CopyCommands") || InStr(sCmd, "CopyBindings") || InStr(sCmd, "CopyCommandsHelp") || InStr(sCmd, "CopyCommandsAlpha") || InStr(sCmd, "CopyBindingsAlpha") || InStr(sCmd, "CopyBindingsLocation") || InStr(sCmd, "SysMenu") || InStr(sCmd, "TuckedPeek") || InStr(sCmd, "Untuck") || InStr(sCmd, "CmdPalette") || InStr(sCmd, "KeyDiagnostics") || sCmd == "KeyQuery" || sCmd == "Settings" || sCmd == "RestoreAllMaximized" || sCmd == "MaximizeAllRestored" || sCmd == "MaximizeAllMinimized" || sCmd == "SwapMaximizedRestored" || sCmd == "SwapMinimizedRestored" || sCmd == "MinimizeAll" || sCmd == "MinimizeAllRestored" || sCmd == "MinimizeAllMaximized" || sCmd == "WindowPicker" || sCmd == "Desk3d" || InStr(sCmd, "WindowHistory") || InStr(sCmd, "Swap") || sCmd == "Gridify") {
+    if (InStr(sCmd, "BumpEdgeUntuck") || InStr(sCmd, "HelpScreen") || InStr(sCmd, "ReloadConfig") || InStr(sCmd, "CopyCommands") || InStr(sCmd, "CopyBindings") || InStr(sCmd, "CopyCommandsHelp") || InStr(sCmd, "CopyCommandsAlpha") || InStr(sCmd, "CopyBindingsAlpha") || InStr(sCmd, "CopyBindingsLocation") || InStr(sCmd, "SysMenu") || InStr(sCmd, "TuckedPeek") || InStr(sCmd, "Untuck") || InStr(sCmd, "CmdPalette") || InStr(sCmd, "KeyDiagnostics") || sCmd == "KeyQuery" || sCmd == "Settings" || sCmd == "RestoreAll" || sCmd == "RestoreAllMinimized" || sCmd == "MaximizeAll" || sCmd == "RestoreAllMaximized" || sCmd == "MaximizeAllRestored" || sCmd == "MaximizeAllMinimized" || sCmd == "SwapMaximizedRestored" || sCmd == "SwapMinimizedRestored" || sCmd == "MinimizeAll" || sCmd == "MinimizeAllRestored" || sCmd == "MinimizeAllMaximized" || sCmd == "WindowPicker" || sCmd == "Desk3d" || InStr(sCmd, "WindowHistory") || InStr(sCmd, "Swap") || sCmd == "Gridify") {
         return true
     }
 
@@ -1525,7 +1525,7 @@ ExecuteCommandRegistry(sCmd, hWnd) {
                 }
                 AnimateWinMove(nX, nY, hWnd)
             }
-        case "StretchLeft", "StretchRight", "StretchTop", "StretchBottom", "StretchTopLeft", "StretchTopRight", "StretchBottomLeft", "StretchBottomRight":
+        case "StretchLeft", "StretchRight", "StretchTop", "StretchBottom", "StretchTopLeft", "StretchTopRight", "StretchBottomLeft", "StretchBottomRight", "StretchAll":
             hMon := DllCall("MonitorFromWindow", "ptr", hWnd, "uint", 2, "ptr")
             MI := Buffer(40)
             NumPut("uint", 40, MI, 0)
@@ -1534,6 +1534,8 @@ ExecuteCommandRegistry(sCmd, hWnd) {
                 mTop := NumGet(MI, 24, "int")
                 mRight := NumGet(MI, 28, "int")
                 mBottom := NumGet(MI, 32, "int")
+                mWidth := mRight - mLeft
+                mHeight := mBottom - mTop
 
                 nX := X, nY := Y, nW := W, nH := H
                 switch sCmd {
@@ -1545,6 +1547,7 @@ ExecuteCommandRegistry(sCmd, hWnd) {
                     case "StretchTopRight": nY := mTop, nW := mRight - X, nH := (Y + H) - mTop
                     case "StretchBottomLeft": nX := mLeft, nW := (X + W) - mLeft, nH := mBottom - Y
                     case "StretchBottomRight": nW := mRight - X, nH := mBottom - Y
+                    case "StretchAll": nX := mLeft, nY := mTop, nW := mWidth, nH := mHeight
                 }
                 SafeMove(nX, nY, nW, nH, hWnd)
             }
@@ -1939,6 +1942,36 @@ ExecuteCommandRegistry(sCmd, hWnd) {
                 }
             }
 
+        case "RestoreAll":
+            winList := WinGetList()
+            for hwnd in winList {
+                if (IsEligibleForBulkCommand(hwnd, true)) {
+                    status := WinGetMinMax(hwnd)
+                    if (status == 1 || status == -1) {
+                        try WinRestore(hwnd)
+                    }
+                }
+            }
+
+        case "RestoreAllMinimized":
+            winList := WinGetList()
+            for hwnd in winList {
+                if (IsEligibleForBulkCommand(hwnd, true) && WinGetMinMax(hwnd) == -1) {
+                    try WinRestore(hwnd)
+                }
+            }
+
+        case "MaximizeAll":
+            winList := WinGetList()
+            for hwnd in winList {
+                if (IsEligibleForBulkCommand(hwnd, true)) {
+                    status := WinGetMinMax(hwnd)
+                    if (status == 0 || status == -1) {
+                        try WinMaximize(hwnd)
+                    }
+                }
+            }
+
         case "RestoreAllMaximized":
             winList := WinGetList()
             for hwnd in winList {
@@ -2316,8 +2349,8 @@ ExecuteCommandRegistry(sCmd, hWnd) {
         case "GoHome": GoWindowHome(hWnd)
         case "Home": InteractiveHome(hWnd)
         case "HomePeek": ShowHomePeek(hWnd)
-        case "StretchToGridLeft", "StretchToGridRight", "StretchToGridUp", "StretchToGridDown", "StretchToGridTopLeft", "StretchToGridTopRight", "StretchToGridBottomLeft", "StretchToGridBottomRight", "PullToGridLeft", "PullToGridRight", "PullToGridUp", "PullToGridDown", "PullToGridTopLeft", "PullToGridTopRight", "PullToGridBottomLeft", "PullToGridBottomRight":
-        case "AddTop", "AddBottom", "AddLeft", "AddRight", "AddTopLeft", "AddTopRight", "AddBottomLeft", "AddBottomRight", "SubtractTop", "SubtractBottom", "SubtractLeft", "SubtractRight", "SubtractTopLeft", "SubtractTopRight", "SubtractBottomLeft", "SubtractBottomRight":
+        case "StretchToGridLeft", "StretchToGridRight", "StretchToGridUp", "StretchToGridDown", "StretchToGridTopLeft", "StretchToGridTopRight", "StretchToGridBottomLeft", "StretchToGridBottomRight", "StretchToGridAll", "PullToGridLeft", "PullToGridRight", "PullToGridUp", "PullToGridDown", "PullToGridTopLeft", "PullToGridTopRight", "PullToGridBottomLeft", "PullToGridBottomRight", "PullToGridAll":
+        case "AddTop", "AddBottom", "AddLeft", "AddRight", "AddTopLeft", "AddTopRight", "AddBottomLeft", "AddBottomRight", "AddAll", "SubtractTop", "SubtractBottom", "SubtractLeft", "SubtractRight", "SubtractTopLeft", "SubtractTopRight", "SubtractBottomLeft", "SubtractBottomRight", "SubtractAll":
             ; 1. Base Grid Geometry Configurations (using half-grid / mid-point cells)
             gX := 15
             gY := 15
@@ -2460,6 +2493,44 @@ ExecuteCommandRegistry(sCmd, hWnd) {
                     }
                     if (jRight <= iLeft) {
                         jRight := iLeft + 1
+                    }
+                case "StretchToGridAll", "AddAll":
+                    if (snapX >= X - 2) {
+                        iLeft := iLeft - 1
+                    }
+                    if (snapRight <= (X + W) + 2) {
+                        jRight := jRight + 1
+                    }
+                    if (snapY >= Y - 2) {
+                        kTop := kTop - 1
+                    }
+                    if (snapBottom <= (Y + H) + 2) {
+                        lBottom := lBottom + 1
+                    }
+                case "PullToGridAll", "SubtractAll":
+                    if (snapX <= X + 2) {
+                        iLeft := iLeft + 1
+                    }
+                    if (snapRight >= (X + W) - 2) {
+                        jRight := jRight - 1
+                    }
+                    if (iLeft >= jRight) {
+                        iLeft := jRight - 1
+                    }
+                    if (jRight <= iLeft) {
+                        jRight := iLeft + 1
+                    }
+                    if (snapY <= Y + 2) {
+                        kTop := kTop + 1
+                    }
+                    if (snapBottom >= (Y + H) - 2) {
+                        lBottom := lBottom - 1
+                    }
+                    if (kTop >= lBottom) {
+                        kTop := lBottom - 1
+                    }
+                    if (lBottom <= kTop) {
+                        lBottom := kTop + 1
                     }
             }
 
@@ -3825,6 +3896,9 @@ GetGlobalCommandList() {
         {cat: "WINDOW", cmd: "MinimizeToTray", key: "Win + Shift + PgDn", desc: "Stow active window into an autonomous system-tray notification process."},
         {cat: "WINDOW", cmd: "PickFromTray", key: "Win + Shift + PgUp", desc: "Open stowed window tray instances via right-click contextual list."},
         {cat: "WINDOW", cmd: "DragWindow", key: "Custom", desc: "Initiate DragWindow mode: Make window and ones above translucent, move with cursor, click/Enter to place, Esc to cancel."},
+        {cat: "WINDOW", cmd: "RestoreAll", key: "Custom", desc: "Restore all desktop windows back to normal size, regardless of maximized/minimized status (excludes docked, hidden or trayed)."},
+        {cat: "WINDOW", cmd: "RestoreAllMinimized", key: "Custom", desc: "Selectively restore minimized windows back to normal size while leaving maximized windows locked (excludes docked, hidden or trayed)."},
+        {cat: "WINDOW", cmd: "MaximizeAll", key: "Custom", desc: "Symmetrically maximize all open windows, irrespective of whether they are minimized or restored (excludes docked, hidden or trayed)."},
         {cat: "WINDOW", cmd: "RestoreAllMaximized", key: "Custom", desc: "Restore all maximized windows to normal size (excludes docked, hidden or trayed)."},
         {cat: "WINDOW", cmd: "MaximizeAllRestored", key: "Custom", desc: "Maximize all normal/restored windows (excludes docked, hidden or trayed)."},
         {cat: "WINDOW", cmd: "MaximizeAllMinimized", key: "Custom", desc: "Maximize all minimized windows (excludes docked, hidden or trayed)."},
@@ -3953,6 +4027,7 @@ GetGlobalCommandList() {
         {cat: "SIZE", cmd: "AddTopRight", key: "Custom", desc: "Grow top-right boundaries outward to nearest grid margins."},
         {cat: "SIZE", cmd: "AddBottomLeft", key: "Custom", desc: "Grow bottom-left boundaries outward to nearest grid margins."},
         {cat: "SIZE", cmd: "AddBottomRight", key: "Custom", desc: "Grow bottom-right boundaries outward to nearest grid margins."},
+        {cat: "SIZE", cmd: "AddAll", key: "Win + Alt + Shift + Numpad 5", desc: "Symmetrically grow all four sides of the window outward to the nearest grid lines."},
         {cat: "SIZE", cmd: "GrowLeft", key: "Win + Ctrl + Shift + Numpad 6", desc: "Grow left boundary outward from active window margin by step width."},
         {cat: "SIZE", cmd: "GrowRight", key: "Win + Ctrl + Shift + Numpad 4", desc: "Grow right boundary outward from active window margin by step width."},
         {cat: "SIZE", cmd: "GrowTop", key: "Win + Ctrl + Shift + Numpad 8", desc: "Grow top boundary outward from active window margin by step width."},
@@ -3970,6 +4045,7 @@ GetGlobalCommandList() {
         {cat: "SIZE", cmd: "SubtractTopRight", key: "Custom", desc: "Contract top-right boundaries inward toward centers of monitor."},
         {cat: "SIZE", cmd: "SubtractBottomLeft", key: "Custom", desc: "Contract bottom-left boundaries inward toward centers of monitor."},
         {cat: "SIZE", cmd: "SubtractBottomRight", key: "Custom", desc: "Contract bottom-right boundaries inward toward centers of monitor."},
+        {cat: "SIZE", cmd: "SubtractAll", key: "Win + Ctrl + Alt + Numpad 5", desc: "Symmetrically contract all four sides of the window inward to the nearest grid lines."},
         {cat: "SIZE", cmd: "HalfSizeLeft", key: "Custom", desc: "Halve window width from the left side."},
         {cat: "SIZE", cmd: "HalfSizeRight", key: "Custom", desc: "Halve window width from the right side."},
         {cat: "SIZE", cmd: "HalfSizeTop", key: "Custom", desc: "Halve window height from the top side."},
@@ -3986,6 +4062,7 @@ GetGlobalCommandList() {
         {cat: "SIZE", cmd: "StretchToGridTopRight", key: "Custom", desc: "Stretch top-right boundaries toward the nearest grid corners."},
         {cat: "SIZE", cmd: "StretchToGridBottomLeft", key: "Custom", desc: "Stretch bottom-left boundaries toward the nearest grid corners."},
         {cat: "SIZE", cmd: "StretchToGridBottomRight", key: "Custom", desc: "Stretch bottom-right boundaries toward the nearest grid corners."},
+        {cat: "SIZE", cmd: "StretchToGridAll", key: "Win + Numpad 5", desc: "Symmetrically stretch all four borders of the window outward to the adjacent grid lines."},
         {cat: "SIZE", cmd: "PullToGridLeft", key: "Win + Alt + Numpad 4", desc: "Pull left boundary inward to nearest grid or midpoint grid cell edge."},
         {cat: "SIZE", cmd: "PullToGridRight", key: "Win + Alt + Numpad 6", desc: "Pull right boundary inward to nearest grid or midpoint grid cell edge."},
         {cat: "SIZE", cmd: "PullToGridUp", key: "Win + Alt + Numpad 8", desc: "Pull top boundary inward to nearest grid or midpoint grid cell edge."},
@@ -3994,6 +4071,7 @@ GetGlobalCommandList() {
         {cat: "SIZE", cmd: "PullToGridTopRight", key: "Custom", desc: "Pull top-right boundary inward to nearest grid or midpoint grid cell edge."},
         {cat: "SIZE", cmd: "PullToGridBottomLeft", key: "Custom", desc: "Pull bottom-left boundary inward to nearest grid or midpoint grid cell edge."},
         {cat: "SIZE", cmd: "PullToGridBottomRight", key: "Custom", desc: "Pull bottom-right boundary inward to nearest grid or midpoint grid cell edge."},
+        {cat: "SIZE", cmd: "PullToGridAll", key: "Win + Ctrl + Alt + Shift + Numpad 5", desc: "Symmetrically pull all four borders of the window inward to the adjacent grid lines."},
         {cat: "SIZE", cmd: "StretchLeft", key: "Custom", desc: "Extend side width of target window to touch screen left bounds."},
         {cat: "SIZE", cmd: "StretchRight", key: "Custom", desc: "Extend side width of target window to touch screen right bounds."},
         {cat: "SIZE", cmd: "StretchTop", key: "Custom", desc: "Extend top height of target window to touch screen top bounds."},
@@ -4001,7 +4079,8 @@ GetGlobalCommandList() {
         {cat: "SIZE", cmd: "StretchTopLeft", key: "Custom", desc: "Extend top-left coordinate vectors of target window bounds to touch screen margins."},
         {cat: "SIZE", cmd: "StretchTopRight", key: "Custom", desc: "Extend top-right coordinate vectors of target window bounds to touch screen margins."},
         {cat: "SIZE", cmd: "StretchBottomLeft", key: "Custom", desc: "Extend bottom-left coordinate vectors of target window bounds to touch screen margins."},
-        {cat: "SIZE", cmd: "StretchBottomRight", key: "Custom", desc: "Extend bottom-right coordinate vectors of target window bounds to touch screen margins."}
+        {cat: "SIZE", cmd: "StretchBottomRight", key: "Custom", desc: "Extend bottom-right coordinate vectors of target window bounds to touch screen margins."},
+        {cat: "SIZE", cmd: "StretchAll", key: "Win + Shift + Numpad 5", desc: "Symmetrically expand all sides of the window outward to fill the monitor workspace edges."}
     ]
     return commandList
 }
