@@ -1,29 +1,84 @@
-# Manual
+---
+title: MANUAL
+---
+
+<!-- # TEMPLATE: MANUAL.template.md -->
+<!-- 
+# MANUAL
+# Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
+# Replace those placeholders with real paths, rules, and project constraints.
+#
+# INSTRUCTIONS FOR THE AI AGENT:
+# This file is the developer's handbook. It maps structural topologies, data flow,
+# core algorithms, algebraic formulas, configuration guidelines, and technical specifications.
+-->
+
+<!-- markdownlint-disable MD013 -->
+
+# MANUAL
 
 This guide describes the structural architecture, module layout, internal algorithms, optimization behaviors, and technical specifications of the **HotWinAHK** codebase.
----
-## Back to...
-- ▪️[AGENTS.md](AGENTS.md)
-- ▪️[AILOG.md](AILOG.md)
-- ▪️[AITASKS.md](AITASKS.md)
-- ▪️[BUILD.md](BUILD.md)
-- ▪️[CODE.md](CODE.md)
-- ▪️[FEATURES.md](FEATURES.md)
-- 🔸[MANUAL.md](MANUAL.md)
-- ▪️[README.md](README.md)
-- ▪️[SPEC.md](SPEC.md)
-- ▪️[TESTING.md](TESTING.md)
+
+## 📑 AI Primary Files
+- 🔹 [AGENTS.md](../AGENTS.md)
+- 🔹 [ARCHIVE.md](ARCHIVE.md)
+- 🔹 [BUILD.md](BUILD.md)
+- 🔹 [CODE.md](CODE.md)
+- 🔹 [DESIGN.md](DESIGN.md)
+- 🔹 [FEATURES.md](FEATURES.md)
+- 🔹 [LOG.md](LOG.md)
+- 🔸 [MANUAL.md](MANUAL.md)
+- 🔹 [README.md](../README.md)
+- 🔹 [SPEC.md](SPEC.md)
+- 🔹 [TASKS.md](TASKS.md)
+- 🔹 [TERMS.md](TERMS.md)
+- 🔹 [TESTING.md](TESTING.md)
+- 🔹 [VERSIONS.md](VERSIONS.md)
 
 <!--
 AI to use a free form format with groups here
 free to add/remove/modify these sections
 -->
-## 🏗️ 1. Architecture Overview
+
+## 🔍 Table of Contents
+- [[#📥 Installation & Initial Deployment]] ^toc-install
+- [[#🏗️ 1. Architecture Overview]] ^toc-architecture
+- [[#🧠 2. Core Modules & Systems]] ^toc-modules
+- [[#🔎 3. Core Algorithm & Mathematical Formulas]] ^toc-math
+- [[#🛰️ 4. Commands, Keybindings & Context Flags]] ^toc-commands
+- [[#🔧 5. Workspace Build & Configuration]] ^toc-config
+- [[#🔍 Diagnostics & Common Troubleshooting]] ^toc-diagnostics
+- [[#Go to...]] ^toc-goto
+
+This guide describes the structural architecture, module layout, internal algorithms, optimization behaviors, and technical specifications of the **{{Specify Application Name}}** codebase.
+
+---
+
+## 📥 Installation & Initial Deployment
+[[#^toc-install|TOC]]
+
+### Setup Sequence
+- 1. **Compile/Build Assets:** Run the compile script or build pipeline as documented in `BUILD.md`.
+- 2. **Apply Configurations:** Run administrative scripts or system configurations required for the base application environment.
+- 3. **Register Components:** Execute target registry configurations or system file bindings to link the software with the host operating system.
+
+---
+
+<!-- 
+  INSTRUCTION: Outline the structural relationship of files and modules.
+  Include raw ASCII boxes or diagrams to make the architecture immediately obvious.
+-->
 HotWinAHK operates as a low-overhead orchestrator for the Windows desktop environment using an event-driven and polling-hybrid design:
 - **Central Core (`HotWinAHK.ahk`)**: Running with administrator authorization, this module loads global configuration matrices, locks the script's physical handle string sequence, initiates WinEvent hooks, and fires polling ticks for mouse collisions.
 - **Dynamic Key Listener Mappings (`HotWinAHK_aux.ahk`)**: Compiled on-the-fly, this file registers relative hotkey combos with the Windows kernel, routing them to action selectors based on state filters.
 - **Isolator Subprocesses (`HotWinAHK_tray.ahk`)**: Minimizes background locking by spawning lightweight individual handlers whenever windows are stowed away into custom system trays.
 
+---
+
+<!-- 
+  INSTRUCTION: Document individual subsystems, class constructors, interfaces, 
+  and persistent background loops that govern state transitions.
+-->
 ## 🧠 2. Core Modules & Systems
 The codebase is composed of highly specialized systems that collaborate without thread blocks:
 - **Hotkeys Dynamic Compiler**: Parsed using `IniRead` arrays. Identifies active sections, extracts mapping keys, maps virtual modifier sequences (Ctrl, Alt, Shift, Win), verifies standard character formats, and structures `.ahk` trigger blocks with execution safety gates. Automatically registers matching counterparts for Numpad hotkeys (such as mapping standard layout keys with their non-lock navigation equivalents) during compilation so bindings work flawlessly under any keyboard state.
@@ -177,6 +232,7 @@ Every action from simple moves to grid mapping is indexed inside the INI command
 - **PullToGridLeft** / **PullToGridRight** / **PullToGridUp** / **PullToGridDown** / **PullToGridTopLeft** / **PullToGridTopRight** / **PullToGridBottomLeft** / **PullToGridBottomRight**: Pull target boundary/boundaries inward to nearest grid edge/corner.
 - **StretchLeft** / **StretchRight** / **StretchTop** / **StretchBottom** / **StretchTopLeft** / **StretchTopRight** / **StretchBottomLeft** / **StretchBottomRight**: Extend target boundary/boundaries to touch screen margins.
 
+
 ## 🔧 5. Workspace Build & Configuration
 - **Script Customization**: Changes to standard profiles are added to the `HotWinAHK.ini` table.
 - **On-The-Fly Compilation**: Hotkeys automatically re-compile and reboot on save or whenever `ReloadConfig` triggers.
@@ -184,27 +240,36 @@ Every action from simple moves to grid mapping is indexed inside the INI command
 
 
 ---
-## Go Back to...
-- [AGENTS.md](AGENTS.md)
-- [AILOG.md](AILOG.md)
-- [AITASKS.md](AITASKS.md)
-- [BUILD.md](BUILD.md)
-- [CODE.md](CODE.md)
-- [FEATURES.md](FEATURES.md)
-- [MANUAL.md](MANUAL.md)
-- [README.md](README.md)
-- [SPEC.md](SPEC.md)
-- [TESTING.md](TESTING.md)
+
+## 🔍 Diagnostics & Common Troubleshooting
+[[#^toc-diagnostics|TOC]]
+
+### Known Failure States & Remediations
+
+#### 🚨 Symptom: "The environment variable '{{CORE_ROOT}}' is not defined."
+- **Root Cause:** The application was triggered before the system or user environment profile saved the location variable.
+- **Remediation:** Run a system setup terminal command to bind the path, or manually apply it via host operating system environment parameters.
+
+#### 🚨 Symptom: Changes apply to files, but the visual interface does not update.
+- **Root Cause:** The operating system shell is serving a cached variation of the directory infrastructure layout.
+- **Remediation:** Re-trigger a shell refresh cycle or restart the host file architecture window manager.
 
 ---
-## Go back to...
-- ▪️[AGENTS.md](AGENTS.md)
-- ▪️[AILOG.md](AILOG.md)
-- ▪️[AITASKS.md](AITASKS.md)
-- ▪️[BUILD.md](BUILD.md)
-- ▪️[CODE.md](CODE.md)
-- ▪️[FEATURES.md](FEATURES.md)
-- 🔸[MANUAL.md](MANUAL.md)
-- ▪️[README.md](README.md)
-- ▪️[SPEC.md](SPEC.md)
-- ▪️[TESTING.md](TESTING.md)
+## 🚀 Go to...
+[[#^toc-goto|TOC]]
+- 🔹 [AGENTS.md](../AGENTS.md)
+- 🔹 [ARCHIVE.md](ARCHIVE.md)
+- 🔹 [BUILD.md](BUILD.md)
+- 🔹 [CODE.md](CODE.md)
+- 🔹 [DESIGN.md](DESIGN.md)
+- 🔹 [FEATURES.md](FEATURES.md)
+- 🔹 [LOG.md](LOG.md)
+- 🔸 [MANUAL.md](MANUAL.md)
+- 🔹 [README.md](../README.md)
+- 🔹 [SPEC.md](SPEC.md)
+- 🔹 [TASKS.md](TASKS.md)
+- 🔹 [TERMS.md](TERMS.md)
+- 🔹 [TESTING.md](TESTING.md)
+- 🔹 [VERSIONS.md](VERSIONS.md)
+
+<!-- # TEMPLATE: MANUAL.template.md -->

@@ -1,32 +1,122 @@
-# Read Me
+---
+title: README
+---
 
-![icon.jpg](icon.jpg)
-## HotWinAHK (AHK Windows Hotkeys)
-Hotkeys to make your windows jump through hoops! HotWinAHK is a highly optimized, high-performance window-management suite written in AutoHotkey v2.0. It features seamless pixel nudging, proportional grid alignment, edge tucking, and dynamic mouse bump acceleration vectors for administrative efficiency.
+<!-- # TEMPLATE: README.template.md -->
+<!-- 
+# README
+# Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
+# Replace those placeholders with real paths, rules, and project constraints.
+#
+# INSTRUCTIONS FOR THE AI AGENT:
+# This file tracks formal specifications, comparing originally requested guidelines 
+# against actual implemented items. Document architectural challenges, optimization rules,
+# compatibility constraints, and platform limits.
+-->
+
+
+<!-- markdownlint-disable MD013 -->
+
+# HotWinAHK
+
+High-performance window-management suite written in AutoHotkey v2.0
+
+![icon](icon.jpg)
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/markcrobbins)
+
+## 📑 AI Primary Files
+- 🔹 [AGENTS.md](AGENTS.md)
+- 🔹 [ARCHIVE.md](AIMD/ARCHIVE.md)
+- 🔹 [BUILD.md](AIMD/BUILD.md)
+- 🔹 [CODE.md](AIMD/CODE.md)
+- 🔹 [DESIGN.md](AIMD/DESIGN.md)
+- 🔹 [FEATURES.md](AIMD/FEATURES.md)
+- 🔹 [LOG.md](AIMD/LOG.md)
+- 🔹 [MANUAL.md](AIMD/MANUAL.md)
+- 🔸 [README.md](README.md)
+- 🔹 [SPEC.md](AIMD/SPEC.md)
+- 🔹 [TASKS.md](AIMD/TASKS.md)
+- 🔹 [TERMS.md](AIMD/TERMS.md)
+- 🔹 [TESTING.md](AIMD/TESTING.md)
+- 🔹 [VERSIONS.md](AIMD/VERSIONS.md)
+
+## 🔍 Table of Contents
+- [[#🎯 Project Abstract & Core Value]] ^toc-abstract
+- [[#🛠️ Technology Stack at a Glance]] ^toc-stack
+- [[#🗺️ Project Layout Blueprint]] ^toc-blueprint
+- [[#⚡ Quick Start for AI Developers]] ^toc-quickstart
+- [[#Go to...]] ^toc-goto
+
+## 🎯 Project Abstract & Core Value
+[[#^toc-abstract|TOC]]
+- {{A robust system tool designed to seamlessly accomplish domain objectives, manage system states, and optimize operational pipelines.}}
 
 ---
-## Go to...
-- ▪️[AGENTS.md](AGENTS.md)
-- ▪️[AILOG.md](AILOG.md)
-- ▪️[AITASKS.md](AITASKS.md)
-- ▪️[BUILD.md](BUILD.md)
-- ▪️[CODE.md](CODE.md)
-- ▪️[FEATURES.md](FEATURES.md)
-- ▪️[MANUAL.md](MANUAL.md)
-- 🔸[README.md](README.md)
-- ▪️[SPEC.md](SPEC.md)
-- ▪️[TESTING.md](TESTING.md)
+
+## 🛠️ Technology Stack at a Glance
+[[#^toc-stack|TOC]]
+- **Target Operating System:** Windows 10+
+- **Core Languages & Runtimes:** AutoHotKey v2
+- **Integrations:** Avoid Standard window keys
 
 ---
-- **Pixel-Precision Control**: Shift windows around monitors down to fine precision (10px horizontal / 5px vertical) or tactical coarse steps (106px horizontal / 58px vertical) aligned with 1/4 layout cells.
-- **Proportional Grid Matrix**: Align windows to mathematically derived aspect tiles (defaulting to 15px grid pads, 418x226px tiles, and 6px gap bounds).
-- **Edge Tucking & Docking**: Tuck active frames into off-screen slots on client margins, keeping a thin tactile accent edge visible (e.g. 20px).
-- **Velocity Bump Untuck Engine**: Polls mouse movements natively at 25ms interval vectors. Sliding the cursor aggressively past screen wall thresholds pulls tucked frames back into immediate view.
-- **Dynamic Configuration Compiler**: Read folding-configured matrices from a customized `HotWinAHK.ini` file and compiled region-by-region folders natively into AHK on-the-fly, preserving custom bindings while patching missing keys.
-- **Premium Fuzzy Window Picker**: Search, filter, and switch active applications instantly using an elegant dark-themed GUI search drawer with hover-reactive navigable buttons.
-- **3D Parallax Desktop Mode**: Rotate and view open workspaces with a highly customized depth parallax visualizer. Supports Shift key motion freezing and Ctrl key rotational scaling.
-- **NumLock-Agnostic Compilation**: Never experience drifted hotkeys. Automatic double-binding links are generated for standard Numpads regardless of NumLock toggle states.
-- **Durable State History (Undo/Redo)**: Chronologically tracks layouts in `HotWinAHK_history.ini` database. Perform instant Undo/Redo or select past states matching application processes.
-- **Interactive Window Swapping**: Swap layout geometries (`Swap`, `SwapSize`, `SwapPosition`) of active containers with whichever window sits directly under the cursor, or drag-click via remote selection loops.
-- **Nested Gridify Menus**: Instantly snap active containers to mathematically precise screen portions via multi-tier nested popup menus.
 
+## 🗺️ Project Layout Blueprint
+[[#^toc-blueprint|TOC]]
+- **`AGENTS.md`** ➔ System prompts and operational boundaries for AI teammates.
+- **`AIMD/ARCHIVE.md`** ➔ Scriptorium for scrapped ideas and sunset components.
+- **`AIMD/BUILD.md`** ➔ Compiler pipelines, flags, and packaging steps.
+- **`AIMD/CODE.md`** ➔ Syntax style guidelines and error-handling mandates.
+- **`AIMD/DESIGN.md`** ➔ Structural topology, design patterns, and data flows.
+- **`AIMD/FEATURES.md`** ➔ Capability matrices and functional product roadmap.
+- **`AIMD/LOG.md`** ➔ Chronological audit trail of development decisions.
+- **`AIMD/MANUAL.md`** ➔ Installation, user runbooks, and diagnostic workflows.
+- **`README.md`** ➔ Primary entry point and structural system abstract.
+- **`AIMD/SPEC.md`** ➔ Technical constraints, parameters, and protocol definitions.
+- **`AIMD/TASKS.md`** ➔ Dynamic task board and backlog management queue.
+- **`AIMD/TERMS.md`** ➔ Technical glossary, definitions, and vocabulary indexes.
+- **`AIMD/TESTING.md`** ➔ Automation suites, edge cases, and QA assertion routines.
+- **`AIMD/VERSIONS.md`** ➔ Change trackers and version milestone evolution lists.
+- **`HotWinAHK_aux.ahk`** ➔ Dynamically generated keybindings
+- **`HotWinAHK_tray.ahk`** ➔ Tray functions
+- **`HotWinAHK.ahk`** ➔ Main Program
+- **`HotWinAHK.ini`** ➔ Key Assignments
+- **`HotWinAHK.log`** ➔ Diagnostics
+- **`windows-hotkeys-homes.ini`** ➔ Store Positions
+
+---
+
+## ⚡ Quick Start for AI Developers
+[[#^toc-quickstart|TOC]]
+
+### 1. Verify Environment
+- No Env Vars
+```cmd
+{{Command to test environment variables or prerequisites / e.g., echo %ENV_ROOT%}}
+```
+
+### 2. Compile & Run Tests
+- No Tests Currently
+```cmd
+{{High-level system execution command chain / e.g., run_build.bat && run_test.bat}}
+```
+
+---
+## 🚀 Go to...
+[[#^toc-goto|TOC]]
+- 🔹 [AGENTS.md](AGENTS.md)
+- 🔹 [ARCHIVE.md](AIMD/ARCHIVE.md)
+- 🔹 [BUILD.md](AIMD/BUILD.md)
+- 🔹 [CODE.md](AIMD/CODE.md)
+- 🔹 [DESIGN.md](AIMD/DESIGN.md)
+- 🔹 [FEATURES.md](AIMD/FEATURES.md)
+- 🔹 [LOG.md](AIMD/LOG.md)
+- 🔹 [MANUAL.md](AIMD/MANUAL.md)
+- 🔸 [README.md](README.md)
+- 🔹 [SPEC.md](AIMD/SPEC.md)
+- 🔹 [TASKS.md](AIMD/TASKS.md)
+- 🔹 [TERMS.md](AIMD/TERMS.md)
+- 🔹 [TESTING.md](AIMD/TESTING.md)
+- 🔹 [VERSIONS.md](AIMD/VERSIONS.md)
+
+<!-- # TEMPLATE: README.template.md -->

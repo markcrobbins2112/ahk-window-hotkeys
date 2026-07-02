@@ -1,21 +1,51 @@
-# Features
-
 ---
-## Back to...
-- ▪️[AGENTS.md](AGENTS.md)
-- ▪️[AILOG.md](AILOG.md)
-- ▪️[AITASKS.md](AITASKS.md)
-- ▪️[BUILD.md](BUILD.md)
-- ▪️[CODE.md](CODE.md)
-- 🔸[FEATURES.md](FEATURES.md)
-- ▪️[MANUAL.md](MANUAL.md)
-- ▪️[README.md](README.md)
-- ▪️[SPEC.md](SPEC.md)
-- ▪️[TESTING.md](TESTING.md)
+title: FEATURES
+---
 
+<!-- # TEMPLATE: FEATURES.template.md -->
+<!-- 
+# FEATURES
+# Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
+# Replace those placeholders with real paths, rules, and project constraints.
+#
+# INSTRUCTIONS FOR THE AI AGENT:
+# This file structures user-facing capabilities and functional features.
+# Group related software parts into "Feature Groups" (with tags and anchors),
+# then list them alphabetically under "All Features".
+-->
+
+<!-- markdownlint-disable MD013 -->
+
+# FEATURES
 Welcome to HotWinAHK! A fast, keyboard-driven window alignment and docking assistant for Windows. Here is a breakdown of its features:
 
-## Feature Groups
+## 📑 AI Primary Files
+- 🔹 [AGENTS.md](../AGENTS.md)
+- 🔹 [ARCHIVE.md](ARCHIVE.md)
+- 🔹 [BUILD.md](BUILD.md)
+- 🔹 [CODE.md](CODE.md)
+- 🔹 [DESIGN.md](DESIGN.md)
+- 🔸 [FEATURES.md](FEATURES.md)
+- 🔹 [LOG.md](LOG.md)
+- 🔹 [MANUAL.md](MANUAL.md)
+- 🔹 [README.md](../README.md)
+- 🔹 [SPEC.md](SPEC.md)
+- 🔹 [TASKS.md](TASKS.md)
+- 🔹 [TERMS.md](TERMS.md)
+- 🔹 [TESTING.md](TESTING.md)
+- 🔹 [VERSIONS.md](VERSIONS.md)
+
+
+## 🔍 Table of Contents
+- [[#📦 Feature Groups]] ^toc-groups
+- [[#🗄️ All Features]] ^toc-all-features
+- [[#📉 Deprecated / Removed Features]] ^toc-deprecated
+- [[#🚀 Go to...]] ^toc-goto
+
+Welcome to {{Specify Program Name}}! {{Provide a 2-3 sentence overview of what the tool accomplishes and how it improves operational workflows}}.
+
+## 📦 Feature Groups
+[[#^toc-groups|TOC]]
 
 ### 🛠️ 1. Administrative Controls & Dynamic Compiler
 <a id="z1" name="z.1"></a>
@@ -56,7 +86,8 @@ Minimize applications into individual system-tray indicators.
 
 ---
 
-## All Features
+## 🗄️ All Features
+[[#^toc-all-features|TOC]]
 
 ### Absolute Monitor Border Snapping
 - Group: [Screen Snapping & Monitor Positioning Matrix](#z2)
@@ -151,8 +182,6 @@ Emits a confirmation audio beep whenever window foreground text focus switches, 
 - Group: [Administrative Controls & Dynamic Compiler](#z1)
 Represses native Windows tooltips with a beautiful obsidian centered overlay displaying actions. Features intelligent text sizing, responsive icon selections (✔, ✕, ⏸, ▶, 📌, ⚡, 🏠, ✦), and sleek bottom progress bar color accent lines matching the specific context.
 
-
-
 ### NumLock-Agnostic Dual Numpad Hotkey Compilation
 - Group: [Administrative Controls & Dynamic Compiler](#z1)
 Ensures that all specified Numpad key commands trigger reliably with total parity regardless of NumLock state. The configuration matrix compiler automatically registers matching counterparts for both NumLock states (e.g., matching `Numpad9` with `NumpadPgUp`), eliminating missing keys or unresponsive bindings.
@@ -189,15 +218,30 @@ Integrates a multi-tier columns-then-rows nested context layout system. Allows s
 - Group: [Administrative Controls & Dynamic Compiler](#z1)
 Upgrades the automatic config-matrix updating engine to structure `HotWinAHK.ini` recursively using standard IDE-folding region boundaries (e.g. `;   #region Move`, `    ;   #region MoveToGrid`, `; #endregion Move`), maintaining absolute clean structures while dynamically patching missing keys or retaining custom overrides.
 
+
 ---
-## Go Back to...
-- ▪️[AGENTS.md](AGENTS.md)
-- ▪️[AILOG.md](AILOG.md)
-- ▪️[AITASKS.md](AITASKS.md)
-- ▪️[BUILD.md](BUILD.md)
-- ▪️[CODE.md](CODE.md)
-- 🔸[FEATURES.md](FEATURES.md)
-- ▪️[MANUAL.md](MANUAL.md)
-- ▪️[README.md](README.md)
-- ▪️[SPEC.md](SPEC.md)
-- ▪️[TESTING.md](TESTING.md)
+
+## 📉 Deprecated / Removed Features
+[[#^toc-deprecated|TOC]]
+- **[!] {{Feature Name}}:** {{Describe why the feature asset was legacy tagged and stripped from production versions, noting previous errors or architectural adjustments.}}
+  - **Replacement Pattern:** {{Explicitly reference the newly introduced loop, file structural change, or strategy that supersedes it.}}
+
+---
+## 🚀 Go to...
+[[#^toc-goto|TOC]]
+- 🔹 [AGENTS.md](../AGENTS.md)
+- 🔹 [ARCHIVE.md](ARCHIVE.md)
+- 🔹 [BUILD.md](BUILD.md)
+- 🔹 [CODE.md](CODE.md)
+- 🔹 [DESIGN.md](DESIGN.md)
+- 🔸 [FEATURES.md](FEATURES.md)
+- 🔹 [LOG.md](LOG.md)
+- 🔹 [MANUAL.md](MANUAL.md)
+- 🔹 [README.md](../README.md)
+- 🔹 [SPEC.md](SPEC.md)
+- 🔹 [TASKS.md](TASKS.md)
+- 🔹 [TERMS.md](TERMS.md)
+- 🔹 [TESTING.md](TESTING.md)
+- 🔹 [VERSIONS.md](VERSIONS.md)
+
+<!-- # TEMPLATE: FEATURES.template.md -->

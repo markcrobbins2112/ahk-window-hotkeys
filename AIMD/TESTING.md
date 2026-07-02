@@ -1,35 +1,54 @@
-# Testing
+---
+title: TESTING
+---
+
+<!-- # TEMPLATE: TESTING.template.md -->
+<!-- 
+# TESTING
+# Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
+# Replace those placeholders with real paths, rules, and project constraints.
+#
+# INSTRUCTIONS FOR THE AI AGENT:
+# This file is an interactive QA test sheet. Use it to coordinate regression checks, 
+# layout edits, interface interactions, calculations checks, state transitions, and border boundaries.
+# Every major feature module must map back to an actionable checkbox item with expected outcomes.
+-->
+
+<!-- markdownlint-disable MD013 -->
+
+# TESTING
 
 You can use this interactive test sheet directly with VS Code / Cursor to verify that all systems in **HotWinAHK** are fully functional. Put your cursor on these checkbox lines, and mark them done!
 
----
-## Back to...
-- ▪️[AGENTS.md](AGENTS.md)
-- ▪️[AILOG.md](AILOG.md)
-- ▪️[AITASKS.md](AITASKS.md)
-- ▪️[BUILD.md](BUILD.md)
-- ▪️[CODE.md](CODE.md)
-- ▪️[FEATURES.md](FEATURES.md)
-- ▪️[MANUAL.md](MANUAL.md)
-- ▪️[README.md](README.md)
-- ▪️[SPEC.md](SPEC.md)
-- 🔸[TESTING.md](TESTING.md)
+## 📑 AI Primary Files
+- 🔹 [AGENTS.md](../AGENTS.md)
+- 🔹 [ARCHIVE.md](ARCHIVE.md)
+- 🔹 [BUILD.md](BUILD.md)
+- 🔹 [CODE.md](CODE.md)
+- 🔹 [DESIGN.md](DESIGN.md)
+- 🔹 [FEATURES.md](FEATURES.md)
+- 🔹 [LOG.md](LOG.md)
+- 🔹 [MANUAL.md](MANUAL.md)
+- 🔹 [README.md](../README.md)
+- 🔹 [SPEC.md](SPEC.md)
+- 🔹 [TASKS.md](TASKS.md)
+- 🔹 [TERMS.md](TERMS.md)
+- 🔸 [TESTING.md](TESTING.md)
+- 🔹 [VERSIONS.md](VERSIONS.md)
+
+## 🔍 Table of Contents
+- [[#🔵 1. Setup & Environment Initializations]] ^toc-setup
+- [[#🟢 2. Primary Functionality & Core Operations]] ^toc-core
+- [[#⚡ 3. Granular Property Checks & Edge Boundaries]] ^toc-edge
+- [[#🕹️ 4. Layout, Rendering & States Loops]] ^toc-rendering
+- [[#🚀 5. Advanced Integrations, Backends & Performance Checks]] ^toc-advanced
+- [[#🗃️ QA Validation History (Sign-Off Log)]] ^toc-history
+- [[#🚀 Go to...]] ^toc-goto
+
+You can use this interactive test sheet directly with VS Code / Cursor to verify that all systems in **{{Specify Program Name}}** are fully functional. Put your cursor on these checkbox lines, and mark them done!
 
 ---
 
-<!--
-AI to use a free form format with groups here
-free to add/remove/modify these sections
-reverse engineer from code
--->
-
-<!--
-Section Detail template
-items
-where items are
-- [ ] {description}
-    - {expected results}
--->
 ## 🔵 Setup & Environment Check
 - [ ] Admin Elevation Check
     - **Instructions**: Launch HotWinAHK (`HotWinAHK.ahk`).
@@ -104,14 +123,33 @@ where items are
 
 
 ---
-## Go Back to...
-- ▪️[AGENTS.md](AGENTS.md)
-- ▪️[AILOG.md](AILOG.md)
-- ▪️[AITASKS.md](AITASKS.md)
-- ▪️[BUILD.md](BUILD.md)
-- ▪️[CODE.md](CODE.md)
-- ▪️[FEATURES.md](FEATURES.md)
-- ▪️[MANUAL.md](MANUAL.md)
-- ▪️[README.md](README.md)
-- ▪️[SPEC.md](SPEC.md)
-- 🔸[TESTING.md](TESTING.md)
+
+## 🗃️ QA Validation History (Sign-Off Log)
+[[#^toc-history|TOC]]
+
+### 📅 [YYYY-MM-DD] - Build v{{X.X.X}}
+- **Testing Agent:** {{e.g., Quality Assurance Bot / reference AGENTS.md}}
+- **Passed Cases:** {{List matching scenario titles that passed baseline validations}}
+- **Failed Cases / Notes:** {{None, or list issues found during test loop}}
+- **Status:** `[PASSED / READY FOR PRODUCTION]`
+
+---
+
+## 🚀 Go to...
+[[#^toc-goto|TOC]]
+- 🔹 [AGENTS.md](../AGENTS.md)
+- 🔹 [ARCHIVE.md](ARCHIVE.md)
+- 🔹 [BUILD.md](BUILD.md)
+- 🔹 [CODE.md](CODE.md)
+- 🔹 [DESIGN.md](DESIGN.md)
+- 🔹 [FEATURES.md](FEATURES.md)
+- 🔹 [LOG.md](LOG.md)
+- 🔹 [MANUAL.md](MANUAL.md)
+- 🔹 [README.md](../README.md)
+- 🔹 [SPEC.md](SPEC.md)
+- 🔹 [TASKS.md](TASKS.md)
+- 🔹 [TERMS.md](TERMS.md)
+- 🔸 [TESTING.md](TESTING.md)
+- 🔹 [VERSIONS.md](VERSIONS.md)
+
+<!-- # TEMPLATE: TESTING.template.md -->

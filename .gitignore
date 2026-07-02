@@ -9,6 +9,8 @@ test-fixture/
 .obsidian/
 .smart-env/
 
+desktop.ini
+
 *.log
 *.vsix
 *.zip
