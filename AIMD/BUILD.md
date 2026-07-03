@@ -55,7 +55,7 @@ title: BUILD
 -->
 ## 🛠️ Build & Packaging Pipeline
 [[#^toc-pipeline|TOC]]
-HotWinAHK comprises a dynamically compiling AutoHotkey system. The core engine translates highly customizable matrix definitions from a simple structure file (`HotWinAHK.ini`) directly into clean AutoHotkey macros (`HotWinAHK_aux.ahk`). On runtime initialization, these hotkeys compiled to static assets are dynamically parsed and registered natively with Windows Shell.
+`HotWinAHK` comprises a dynamically compiling AutoHotkey system. The core engine translates highly customizable matrix definitions from a simple structure file (`HotWinAHK.ini`) directly into clean AutoHotkey macros (`HotWinAHK_aux.ahk`). On runtime initialization, these hotkeys compiled to static assets are dynamically parsed and registered natively with Windows Shell.
 
 ### 📦 Key Components
 - **`HotWinAHK.ahk`**: The main execution engine. Operates as the orchestrator, initializing logging, diagnostic window systems, focus listener hooks, thread queues, and the velocity-bump poll loops.
@@ -87,8 +87,6 @@ HotWinAHK comprises a dynamically compiling AutoHotkey system. The core engine t
 - 1. **Size Checking:** Verify that the output executable or bundle size is greater than `0 KB`.
 - 2. **Path Verification:** Check that the output file is located exactly within the target distribution directory layout.
 - 3. **Smoke Test Command:** `{{Enter a simple CLI verification test, e.g., bin\app.exe --version}}`
-
----
 ## 🚀 Go to...
 [[#^toc-goto|TOC]]
 - 🔹 [AGENTS.md](../AGENTS.md)

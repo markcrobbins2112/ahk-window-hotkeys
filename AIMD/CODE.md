@@ -75,7 +75,7 @@ title: CODE
 - **Logging Integration:** Route diagnostics using `OutputDebug()` for real-time IDE debugging, or use `FileAppend()` to target a dedicated local log or redirect to standard error via the `"*"` stream. Extract `.Message`, `.What`, and `.Line` from catchable Error Objects to populate failure logs.
 - **Inline Comments:** Document the "Why" behind mandatory execution delays (`Sleep`), specific Win32 `DllCall` parameters, or `ComObject` interface workarounds required by uncooperative target applications. Do not explain basic syntax or hotkey declarations.
 
-```ahk
+```autohotkey
 #Requires AutoHotkey v2.0
 #SingleInstance Force
 
@@ -135,7 +135,7 @@ try {
 [[#^toc-regions|TOC]]
 - **Structures**: Wrap classes or data blocks inside system structures regions named `_globals`, `_classes`, or custom container dividers.
 - **Example Regions Map**:
-```ahk
+```autohotkey
 ;@region 1. INITIALIZATION & CONFIGURATION
 #Requires AutoHotkey v2.0
 #SingleInstance Force
