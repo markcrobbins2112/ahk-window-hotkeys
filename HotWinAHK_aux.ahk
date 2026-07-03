@@ -297,67 +297,67 @@ $+#down:: {
     ExecuteActionWithCondition("MovepxDown", "")
 }
 
-$+numpad4:: {
+$^!numpad4:: {
     ExecuteActionWithCondition("EdgeLeft", "")
 }
 
-$+numpadleft:: {
+$^!numpadleft:: {
     ExecuteActionWithCondition("EdgeLeft", "")
 }
 
-$+numpad6:: {
+$^!numpad6:: {
     ExecuteActionWithCondition("EdgeRight", "")
 }
 
-$+numpadright:: {
+$^!numpadright:: {
     ExecuteActionWithCondition("EdgeRight", "")
 }
 
-$+numpad8:: {
+$^!numpad8:: {
     ExecuteActionWithCondition("EdgeTop", "")
 }
 
-$+numpadup:: {
+$^!numpadup:: {
     ExecuteActionWithCondition("EdgeTop", "")
 }
 
-$+numpad2:: {
+$^!numpad2:: {
     ExecuteActionWithCondition("EdgeBottom", "")
 }
 
-$+numpaddown:: {
+$^!numpaddown:: {
     ExecuteActionWithCondition("EdgeBottom", "")
 }
 
-$+numpad7:: {
+$^!numpad7:: {
     ExecuteActionWithCondition("EdgeTopLeft", "")
 }
 
-$+numpadhome:: {
+$^!numpadhome:: {
     ExecuteActionWithCondition("EdgeTopLeft", "")
 }
 
-$+numpad9:: {
+$^!numpad9:: {
     ExecuteActionWithCondition("EdgeTopRight", "")
 }
 
-$+numpadpgup:: {
+$^!numpadpgup:: {
     ExecuteActionWithCondition("EdgeTopRight", "")
 }
 
-$+numpad1:: {
+$^!numpad1:: {
     ExecuteActionWithCondition("EdgeBottomLeft", "")
 }
 
-$+numpadend:: {
+$^!numpadend:: {
     ExecuteActionWithCondition("EdgeBottomLeft", "")
 }
 
-$+numpad3:: {
+$^!numpad3:: {
     ExecuteActionWithCondition("EdgeBottomRight", "")
 }
 
-$+numpadpgdn:: {
+$^!numpadpgdn:: {
     ExecuteActionWithCondition("EdgeBottomRight", "")
 }
 
@@ -692,140 +692,76 @@ $+#numpadpgdn:: {
     ExecuteActionWithCondition("TrimBottomRight", "")
 }
 
-$!+#numpad8:: {
-    ExecuteActionWithCondition("AddTop", "")
-}
-
-$!+#numpadup:: {
-    ExecuteActionWithCondition("AddTop", "")
-}
-
-$!+#numpad2:: {
-    ExecuteActionWithCondition("AddBottom", "")
-}
-
-$!+#numpaddown:: {
-    ExecuteActionWithCondition("AddBottom", "")
-}
-
-$!+#numpad4:: {
-    ExecuteActionWithCondition("AddLeft", "")
-}
-
-$!+#numpadleft:: {
-    ExecuteActionWithCondition("AddLeft", "")
-}
-
-$!+#numpad6:: {
-    ExecuteActionWithCondition("AddRight", "")
-}
-
-$!+#numpadright:: {
-    ExecuteActionWithCondition("AddRight", "")
-}
-
-$!+#numpad7:: {
-    ExecuteActionWithCondition("AddTopLeft", "")
-}
-
-$!+#numpadhome:: {
-    ExecuteActionWithCondition("AddTopLeft", "")
-}
-
-$!+#numpad9:: {
-    ExecuteActionWithCondition("AddTopRight", "")
-}
-
-$!+#numpadpgup:: {
-    ExecuteActionWithCondition("AddTopRight", "")
-}
-
-$!+#numpad1:: {
-    ExecuteActionWithCondition("AddBottomLeft", "")
-}
-
-$!+#numpadend:: {
-    ExecuteActionWithCondition("AddBottomLeft", "")
-}
-
-$!+#numpad3:: {
-    ExecuteActionWithCondition("AddBottomRight", "")
-}
-
-$!+#numpadpgdn:: {
-    ExecuteActionWithCondition("AddBottomRight", "")
-}
-
-$^#numpad4:: {
-    ExecuteActionWithCondition("GrowLeft", "")
-}
-
-$^#numpadleft:: {
-    ExecuteActionWithCondition("GrowLeft", "")
-}
-
-$^#numpad6:: {
-    ExecuteActionWithCondition("GrowRight", "")
-}
-
-$^#numpadright:: {
-    ExecuteActionWithCondition("GrowRight", "")
-}
-
 $^#numpad8:: {
-    ExecuteActionWithCondition("GrowTop", "")
+    ExecuteActionWithCondition("AddTop", "")
 }
 
 $^#numpadup:: {
-    ExecuteActionWithCondition("GrowTop", "")
+    ExecuteActionWithCondition("AddTop", "")
 }
 
 $^#numpad2:: {
-    ExecuteActionWithCondition("GrowBottom", "")
+    ExecuteActionWithCondition("AddBottom", "")
 }
 
 $^#numpaddown:: {
-    ExecuteActionWithCondition("GrowBottom", "")
+    ExecuteActionWithCondition("AddBottom", "")
 }
 
-$^#numpad5:: {
-    ExecuteActionWithCondition("GrowAll", "")
+$^#numpad4:: {
+    ExecuteActionWithCondition("AddLeft", "")
 }
 
-$^#numpadclear:: {
-    ExecuteActionWithCondition("GrowAll", "")
+$^#numpadleft:: {
+    ExecuteActionWithCondition("AddLeft", "")
+}
+
+$^#numpad6:: {
+    ExecuteActionWithCondition("AddRight", "")
+}
+
+$^#numpadright:: {
+    ExecuteActionWithCondition("AddRight", "")
 }
 
 $^#numpad7:: {
-    ExecuteActionWithCondition("GrowTopLeft", "")
+    ExecuteActionWithCondition("AddTopLeft", "")
 }
 
 $^#numpadhome:: {
-    ExecuteActionWithCondition("GrowTopLeft", "")
+    ExecuteActionWithCondition("AddTopLeft", "")
 }
 
 $^#numpad9:: {
-    ExecuteActionWithCondition("GrowTopRight", "")
+    ExecuteActionWithCondition("AddTopRight", "")
 }
 
 $^#numpadpgup:: {
-    ExecuteActionWithCondition("GrowTopRight", "")
+    ExecuteActionWithCondition("AddTopRight", "")
 }
 
 $^#numpad1:: {
-    ExecuteActionWithCondition("GrowBottomLeft", "")
+    ExecuteActionWithCondition("AddBottomLeft", "")
 }
 
 $^#numpadend:: {
-    ExecuteActionWithCondition("GrowBottomLeft", "")
+    ExecuteActionWithCondition("AddBottomLeft", "")
 }
 
 $^#numpad3:: {
-    ExecuteActionWithCondition("GrowBottomRight", "")
+    ExecuteActionWithCondition("AddBottomRight", "")
 }
 
 $^#numpadpgdn:: {
-    ExecuteActionWithCondition("GrowBottomRight", "")
+    ExecuteActionWithCondition("AddBottomRight", "")
+}
+
+$^#numpadclear:: {
+    ExecuteActionWithCondition("AddAll", "")
+}
+
+$^#numpad5:: {
+    ExecuteActionWithCondition("AddAll", "")
 }
 
 $^!#numpad8:: {
@@ -892,36 +828,28 @@ $^!#numpadpgdn:: {
     ExecuteActionWithCondition("SubtractBottomRight", "")
 }
 
-$^!+#numpad4:: {
-    ExecuteActionWithCondition("HalfSizeLeft", "")
+$^!#numpad5:: {
+    ExecuteActionWithCondition("SubtractAll", "")
 }
 
-$^!+#numpadleft:: {
-    ExecuteActionWithCondition("HalfSizeLeft", "")
+$^!#numpadclear:: {
+    ExecuteActionWithCondition("SubtractAll", "")
 }
 
-$^!+#numpad6:: {
-    ExecuteActionWithCondition("HalfSizeRight", "")
+$!+#right:: {
+    ExecuteActionWithCondition("DoubleSizeLeft", "")
 }
 
-$^!+#numpadright:: {
-    ExecuteActionWithCondition("HalfSizeRight", "")
+$!+#left:: {
+    ExecuteActionWithCondition("DoubleSizeRight", "")
 }
 
-$^!+#numpad8:: {
-    ExecuteActionWithCondition("HalfSizeTop", "")
+$!+#down:: {
+    ExecuteActionWithCondition("DoubleSizeTop", "")
 }
 
-$^!+#numpadup:: {
-    ExecuteActionWithCondition("HalfSizeTop", "")
-}
-
-$^!+#numpad2:: {
-    ExecuteActionWithCondition("HalfSizeBottom", "")
-}
-
-$^!+#numpaddown:: {
-    ExecuteActionWithCondition("HalfSizeBottom", "")
+$!+#up:: {
+    ExecuteActionWithCondition("DoubleSizeBottom", "")
 }
 
 $#numpad4:: {
@@ -988,6 +916,14 @@ $#numpadpgdn:: {
     ExecuteActionWithCondition("StretchToGridBottomRight", "")
 }
 
+$#numpad5:: {
+    ExecuteActionWithCondition("StretchToGridAll", "")
+}
+
+$#numpadclear:: {
+    ExecuteActionWithCondition("StretchToGridAll", "")
+}
+
 $!#numpad4:: {
     ExecuteActionWithCondition("PullToGridLeft", "")
 }
@@ -1052,68 +988,32 @@ $!#numpadpgdn:: {
     ExecuteActionWithCondition("PullToGridBottomRight", "")
 }
 
-$^+#numpad4:: {
+$!#numpad5:: {
+    ExecuteActionWithCondition("PullToGridAll", "")
+}
+
+$!#numpadclear:: {
+    ExecuteActionWithCondition("PullToGridAll", "")
+}
+
+$^!+left:: {
     ExecuteActionWithCondition("StretchLeft", "")
 }
 
-$^+#numpadleft:: {
-    ExecuteActionWithCondition("StretchLeft", "")
-}
-
-$^+#numpad6:: {
+$^!+right:: {
     ExecuteActionWithCondition("StretchRight", "")
 }
 
-$^+#numpadright:: {
-    ExecuteActionWithCondition("StretchRight", "")
-}
-
-$^+#numpad8:: {
+$^!+up:: {
     ExecuteActionWithCondition("StretchTop", "")
 }
 
-$^+#numpadup:: {
-    ExecuteActionWithCondition("StretchTop", "")
-}
-
-$^+#numpad2:: {
+$^!+down:: {
     ExecuteActionWithCondition("StretchBottom", "")
 }
 
-$^+#numpaddown:: {
-    ExecuteActionWithCondition("StretchBottom", "")
-}
-
-$^+#numpad7:: {
-    ExecuteActionWithCondition("StretchTopLeft", "")
-}
-
-$^+#numpadhome:: {
-    ExecuteActionWithCondition("StretchTopLeft", "")
-}
-
-$^+#numpad9:: {
-    ExecuteActionWithCondition("StretchTopRight", "")
-}
-
-$^+#numpadpgup:: {
-    ExecuteActionWithCondition("StretchTopRight", "")
-}
-
-$^+#numpad1:: {
-    ExecuteActionWithCondition("StretchBottomLeft", "")
-}
-
-$^+#numpadend:: {
-    ExecuteActionWithCondition("StretchBottomLeft", "")
-}
-
-$^+#numpad3:: {
-    ExecuteActionWithCondition("StretchBottomRight", "")
-}
-
-$^+#numpadpgdn:: {
-    ExecuteActionWithCondition("StretchBottomRight", "")
+$^!numpadadd:: {
+    ExecuteActionWithCondition("StretchAll", "")
 }
 
 $^+#left:: {
@@ -1211,37 +1111,5 @@ $!+numpad9:: {
 
 $!+numpadpgup:: {
     ExecuteActionWithCondition("MovepxUpRight", "")
-}
-
-$!numpad1:: {
-    ExecuteActionWithCondition("MoveTadDownLeft", "")
-}
-
-$!numpadend:: {
-    ExecuteActionWithCondition("MoveTadDownLeft", "")
-}
-
-$!numpad3:: {
-    ExecuteActionWithCondition("MoveTadDownRight", "")
-}
-
-$!numpadpgdn:: {
-    ExecuteActionWithCondition("MoveTadDownRight", "")
-}
-
-$!numpad7:: {
-    ExecuteActionWithCondition("MoveTadUpLeft", "")
-}
-
-$!numpadhome:: {
-    ExecuteActionWithCondition("MoveTadUpLeft", "")
-}
-
-$!numpad9:: {
-    ExecuteActionWithCondition("MoveTadUpRight", "")
-}
-
-$!numpadpgup:: {
-    ExecuteActionWithCondition("MoveTadUpRight", "")
 }
 

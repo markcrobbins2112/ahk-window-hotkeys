@@ -90,21 +90,26 @@ a.cas  -
 a.w    (maxrest etc)
 a.wc   TuckPeek
 a.wca  Untuck
-a.wa   MoveTad -
-a.was  DoubleSizeLeft
-a.ws   Movepx -
-a.wcs  Tuck           ?Dir.s
-a.wca  Untuck         ?Dir.s
-a.wcas HalfSize       ?Dir.s
+a.wa   MoveTad
+a.was  DoubleSize
+a.ws   Movepx
+a.wcs  Tuck           
+a.wca  Untuck         
+!a.wcas HalfSize       
+
+mv a.wa.ws n._.c.ca
+sz a.was+ n .w+g .wc+ .wca- .wa-g
+tk a .wcsT .wcaU .wcTP P.wcs U.wcs `.wc
+
 
 5._   Center
-5.w   ** StretchToGridAll
-5.wc  Grow
-5.wca ** SubtactAll
-5.wa  ** PullToGridAll
-5.was ** AddAll
-5.ws  TrimAll
-5.wcs ** StretchAll
+5.w   StretchToGrid
+5.wc  Add
+5.wca Subtact
+5.wa  PullToGridAll
+!5.was -
+!5.ws  TrimAll
+!5.wcs ** StretchAll
 
 add._ SnapToGridEnlarge
 add.a ScaleExpand10px
@@ -115,19 +120,21 @@ sub.c ScaleReduceGridPart
 
 n._   MoveToGrid     ?Dir.a-c
 n.c   JumpGrid       Dir.s
-n.ca  -
-n.a   MoveTad
-n.as  Movepx
-n.s   Edge           Dir.a-c
-n.cs  EdgeIn
+n.ca  Edge           Dir.a-c
+!n.a  MoveTad
+!n.as  Movepx
+!n.s   
+!n.cs  EdgeIn
 n.cas -
+
+
 
 n.w   StretchToGrid  Pull
 n.wa  PullToGrid     Pull.a
-n.wcs Stretch        Pull
+!n.wcs Stretch        Pull
 n.wc  Grow           Pull.c
-n.ws  Trim           Dir.s
-n.was Add            ?Dir.s
+!n.ws  Trim           Dir.s
+!n.was Add            ?Dir.s
 n.wca Subtract       ?Dir.s
 n.wcas Half
 

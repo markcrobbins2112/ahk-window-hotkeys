@@ -8145,3 +8145,4 @@ Escape::EndTuckPeek()
 ; #endregion
 
 ; &"C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" "C:\_\ahk-window-hotkeys\HotWinAHK.ahk"
+; &"C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" C:\_o\__\ahk-window-hotkeys\HotWinAHK.ahk
