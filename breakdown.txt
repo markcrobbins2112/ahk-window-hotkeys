@@ -1,10 +1,23 @@
+
+mv a.wa.ws n._.c.ca
+sz a.was+ n .w+g .wc+ .wca- .wa-g
+tk a .wcsT .wcaU .wcTP P.wcs U.wcs `.wc
+
+os /.w HelpScreen
+os /.wc WinInfo
+os ..wca  KeyDiagnostics
+os ..wa   KeyQuery
+os /.ws PeekUnderMouse
+os ,.wc Settings
+
+
+
 ,.wc Settings
 pause.wc ToggleSuspension
 f2.wc EditConfig
 f5.wc ReloadConfig
 f5.wca RestartProgram
 f4.wc  ExitProgram
-f6.w   DragWindow
 f6.w   DragWindow
 
 sl.w   Home
@@ -76,8 +89,6 @@ T.wc AlwaysOnTop
 rb.w MouseToGrid
 lb.w MouseRelativeSize
 
-
-
 Cmds
 a._    -
 a.c    -
@@ -97,9 +108,6 @@ a.wcs  Tuck
 a.wca  Untuck         
 !a.wcas HalfSize       
 
-mv a.wa.ws n._.c.ca
-sz a.was+ n .w+g .wc+ .wca- .wa-g
-tk a .wcsT .wcaU .wcTP P.wcs U.wcs `.wc
 
 
 5._   Center

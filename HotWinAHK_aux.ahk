@@ -162,12 +162,12 @@ $+#]:: {
     ExecuteActionWithCondition("SwapMaximizedRestored", "")
 }
 
-$+#-:: {
+$+#[:: {
     try Suspend("Permit")
     ExecuteActionWithCondition("SwapMinimizedRestored", "")
 }
 
-$#-:: {
+$!+#-:: {
     ExecuteActionWithCondition("MinimizeAll", "")
 }
 
