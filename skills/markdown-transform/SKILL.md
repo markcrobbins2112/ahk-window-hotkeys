@@ -64,6 +64,7 @@ To pass strict markdown lint rules (such as `markdownlint`), your transformed fi
 - **Spaces Surrounding List Items (MD030)**: Ensure there is exactly one space after a list bullet marker (`-` or `*`) or order number (e.g. use `- Checked item` instead of `-  Checked item`).
 - **No Trailing Spaces (MD009)**: Eliminate trailing whitespaces at the end of lines, unless explicitly declaring a hard line break with exactly 2 trailing spaces.
 - **Horizontal Rule Consistency (MD035)**: Always use a consistent character and spacing format for horizontal dividers (e.g., `---`).
+- **No Hash Symbols in Comments**: This rule applies strictly to the first multi-line HTML comment block (file header comment) and single-line comments that start with `TEMPLATE:` (e.g. `<!-- TEMPLATE: ... -->`). Strip or omit all `#` characters inside these specific comments.
 
 ---
 
