@@ -55,13 +55,13 @@ Do not resurrect code snippets or architectural patterns from this file into the
 <a id="a-webserverpreviewnodejsbridge"></a>[TOC](#toc-webserverpreviewnodejsbridge)
 - **Active Lifespan:** Initial Scaffold to 2026-07-23 (Retired on 2026-07-23)
 - **Reason for Retirement:** User explicitly requested removal of all server infrastructure (`server.ts`, `App.tsx`, `vite.config.ts`, `tsconfig.json`) to keep the repository strictly focused as a standalone AutoHotkey v2.0 Windows application suite.
-- **Superseded By:** Standalone desktop AutoHotkey runtime (`HotWinAHK.ahk`).
+- **Superseded By:** Standalone desktop AutoHotkey runtime ([`HotWinAHK.ahk`](../HotWinAHK.ahk)).
 
 ### ❌ Combined Single-File Configuration Database
 <a id="a-combinedsinglefileconfigurationdatabase"></a>[TOC](#toc-combinedsinglefileconfigurationdatabase)
 - **Active Lifespan:** Initial design to 2026-06-22
-- **Reason for Retirement:** Walkthrough test logs and interactive keyboard/command state tracking cluttered user settings in `HotWinAHK.ini`.
-- **Superseded By:** Decoupled `tests.ini` database file specifically dedicated to test metrics and walkthrough execution states.
+- **Reason for Retirement:** Walkthrough test logs and interactive keyboard/command state tracking cluttered user settings in [`HotWinAHK.ini`](../HotWinAHK.ini).
+- **Superseded By:** Decoupled [`tests.ini`](../tests.ini) database file specifically dedicated to test metrics and walkthrough execution states.
 
 ---
 

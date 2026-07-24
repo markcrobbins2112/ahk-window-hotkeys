@@ -6,10 +6,9 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
-  "scripts": {},
-  "dependencies": {},
-  "devDependencies": {
-    "@types/node": "^22.14.0"
+  "scripts": {
+    "launch": "AutoHotkey.exe HotWinAHK.ahk",
+    "start": "AutoHotkey.exe HotWinAHK.ahk"
   },
   "author": "markrobbins",
   "repository": {

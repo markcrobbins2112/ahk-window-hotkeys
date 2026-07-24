@@ -57,10 +57,11 @@ are received) and mark items completed ([x]) once verified.
 ---
 ## 💬 Incoming tasks from chat
 <a id="a-incomingtasksfromchat"></a>[TOC](#toc-incomingtasksfromchat)
+- [x] **Package Cleanup & Markdown Link Enforcement**: Removed server-related scripts (dev, build, preview) and dependencies/devDependencies from [`package.json`](../package.json), added a launch script running [`HotWinAHK.ahk`](../HotWinAHK.ahk), and updated all file references across Markdown documentation files to proper Markdown links.
 - [x] **Markdown Comment Cleaning Rule**: Strip hash (`#`) symbols from file header comments and `TEMPLATE:` single-line HTML comments across all Markdown documentation files.
 - [x] **Skill Rule Addition**: Update `skills/markdown-transform/SKILL.md` and `skills/system_skills/markdown-transform/SKILL.md` with the refined rule: "This rule applies strictly to the first multi-line HTML comment block (file header comment) and single-line comments that start with TEMPLATE:".
 - [x] **Server Cleanup & Single-View Constraints**: Purge web server files (`App.tsx`, `server.ts`, etc.) to enforce desktop AutoHotkey suite focus without unrequested server UI layers.
-- [x] **Code Analysis & AIMD Documentation Update**: Perform thorough static analysis on `HotWinAHK.ahk`, `HotWinAHK.ini`, `HotWinAHK_aux.ahk`, and `HotWinAHK_tray.ahk` to update all AIMD Markdown documentation files (`TASKS.md`, `LOG.md`, `README.md`, `AGENTS.md`, `BUILD.md`, `CODE.md`, `DESIGN.md`, `FEATURES.md`, `MANUAL.md`, `SPEC.md`, `TERMS.md`, `TESTING.md`, `VERSIONS.md`, `ARCHIVE.md`).
+- [x] **Code Analysis & AIMD Documentation Update**: Perform thorough static analysis on [`HotWinAHK.ahk`](../HotWinAHK.ahk), [`HotWinAHK.ini`](../HotWinAHK.ini), [`HotWinAHK_aux.ahk`](../HotWinAHK_aux.ahk), and [`HotWinAHK_tray.ahk`](../HotWinAHK_tray.ahk) to update all AIMD Markdown documentation files ([`TASKS.md`](TASKS.md), [`LOG.md`](LOG.md), [`README.md`](../README.md), [`AGENTS.md`](../AGENTS.md), [`BUILD.md`](BUILD.md), [`CODE.md`](CODE.md), [`DESIGN.md`](DESIGN.md), [`FEATURES.md`](FEATURES.md), [`MANUAL.md`](MANUAL.md), [`SPEC.md`](SPEC.md), [`TERMS.md`](TERMS.md), [`TESTING.md`](TESTING.md), [`VERSIONS.md`](VERSIONS.md), [`ARCHIVE.md`](ARCHIVE.md)).
 
 ## 🔄 New Changes
 <a id="a-newchanges"></a>[TOC](#toc-newchanges)
@@ -69,7 +70,7 @@ are received) and mark items completed ([x]) once verified.
 
 ## ⚙️ New Settings
 <a id="a-newsettings"></a>[TOC](#toc-newsettings)
-- [x] `SilenceAll`: Boolean flag in `HotWinAHK.ini` under `[Settings]` controlling sound notifications across execution routines.
+- [x] `SilenceAll`: Boolean flag in [`HotWinAHK.ini`](../HotWinAHK.ini) under `[Settings]` controlling sound notifications across execution routines.
 - [x] `SilentOnWinCmds`: Boolean flag suppressing audio confirmation on window commands.
 - [x] `TipWinCmds`: Boolean flag displaying visual tooltips on window movement and docking actions.
 
@@ -88,7 +89,7 @@ are received) and mark items completed ([x]) once verified.
 ## 🚀 New Features
 <a id="a-newfeatures"></a>[TOC](#toc-newfeatures)
 - [x] Feature Name: AutoHotkey v2.0 Self-Compiling Static Hotkey Generator
-  - Compiles `HotWinAHK.ini` configuration rules into `HotWinAHK_aux.ahk` at startup for zero-latency execution.
+  - Compiles [`HotWinAHK.ini`](../HotWinAHK.ini) configuration rules into [`HotWinAHK_aux.ahk`](../HotWinAHK_aux.ahk) at startup for zero-latency execution.
 
 ---
 
@@ -105,7 +106,7 @@ are received) and mark items completed ([x]) once verified.
 
 ### 🛠️ Settings
 <a id="a-settings"></a>[TOC](#toc-settings)
-- [x] Configured `HotWinAHK.ini` settings matrix with 200+ commands and default parameters (`SilenceAll=false`, `SilentOnWinCmds=false`, `TipWinCmds=true`).
+- [x] Configured [`HotWinAHK.ini`](../HotWinAHK.ini) settings matrix with 200+ commands and default parameters (`SilenceAll=false`, `SilentOnWinCmds=false`, `TipWinCmds=true`).
 
 ### 💻 Commands
 <a id="a-commands"></a>[TOC](#toc-commands)

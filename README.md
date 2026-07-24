@@ -71,26 +71,26 @@ High-performance window-management suite written in AutoHotkey v2.0
 
 ## 🗺️ Project Layout Blueprint
 <a id="a-projectlayoutblueprint"></a>[TOC](#toc-projectlayoutblueprint)
-- **`AGENTS.md`** ➔ System prompts and operational boundaries for AI teammates.
-- **`AIMD/ARCHIVE.md`** ➔ Scriptorium for scrapped ideas and sunset components.
-- **`AIMD/BUILD.md`** ➔ Compiler pipelines, flags, and packaging steps.
-- **`AIMD/CODE.md`** ➔ Syntax style guidelines and error-handling mandates.
-- **`AIMD/DESIGN.md`** ➔ Structural topology, design patterns, and data flows.
-- **`AIMD/FEATURES.md`** ➔ Capability matrices and functional product roadmap.
-- **`AIMD/LOG.md`** ➔ Chronological audit trail of development decisions.
-- **`AIMD/MANUAL.md`** ➔ Installation, user runbooks, and diagnostic workflows.
-- **`README.md`** ➔ Primary entry point and structural system abstract.
-- **`AIMD/SPEC.md`** ➔ Technical constraints, parameters, and protocol definitions.
-- **`AIMD/TASKS.md`** ➔ Dynamic task board and backlog management queue.
-- **`AIMD/TERMS.md`** ➔ Technical glossary, definitions, and vocabulary indexes.
-- **`AIMD/TESTING.md`** ➔ Automation suites, edge cases, and QA assertion routines.
-- **`AIMD/VERSIONS.md`** ➔ Change trackers and version milestone evolution lists.
-- **`HotWinAHK_aux.ahk`** ➔ Dynamically compiled static hotkey mappings.
-- **`HotWinAHK_tray.ahk`** ➔ System tray icon context menu and stowing routines.
-- **`HotWinAHK.ahk`** ➔ Main execution orchestrator engine.
-- **`HotWinAHK.ini`** ➔ Dynamic command assignments and application settings.
-- **`tests.ini`** ➔ Dedicated database tracking testing state, logs, and walkthrough metrics.
-- **`windows-hotkeys-homes.ini`** ➔ Persistent database storing custom home positions.
+- **[`AGENTS.md`](AGENTS.md)** ➔ System prompts and operational boundaries for AI teammates.
+- **[`AIMD/ARCHIVE.md`](AIMD/ARCHIVE.md)** ➔ Scriptorium for scrapped ideas and sunset components.
+- **[`AIMD/BUILD.md`](AIMD/BUILD.md)** ➔ Compiler pipelines, flags, and packaging steps.
+- **[`AIMD/CODE.md`](AIMD/CODE.md)** ➔ Syntax style guidelines and error-handling mandates.
+- **[`AIMD/DESIGN.md`](AIMD/DESIGN.md)** ➔ Structural topology, design patterns, and data flows.
+- **[`AIMD/FEATURES.md`](AIMD/FEATURES.md)** ➔ Capability matrices and functional product roadmap.
+- **[`AIMD/LOG.md`](AIMD/LOG.md)** ➔ Chronological audit trail of development decisions.
+- **[`AIMD/MANUAL.md`](AIMD/MANUAL.md)** ➔ Installation, user runbooks, and diagnostic workflows.
+- **[`README.md`](README.md)** ➔ Primary entry point and structural system abstract.
+- **[`AIMD/SPEC.md`](AIMD/SPEC.md)** ➔ Technical constraints, parameters, and protocol definitions.
+- **[`AIMD/TASKS.md`](AIMD/TASKS.md)** ➔ Dynamic task board and backlog management queue.
+- **[`AIMD/TERMS.md`](AIMD/TERMS.md)** ➔ Technical glossary, definitions, and vocabulary indexes.
+- **[`AIMD/TESTING.md`](AIMD/TESTING.md)** ➔ Automation suites, edge cases, and QA assertion routines.
+- **[`AIMD/VERSIONS.md`](AIMD/VERSIONS.md)** ➔ Change trackers and version milestone evolution lists.
+- **[`HotWinAHK_aux.ahk`](HotWinAHK_aux.ahk)** ➔ Dynamically compiled static hotkey mappings.
+- **[`HotWinAHK_tray.ahk`](HotWinAHK_tray.ahk)** ➔ System tray icon context menu and stowing routines.
+- **[`HotWinAHK.ahk`](HotWinAHK.ahk)** ➔ Main execution orchestrator engine.
+- **[`HotWinAHK.ini`](HotWinAHK.ini)** ➔ Dynamic command assignments and application settings.
+- **[`tests.ini`](tests.ini)** ➔ Dedicated database tracking testing state, logs, and walkthrough metrics.
+- **[`windows-hotkeys-homes.ini`](windows-hotkeys-homes.ini)** ➔ Persistent database storing custom home positions.
 
 ---
 

@@ -44,6 +44,15 @@ Keep the very latest entry at the top of the "Log Entries" section.
   - [📑 AI Primary Files](#a-aiprimaryfiles) <a id="toc-aiprimaryfiles"></a> ^toc-aiprimaryfiles
   - [💾 Commit Message](#a-commitmessage) <a id="toc-commitmessage"></a> ^toc-commitmessage
   - [📝 Log Entries](#a-logentries) <a id="toc-logentries"></a> ^toc-logentries
+  - [[2026-07-23T23:45:00Z]](#a-20260723t234500z) <a id="toc-20260723t234500z"></a> ^toc-20260723t234500z
+    - [🎯 Primary Goals & Requirements](#a-primarygoalsrequirements20260723t234500z) <a id="toc-primarygoalsrequirements20260723t234500z"></a> ^toc-primarygoalsrequirements20260723t234500z
+    - [🛠️ Completed Changes in this Session](#a-completedchangesinthissession20260723t234500z) <a id="toc-completedchangesinthissession20260723t234500z"></a> ^toc-completedchangesinthissession20260723t234500z
+    - [🔸 Affected Files](#a-affectedfiles20260723t234500z) <a id="toc-affectedfiles20260723t234500z"></a> ^toc-affectedfiles20260723t234500z
+  - [[2026-07-23T23:27:00Z]](#a-20260723t232700z) <a id="toc-20260723t232700z"></a> ^toc-20260723t232700z
+    - [🎯 Primary Goals & Requirements](#a-primarygoalsrequirements20260723t232700z) <a id="toc-primarygoalsrequirements20260723t232700z"></a> ^toc-primarygoalsrequirements20260723t232700z
+    - [🛠️ Completed Changes in this Session](#a-completedchangesinthissession20260723t232700z) <a id="toc-completedchangesinthissession20260723t232700z"></a> ^toc-completedchangesinthissession20260723t232700z
+    - [🔸 Affected Files](#a-affectedfiles20260723t232700z) <a id="toc-affectedfiles20260723t232700z"></a> ^toc-affectedfiles20260723t232700z
+    - [🤖 Next Steps, Concerns and Suggestions](#a-nextstepsconcernsandsuggestions) <a id="toc-nextstepsconcernsandsuggestions"></a> ^toc-nextstepsconcernsandsuggestions
   - [[2026-06-22T15:21:00Z]](#a-20260622t152100z) <a id="toc-20260622t152100z"></a> ^toc-20260622t152100z
     - [🎯 Primary Goals & Requirements](#a-primarygoalsrequirements20260622t152100z) <a id="toc-primarygoalsrequirements20260622t152100z"></a> ^toc-primarygoalsrequirements20260622t152100z
     - [🛠️ Completed Changes in this Session](#a-completedchangesinthissession20260622t152100z) <a id="toc-completedchangesinthissession20260622t152100z"></a> ^toc-completedchangesinthissession20260622t152100z
@@ -246,18 +255,18 @@ Keep the very latest entry at the top of the "Log Entries" section.
     - [🛠️ Completed Changes in this Session](#a-completedchangesinthissession20260607t175800z) <a id="toc-completedchangesinthissession20260607t175800z"></a> ^toc-completedchangesinthissession20260607t175800z
     - [🔸 Affected Files](#a-affectedfiles20260607t175800z) <a id="toc-affectedfiles20260607t175800z"></a> ^toc-affectedfiles20260607t175800z
   - [🏛️ Permanent Decision Record Archive](#a-permanentdecisionrecordarchive) <a id="toc-permanentdecisionrecordarchive"></a> ^toc-permanentdecisionrecordarchive
-    - [🏷️ [ADR-001] - Decoupling Test Matrix Storage into Dedicated tests.ini File](#a-adr001decouplingtestmatrixstorageintodedicatedtestsinifile) <a id="toc-adr001decouplingtestmatrixstorageintodedicatedtestsinifile"></a> ^toc-adr001decouplingtestmatrixstorageintodedicatedtestsinifile
+    - [🏷️ [ADR-001] - {{Architectural Decision Title / e.g., Choosing UTF-16 LE for System Configs}}](#a-adr001architecturaldecisiontitleegchoosingutf16leforsystemconfigs) <a id="toc-adr001architecturaldecisiontitleegchoosingutf16leforsystemconfigs"></a> ^toc-adr001architecturaldecisiontitleegchoosingutf16leforsystemconfigs
   - [🚀 Go to...](#a-goto) <a id="toc-goto"></a> ^toc-goto
 ---
 ## 💾 Commit Message
 <a id="a-commitmessage"></a>[TOC](#toc-commitmessage)
 ```text
-docs(aimd): thoroughly analyze AHK codebase and update markdown documentation suite
+refactor(package): remove server scripts and dependencies, add launch script, enforce markdown links
 
-- Strip hash symbols from header and TEMPLATE comments across markdown files
-- Refine markdown-transform SKILL.md rules for comment headers
-- Purge server files and update AIMD documentation to reflect AutoHotkey v2.0 window management suite
-- Fill in placeholders in TASKS.md, LOG.md, BUILD.md, CODE.md, DESIGN.md, FEATURES.md, MANUAL.md, SPEC.md, TERMS.md, TESTING.md, VERSIONS.md, ARCHIVE.md, README.md, AGENTS.md
+- Remove dev, build, and preview scripts from package.json
+- Remove react, react-dom, lucide-react, vite, and dev dependencies required by web server
+- Add launch script to run HotWinAHK.ahk via AutoHotkey.exe
+- Convert all file references across all Markdown documentation files to proper relative Markdown links
 ```
 
 ## 📝 Log Entries
@@ -286,6 +295,41 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 
 -->
 
+## [2026-07-23T23:45:00Z]
+<a id="a-20260723t234500z"></a>[TOC](#toc-20260723t234500z)
+### 🎯 Primary Goals & Requirements
+<a id="a-primarygoalsrequirements20260723t234500z"></a>[TOC](#toc-primarygoalsrequirements20260723t234500z)
+- **Purge Server Scripts**: Remove all scripts in [`package.json`](../package.json) related to running a server (`dev`, `build`, `preview`).
+- **Purge Server Dependencies**: Remove all npm dependencies and devDependencies required by the server/frontend build (`react`, `react-dom`, `lucide-react`, `vite`, `tailwindcss`, `@types/react`, etc.).
+- **Add Launch Script**: Add a `"launch"` (and `"start"`) script to [`package.json`](../package.json) that executes [`HotWinAHK.ahk`](../HotWinAHK.ahk) using `AutoHotkey.exe`.
+- **Enforce Markdown Links**: Convert all file references across Markdown documentation files (`README.md`, `AGENTS.md`, `AIMD/*.md`, `skills/.../SKILL.md`) into proper relative Markdown links.
+
+### 🛠️ Completed Changes in this Session
+<a id="a-completedchangesinthissession20260723t234500z"></a>[TOC](#toc-completedchangesinthissession20260723t234500z)
+- **Updated Package Manifest**: Modified [`package.json`](../package.json) to strip web dev server scripts and React/Vite dependencies, replacing them with `"launch": "AutoHotkey.exe HotWinAHK.ahk"`.
+- **Enforced Relative Markdown Links**: Processed all 15 Markdown documentation files in the repository to systematically wrap unlinked references to project files ([`HotWinAHK.ahk`](../HotWinAHK.ahk), [`HotWinAHK.ini`](../HotWinAHK.ini), [`HotWinAHK_aux.ahk`](../HotWinAHK_aux.ahk), [`HotWinAHK_tray.ahk`](../HotWinAHK_tray.ahk), [`windows-hotkeys-homes.ini`](../windows-hotkeys-homes.ini), [`tests.ini`](../tests.ini), [`package.json`](../package.json), [`README.md`](../README.md), [`AGENTS.md`](../AGENTS.md), and `AIMD/*.md` files) into valid relative GFM Markdown links.
+- **Compiled TOCs & Documentation State**: Updated [`TASKS.md`](TASKS.md) backlog, appended new session log in [`LOG.md`](LOG.md), and recompiled all Table of Contents blocks.
+
+### 🔸 Affected Files
+<a id="a-affectedfiles20260723t234500z"></a>[TOC](#toc-affectedfiles20260723t234500z)
+- [`/package.json`](../package.json)
+- [`/README.md`](../README.md)
+- [`/AGENTS.md`](../AGENTS.md)
+- [`/AIMD/LOG.md`](LOG.md)
+- [`/AIMD/TASKS.md`](TASKS.md)
+- [`/AIMD/BUILD.md`](BUILD.md)
+- [`/AIMD/CODE.md`](CODE.md)
+- [`/AIMD/DESIGN.md`](DESIGN.md)
+- [`/AIMD/FEATURES.md`](FEATURES.md)
+- [`/AIMD/MANUAL.md`](MANUAL.md)
+- [`/AIMD/SPEC.md`](SPEC.md)
+- [`/AIMD/TERMS.md`](TERMS.md)
+- [`/AIMD/TESTING.md`](TESTING.md)
+- [`/AIMD/VERSIONS.md`](VERSIONS.md)
+- [`/AIMD/ARCHIVE.md`](ARCHIVE.md)
+- [`/skills/markdown-transform/SKILL.md`](../skills/markdown-transform/SKILL.md)
+- [`/skills/system_skills/markdown-transform/SKILL.md`](../skills/system_skills/markdown-transform/SKILL.md)
+
 ## [2026-07-23T23:27:00Z]
 <a id="a-20260723t232700z"></a>[TOC](#toc-20260723t232700z)
 ### 🎯 Primary Goals & Requirements
@@ -293,56 +337,56 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 - **Markdown Comment Hash Removal**: Clean up hash (`#`) symbols inside HTML file header comments and `TEMPLATE:` single-line comments across all Markdown documentation files in the repository.
 - **Skill Specification Update**: Refine `skills/markdown-transform/SKILL.md` and `skills/system_skills/markdown-transform/SKILL.md` to clarify that the hash-stripping rule applies strictly to the first multi-line HTML comment block (file header comment) and single-line comments starting with `TEMPLATE:`.
 - **Remove Web Server Code**: Purge unrequested web server files (`App.tsx`, `index.html`, etc.) to adhere strictly to the AutoHotkey v2.0 desktop suite scope.
-- **Thorough Code Analysis & AIMD Documentation Update**: Analyze the AutoHotkey codebase (`HotWinAHK.ahk`, `HotWinAHK.ini`, `HotWinAHK_aux.ahk`, `HotWinAHK_tray.ahk`) and update all Markdown files in `AIMD/` and root (`README.md`, `AGENTS.md`, `TASKS.md`, `LOG.md`, `BUILD.md`, `CODE.md`, `DESIGN.md`, `FEATURES.md`, `MANUAL.md`, `SPEC.md`, `TERMS.md`, `TESTING.md`, `VERSIONS.md`, `ARCHIVE.md`).
+- **Thorough Code Analysis & AIMD Documentation Update**: Analyze the AutoHotkey codebase ([`HotWinAHK.ahk`](../HotWinAHK.ahk), [`HotWinAHK.ini`](../HotWinAHK.ini), [`HotWinAHK_aux.ahk`](../HotWinAHK_aux.ahk), [`HotWinAHK_tray.ahk`](../HotWinAHK_tray.ahk)) and update all Markdown files in `AIMD/` and root ([`README.md`](../README.md), [`AGENTS.md`](../AGENTS.md), [`TASKS.md`](TASKS.md), [`LOG.md`](LOG.md), [`BUILD.md`](BUILD.md), [`CODE.md`](CODE.md), [`DESIGN.md`](DESIGN.md), [`FEATURES.md`](FEATURES.md), [`MANUAL.md`](MANUAL.md), [`SPEC.md`](SPEC.md), [`TERMS.md`](TERMS.md), [`TESTING.md`](TESTING.md), [`VERSIONS.md`](VERSIONS.md), [`ARCHIVE.md`](ARCHIVE.md)).
 
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260723t232700z"></a>[TOC](#toc-completedchangesinthissession20260723t232700z)
-- **Cleaned Markdown Comment Lines**: Stripped hash characters from multi-line file headers and `TEMPLATE:` HTML comments across `README.md`, `AGENTS.md`, and all `AIMD/*.md` files.
+- **Cleaned Markdown Comment Lines**: Stripped hash characters from multi-line file headers and `TEMPLATE:` HTML comments across [`README.md`](../README.md), [`AGENTS.md`](../AGENTS.md), and all `AIMD/*.md` files.
 - **Updated Skill Definition**: Modified `SKILL.md` in both skill locations (`skills/markdown-transform/SKILL.md` and `skills/system_skills/markdown-transform/SKILL.md`) to explicitly document the refined comment hash-stripping constraints.
 - **Purged Web Server Artifacts**: Removed unneeded client-side React files (`App.tsx`, `index.html`, `main.tsx`, `index.css`, `vite.config.ts`, `tsconfig.json`) to keep the workspace strictly focused on AutoHotkey v2.0 desktop window management.
 - **Synchronized AIMD Documentation Suite**: Replaced all remaining double curly brace placeholders with real AutoHotkey v2.0 specifications, architecture descriptions, command matrices, and build/test instructions.
 
 ### 🔸 Affected Files
 <a id="a-affectedfiles20260723t232700z"></a>[TOC](#toc-affectedfiles20260723t232700z)
-- `README.md`
-- `AGENTS.md`
+- [`README.md`](../README.md)
+- [`AGENTS.md`](../AGENTS.md)
 - `skills/markdown-transform/SKILL.md`
 - `skills/system_skills/markdown-transform/SKILL.md`
-- `AIMD/TASKS.md`
-- `AIMD/LOG.md`
-- `AIMD/BUILD.md`
-- `AIMD/CODE.md`
-- `AIMD/DESIGN.md`
-- `AIMD/FEATURES.md`
-- `AIMD/MANUAL.md`
-- `AIMD/SPEC.md`
-- `AIMD/TERMS.md`
-- `AIMD/TESTING.md`
-- `AIMD/VERSIONS.md`
-- `AIMD/ARCHIVE.md`
+- [`AIMD/TASKS.md`](TASKS.md)
+- [`AIMD/LOG.md`](LOG.md)
+- [`AIMD/BUILD.md`](BUILD.md)
+- [`AIMD/CODE.md`](CODE.md)
+- [`AIMD/DESIGN.md`](DESIGN.md)
+- [`AIMD/FEATURES.md`](FEATURES.md)
+- [`AIMD/MANUAL.md`](MANUAL.md)
+- [`AIMD/SPEC.md`](SPEC.md)
+- [`AIMD/TERMS.md`](TERMS.md)
+- [`AIMD/TESTING.md`](TESTING.md)
+- [`AIMD/VERSIONS.md`](VERSIONS.md)
+- [`AIMD/ARCHIVE.md`](ARCHIVE.md)
 
 ### 🤖 Next Steps, Concerns and Suggestions
-<a id="a-nextstepsconcernssuggestions20260723t232700z"></a>[TOC](#toc-nextstepsconcernssuggestions20260723t232700z)
-- **Maintain Linter & Anchor Formatting**: Run Markdown TOC and anchor verification scripts whenever new features or settings are added to `HotWinAHK.ini` or `HotWinAHK.ahk`.
+<a id="a-nextstepsconcernsandsuggestions"></a>[TOC](#toc-nextstepsconcernsandsuggestions)
+- **Maintain Linter & Anchor Formatting**: Run Markdown TOC and anchor verification scripts whenever new features or settings are added to [`HotWinAHK.ini`](../HotWinAHK.ini) or [`HotWinAHK.ahk`](../HotWinAHK.ahk).
 
 ## [2026-06-22T15:21:00Z]
 <a id="a-20260622t152100z"></a>[TOC](#toc-20260622t152100z)
 ### 🎯 Primary Goals & Requirements
 <a id="a-primarygoalsrequirements20260622t152100z"></a>[TOC](#toc-primarygoalsrequirements20260622t152100z)
-- **Detach Test Results and Logs from Core Configuration**: Move interactive Command and Keyboard test state tracking and ratings log history from `HotWinAHK.ini` to a dedicated `tests.ini` database.
+- **Detach Test Results and Logs from Core Configuration**: Move interactive Command and Keyboard test state tracking and ratings log history from [`HotWinAHK.ini`](../HotWinAHK.ini) to a dedicated [`tests.ini`](../tests.ini) database.
 - **Maintain Pristine User Preferences**: Ensure that configurations related to bindings, settings, or dimensions are kept entirely isolated from testing footprints.
 
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260622t152100z"></a>[TOC](#toc-completedchangesinthissession20260622t152100z)
-- **Decoupled Test Database (`tests.ini`)**:
-  - Configured a new global variable `g_sTestsIniFile := A_ScriptDir "\tests.ini"` in `HotWinAHK.ahk` to point to the new dedicated test files database.
-  - Redirected all testing state operations (reads/writes to `CommandTestState`, `CommandTestLogs`, `KeyboardTestState`, and `KeyboardTestLogs`) from `g_sIniFile` (`HotWinAHK.ini`) to the specialized `g_sTestsIniFile` (`tests.ini`).
+- **Decoupled Test Database ([`tests.ini`](../tests.ini))**:
+  - Configured a new global variable `g_sTestsIniFile := A_ScriptDir "\[tests.ini](../tests.ini)"` in [`HotWinAHK.ahk`](../HotWinAHK.ahk) to point to the new dedicated test files database.
+  - Redirected all testing state operations (reads/writes to `CommandTestState`, `CommandTestLogs`, `KeyboardTestState`, and `KeyboardTestLogs`) from `g_sIniFile` ([`HotWinAHK.ini`](../HotWinAHK.ini)) to the specialized `g_sTestsIniFile` ([`tests.ini`](../tests.ini)).
 - **Complete Walkthrough UI and Message Alignment**:
-  - Updated completion prompt dialogs to explicitly notify the user that walkthrough rating results have been safely persisted under `tests.ini`.
+  - Updated completion prompt dialogs to explicitly notify the user that walkthrough rating results have been safely persisted under [`tests.ini`](../tests.ini).
 - **Regenerated and Compiled Hotkey Matrix**:
-  - Automated compilation of `HotWinAHK_aux.ahk` from the new clean `HotWinAHK.ini` configurations.
+  - Automated compilation of [`HotWinAHK_aux.ahk`](../HotWinAHK_aux.ahk) from the new clean [`HotWinAHK.ini`](../HotWinAHK.ini) configurations.
 - **Updated Documentation and Task Records**:
-  - Restructured `AITASKS.md` task checklists and completed descriptions to match the `tests.ini` redirection.
+  - Restructured `AITASKS.md` task checklists and completed descriptions to match the [`tests.ini`](../tests.ini) redirection.
 
 ## [2026-06-22T15:15:00Z]
 <a id="a-20260622t151500z"></a>[TOC](#toc-20260622t151500z)
@@ -409,8 +453,8 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260622t142000z"></a>[TOC](#toc-completedchangesinthissession20260622t142000z)
 - **Programmed .wcas String Conversion Engines**:
-  - Authored `FormatKeyToWcas(keyStr)` parse utility in `HotWinAHK.ahk` to convert arbitrary descriptive strings like `"Win + Alt + Shift + Left"` into concise standard `.wcas` mappings (e.g. `left.was`).
-  - Authored `GetActiveWcasKey(sCmd)` to dynamically look up customized keys active in `HotWinAHK.ini` and output them formatted in `.wcas` format, ensuring user overrides display perfectly.
+  - Authored `FormatKeyToWcas(keyStr)` parse utility in [`HotWinAHK.ahk`](../HotWinAHK.ahk) to convert arbitrary descriptive strings like `"Win + Alt + Shift + Left"` into concise standard `.wcas` mappings (e.g. `left.was`).
+  - Authored `GetActiveWcasKey(sCmd)` to dynamically look up customized keys active in [`HotWinAHK.ini`](../HotWinAHK.ini) and output them formatted in `.wcas` format, ensuring user overrides display perfectly.
 - **Overhauled system SysMenu Structure**:
   - Re-implemented `SysMenu()` utilising a hardcoded structure tracking all management verbs (`SysMenu`, `HelpScreen`, `CmdPalette`, `ReloadConfig`, `EditConfig`, `Settings`, etc.) and inserting menu separators cleanly to partition groupings.
   - Resolved command display names by retrieving active `.wcas` notation suffixes dynamically.
@@ -457,7 +501,7 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260622t133800z"></a>[TOC](#toc-completedchangesinthissession20260622t133800z)
 - **Created Dynamic Helper for Walkthrough Sequence**:
-  - Coded `GetCommandTestList()` in `HotWinAHK.ahk` to sort `GetGlobalCommandList()` items based on physical keybinding strings.
+  - Coded `GetCommandTestList()` in [`HotWinAHK.ahk`](../HotWinAHK.ahk) to sort `GetGlobalCommandList()` items based on physical keybinding strings.
   - Placed commands with keybindings containing `"numpad"`, `"left"`, `"right"`, `"up"`, or `"down"` (filtered to exclude page navigation modifiers) at the top of the test suite list, ensuring they are tested first.
 - **Removed Automated Application**:
   - Removed `ApplyCommand(0)` call on step construction within `ShowCommandTestGui()`.
@@ -478,7 +522,7 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260622t132200z"></a>[TOC](#toc-completedchangesinthissession20260622t132200z)
 - **Replaced Invalid MsgBox Option String**:
-  - Replaced the string `"AlwaysOnTop"` with the standard WinAPI numeric style equivalent `262144` across all 6 walkthrough prompt `MsgBox` calls in `HotWinAHK.ahk` (lines 5381, 5403, 5582, 5634, 5656, 5794).
+  - Replaced the string `"AlwaysOnTop"` with the standard WinAPI numeric style equivalent `262144` across all 6 walkthrough prompt `MsgBox` calls in [`HotWinAHK.ahk`](../HotWinAHK.ahk) (lines 5381, 5403, 5582, 5634, 5656, 5794).
 
 ### 🔸 Affected Files
 <a id="a-affectedfiles20260622t132200z"></a>[TOC](#toc-affectedfiles20260622t132200z)
@@ -490,7 +534,7 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 <a id="a-20260622t131300z"></a>[TOC](#toc-20260622t131300z)
 ### 🎯 Primary Goals & Requirements
 <a id="a-primarygoalsrequirements20260622t131300z"></a>[TOC](#toc-primarygoalsrequirements20260622t131300z)
-- **Resolve Invalid Option 'W' in GUI Elements**: Fix the compile/runtime error caused by an invalid option parameter `W` in GUI `Add("Text", ...)` statements for the Command and Keyboard Test dialogs inside `HotWinAHK.ahk`.
+- **Resolve Invalid Option 'W' in GUI Elements**: Fix the compile/runtime error caused by an invalid option parameter `W` in GUI `Add("Text", ...)` statements for the Command and Keyboard Test dialogs inside [`HotWinAHK.ahk`](../HotWinAHK.ahk).
 
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260622t131300z"></a>[TOC](#toc-completedchangesinthissession20260622t131300z)
@@ -513,7 +557,7 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260622t131000z"></a>[TOC](#toc-completedchangesinthissession20260622t131000z)
 - **Corrected Typo in Opacity Restoration**:
-  - Renamed the single occurrence of the undefined function or local variable `WinSetTranslucent` to the correct built-in function name `WinSetTransparent` on line 5891 of `HotWinAHK.ahk`.
+  - Renamed the single occurrence of the undefined function or local variable `WinSetTranslucent` to the correct built-in function name `WinSetTransparent` on line 5891 of [`HotWinAHK.ahk`](../HotWinAHK.ahk).
 
 ### 🔸 Affected Files
 <a id="a-affectedfiles20260622t131000z"></a>[TOC](#toc-affectedfiles20260622t131000z)
@@ -542,7 +586,7 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 <a id="a-20260622t123500z"></a>[TOC](#toc-20260622t123500z)
 ### 🎯 Primary Goals & Requirements
 <a id="a-primarygoalsrequirements20260622t123500z"></a>[TOC](#toc-primarygoalsrequirements20260622t123500z)
-- **Interactive Command Verification Test Walkthrough**: Develop a test suite (`CommandTest`) that walks through each HotWinAHK command, executes it on the window that was active upon starting, prompts the user with a dark rating dialog (Worked/Failed/Unsure/Skip), logs execution history under `[CommandTestLogs]` in `HotWinAHK.ini`, and gracefully tracks progress in `[CommandTestState]` to allow resuming on reload.
+- **Interactive Command Verification Test Walkthrough**: Develop a test suite (`CommandTest`) that walks through each HotWinAHK command, executes it on the window that was active upon starting, prompts the user with a dark rating dialog (Worked/Failed/Unsure/Skip), logs execution history under `[CommandTestLogs]` in [`HotWinAHK.ini`](../HotWinAHK.ini), and gracefully tracks progress in `[CommandTestState]` to allow resuming on reload.
 - **Physical Keyboard Shortcut Trigger Verification**: Build a walkthrough (`KeyboardTest`) that informs and prompts the user to physically invoke expected default bindings on their tested application, allowing standard OS Hotkeys to trigger without active interception.
 - **Pristine State Snapshot and Restorations**: Implement robust pre-test window coordinate and state snapshots so that whichever window was manipulated immediately snaps back to its original position/size when the user moves between steps, retries, or closes testing.
 
@@ -551,7 +595,7 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 - **Programmed `SaveTargetWindowState` & `RestoreTargetWindowState` Helpers**: Built robust error-wrapped geometry, Min/Max state, AlwaysOnTop, and opacity/translucency snapshot routines. Enables both test suites to guarantee a perfectly clean, non-disruptive desktop state by automatically reversing transformations when rating, skipping, going back, retrying, or canceling.
 - **Refactored `ShowKeyboardTestGui`**: Re-engineered the keyboard test to completely bypass intrusive polling loops/InputHooks. It now focuses the active target window and prompts the user to fire standard hotkeys, rendering keyboard-navigable shortcut-ampersand buttons (`Alt+W` for Worked, `Alt+F` for Failed, `Alt+R` for Retry, `Alt+B` for Back, `Alt+C` for Cancel) for effortless hands-on-keyboard execution.
 - **Refactored `ShowCommandTestGui` Window Logic**: Integrated direct target window state restoration on transition and reset events.
-- **Created INI States & Logging Entries**: Connected direct state writing into `HotWinAHK.ini` across sections `CommandTestState`, `CommandTestLogs`, `KeyboardTestState`, and `KeyboardTestLogs`.
+- **Created INI States & Logging Entries**: Connected direct state writing into [`HotWinAHK.ini`](../HotWinAHK.ini) across sections `CommandTestState`, `CommandTestLogs`, `KeyboardTestState`, and `KeyboardTestLogs`.
 
 ### 🔸 Affected Files
 <a id="a-affectedfiles20260622t123500z"></a>[TOC](#toc-affectedfiles20260622t123500z)
@@ -569,7 +613,7 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260622t122500z"></a>[TOC](#toc-completedchangesinthissession20260622t122500z)
-- **Eliminated `"Custom"` Key Declarations**: Modified the global registry in `HotWinAHK.ahk` to assign high-performance physical combinations to all unassigned commands.
+- **Eliminated `"Custom"` Key Declarations**: Modified the global registry in [`HotWinAHK.ahk`](../HotWinAHK.ahk) to assign high-performance physical combinations to all unassigned commands.
 - **Unified Diagonal Movement Layout**: Assigned Numpad corners 7, 9, 1, and 3 to `MoveToGridTopLeft/TopRight/BottomLeft/BottomRight` default bindings, completing the 8-directional movement grid.
 - **Harmonized Edge Alignments**: Assigned `EdgeTopLeft/TopRight/BottomLeft/BottomRight` to corresponding `Shift + Numpad` layouts, and assigned `JumpGridTopLeft/TopRight/BottomLeft/BottomRight` to `Ctrl + Numpad` combinations, aligning exactly with the INI structure.
 - **Configured Symmetric Sizing & Resizing Diagonals**:
@@ -594,16 +638,16 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 ### 🎯 Primary Goals & Requirements
 <a id="a-primarygoalsrequirements20260622t121500z"></a>[TOC](#toc-primarygoalsrequirements20260622t121500z)
 - **First-Class Symmetrical Bulk Actions**: Program and integrate the missing bulk commands: `RestoreAll`, `RestoreAllMinimized`, and `MaximizeAll` to provide a comprehensive, symmetrical multi-window state orchestration profile.
-- **Four-Sided Symmetrical Sizing/Grid Snaps**: Implement the logically missing four-sided symmetrical commands (`StretchToGridAll`, `PullToGridAll`, `AddAll`, `SubtractAll`, and `StretchAll`) in `HotWinAHK.ahk` to grant users full multi-side bounds sizing control.
+- **Four-Sided Symmetrical Sizing/Grid Snaps**: Implement the logically missing four-sided symmetrical commands (`StretchToGridAll`, `PullToGridAll`, `AddAll`, `SubtractAll`, and `StretchAll`) in [`HotWinAHK.ahk`](../HotWinAHK.ahk) to grant users full multi-side bounds sizing control.
 - **Dynamic Configuration Registry & Descriptions**: Register these commands inside `GetGlobalCommandList` and the dynamic `iniStructure` block so they are automatically compiled on start, hot-reloaded, and documented with human-readable explanations in the help screen.
 
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260622t121500z"></a>[TOC](#toc-completedchangesinthissession20260622t121500z)
-- **Programmed Bulk Commands Dispatch**: Implemented cases for `RestoreAll`, `RestoreAllMinimized`, and `MaximizeAll` in `ExecuteCommandRegistry` within `HotWinAHK.ahk`, enabling bulk window sizing adjustments across all matching, non-stowed desktop windows.
-- **Whitelisted Bulk Meta-Commands**: Added `RestoreAll`, `RestoreAllMinimized`, and `MaximizeAll` to the `IsMetaCommand` validation bypass pattern in `HotWinAHK.ahk`, allowing them to execute cleanly across background processes without getting blocked.
+- **Programmed Bulk Commands Dispatch**: Implemented cases for `RestoreAll`, `RestoreAllMinimized`, and `MaximizeAll` in `ExecuteCommandRegistry` within [`HotWinAHK.ahk`](../HotWinAHK.ahk), enabling bulk window sizing adjustments across all matching, non-stowed desktop windows.
+- **Whitelisted Bulk Meta-Commands**: Added `RestoreAll`, `RestoreAllMinimized`, and `MaximizeAll` to the `IsMetaCommand` validation bypass pattern in [`HotWinAHK.ahk`](../HotWinAHK.ahk), allowing them to execute cleanly across background processes without getting blocked.
 - **Coded Symmetrical Grid Snap Actions**: Implemented the four-sided coordinate snapping and movement calculation blocks inside `switch sCmd` for `"StretchToGridAll"`, `"PullToGridAll"`, `"AddAll"`, and `"SubtractAll"`, adjusting all four border indices simultaneously.
 - **Implemented Symmetrical Monitor Stretch**: Added case labels routing `"StretchAll"` directly into the safe coordinate extension block inside `ExecuteCommandRegistry`.
-- **Updated Global Command Registries**: Registered descriptions, keyboard categories, and default key bindings for the five new size actions and three bulk commands inside `GetGlobalCommandList()` and `iniStructure`, allowing the compiler to auto-generate proper defaults in `HotWinAHK.ini`.
+- **Updated Global Command Registries**: Registered descriptions, keyboard categories, and default key bindings for the five new size actions and three bulk commands inside `GetGlobalCommandList()` and `iniStructure`, allowing the compiler to auto-generate proper defaults in [`HotWinAHK.ini`](../HotWinAHK.ini).
 
 ### 🔸 Affected Files
 <a id="a-affectedfiles20260622t121500z"></a>[TOC](#toc-affectedfiles20260622t121500z)
@@ -626,13 +670,13 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 - **Integrated Custom Scaling on Grow & Trim**: Updated standard window trimming and expanding command sets to cleanly reference the new vertical and horizontal tad values (`g_zy` and `g_zx`).
 - **Eliminated Hotkey Redundancies**: Segregated positioning/nudging (`MoveTad`/`Movepx`) exclusively onto Arrow key combinations. Removed duplicate Alt+Numpad and Alt+Shift+Numpad codes (`keys1`).
 - **Sizing Key Consolidation**: Cleared overlapping Arrow key modifier duplicates (`keys2`) from Numpad-based window scaling operations (`HalfSize`, `DoubleSize`), keeping sizing strictly on the Numpad and freeing Arrow keys for lightweight, high-speed movement.
-- **Synchronized User Config Comments**: Updated `HotWinAHK.ini` file headers and descriptions to properly report the updated precision metrics and key assignments.
+- **Synchronized User Config Comments**: Updated [`HotWinAHK.ini`](../HotWinAHK.ini) file headers and descriptions to properly report the updated precision metrics and key assignments.
 
 ### 🔸 Affected Files
 <a id="a-affectedfiles20260622t114200z"></a>[TOC](#toc-affectedfiles20260622t114200z)
-- `HotWinAHK.ahk`
-- `HotWinAHK.ini`
-- `MANUAL.md`
+- [`HotWinAHK.ahk`](../HotWinAHK.ahk)
+- [`HotWinAHK.ini`](../HotWinAHK.ini)
+- [`MANUAL.md`](MANUAL.md)
 - `AITASKS.md`
 
 ## [2026-06-22T11:29:00Z]
@@ -644,8 +688,8 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260622t112900z"></a>[TOC](#toc-completedchangesinthissession20260622t112900z)
-- **Redesigned Spatial Snapping Mechanics**: Rewrote the inner `switch sCmd` cases of `ExecuteCommandRegistry` inside `HotWinAHK.ahk`. Replaced legacy absolute pixel bounds comparison checks with mathematically rigorous, direction-oriented bounding line checks. The left/top bounds are dynamically stretched outward when they fall behind their corresponding grid references, while the right/bottom bounds are stretched outward when they fall in front. The inward pull cases were aligned symmetrically to retract window edges inward correctly.
-- **Enriched Cursor Tooltips**: Completely refactored `ShowQuickTip` in `HotWinAHK.ahk` to resolve the invoked command names against the data catalog inside `GetGlobalCommandList()`. When matched, the tooltip now formats as a modern, stylized card block presenting the action categories, descriptions, and defaults, with an extended display duration.
+- **Redesigned Spatial Snapping Mechanics**: Rewrote the inner `switch sCmd` cases of `ExecuteCommandRegistry` inside [`HotWinAHK.ahk`](../HotWinAHK.ahk). Replaced legacy absolute pixel bounds comparison checks with mathematically rigorous, direction-oriented bounding line checks. The left/top bounds are dynamically stretched outward when they fall behind their corresponding grid references, while the right/bottom bounds are stretched outward when they fall in front. The inward pull cases were aligned symmetrically to retract window edges inward correctly.
+- **Enriched Cursor Tooltips**: Completely refactored `ShowQuickTip` in [`HotWinAHK.ahk`](../HotWinAHK.ahk) to resolve the invoked command names against the data catalog inside `GetGlobalCommandList()`. When matched, the tooltip now formats as a modern, stylized card block presenting the action categories, descriptions, and defaults, with an extended display duration.
 
 ### 🔸 Affected Files
 <a id="a-affectedfiles20260622t112900z"></a>[TOC](#toc-affectedfiles20260622t112900z)
@@ -660,7 +704,7 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260616t160300z"></a>[TOC](#toc-completedchangesinthissession20260616t160300z)
-- **Enforced Semicolon Isolation**: Refactored `HotWinAHK.ahk` to separate indentation spacing from semicolon comments using clean string concatenation (e.g. `"    " . ";   #region "`). This ensures that the first character of the comment string literal is always the semicolon itself (meaning it is immediately preceded by the source code's double-quote `"`, not a space or tab), preventing the AHK parser from treating it as a live comment.
+- **Enforced Semicolon Isolation**: Refactored [`HotWinAHK.ahk`](../HotWinAHK.ahk) to separate indentation spacing from semicolon comments using clean string concatenation (e.g. `"    " . ";   #region "`). This ensures that the first character of the comment string literal is always the semicolon itself (meaning it is immediately preceded by the source code's double-quote `"`, not a space or tab), preventing the AHK parser from treating it as a live comment.
 - **Removed Chr(59) Workaround**: Shifted back to standard string-based comment syntax which eliminates function call overhead while remaining 100% compliant with both the AutoHotkey interpreter and VS Code's diagnostic linter engine.
 
 ### 🔸 Affected Files
@@ -671,15 +715,15 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 <a id="a-20260616t154600z"></a>[TOC](#toc-20260616t154600z)
 ### 🎯 Primary Goals & Requirements
 <a id="a-primarygoalsrequirements20260616t154600z"></a>[TOC](#toc-primarygoalsrequirements20260616t154600z)
-- **Unified Config Matrix Formatting**: Reorganize `HotWinAHK.ini` to enforce no blank/empty lines across categories, subcategories, settings, or regional boundaries.
+- **Unified Config Matrix Formatting**: Reorganize [`HotWinAHK.ini`](../HotWinAHK.ini) to enforce no blank/empty lines across categories, subcategories, settings, or regional boundaries.
 - **Group Explanations & Descriptions**: Inject expressive category and subcategory comments directly beneath region marks to clearly declare the purpose of each command segment.
 - **Define Custom Default Keybinds**: Sift through all historically unbound commands (containing blank bindings) and assign newly invented, non-conflicting hotkey mappings to ensure they are instantly accessible and functional.
-- **Synchronize Matrix Engine Checks**: Ensure that the automatic `.ini` maintenance script (`EnsureAllCommandsInIni` inside `HotWinAHK.ahk`) perfectly aligns with these design requirements, preventing the accidental generation of blank lines or unhelpful comments, and retaining descriptive layouts safely.
+- **Synchronize Matrix Engine Checks**: Ensure that the automatic `.ini` maintenance script (`EnsureAllCommandsInIni` inside [`HotWinAHK.ahk`](../HotWinAHK.ahk)) perfectly aligns with these design requirements, preventing the accidental generation of blank lines or unhelpful comments, and retaining descriptive layouts safely.
 
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260616t154600z"></a>[TOC](#toc-completedchangesinthissession20260616t154600z)
-- **Updated Matrix Engine**: Refactored `EnsureAllCommandsInIni` inside `HotWinAHK.ahk` to load structured subregion description definitions (`desc`), printing them beneath region tags, fully omitting empty newline loops during assembly, and cleaning custom headers of blank line clusters.
-- **Polished Configurations INI Matrix**: Overwrote `HotWinAHK.ini` to match the exact spacing properties, printing high-contrast, fully detailed region documentation tags with newly invented keybind assignments for Bulk, Focus, EdgeIn, Swap, HalfDouble, and Tuck sub-families.
+- **Updated Matrix Engine**: Refactored `EnsureAllCommandsInIni` inside [`HotWinAHK.ahk`](../HotWinAHK.ahk) to load structured subregion description definitions (`desc`), printing them beneath region tags, fully omitting empty newline loops during assembly, and cleaning custom headers of blank line clusters.
+- **Polished Configurations INI Matrix**: Overwrote [`HotWinAHK.ini`](../HotWinAHK.ini) to match the exact spacing properties, printing high-contrast, fully detailed region documentation tags with newly invented keybind assignments for Bulk, Focus, EdgeIn, Swap, HalfDouble, and Tuck sub-families.
 - **Tracked Completed Objectives**: Documented the formatting milestone under `AITASKS.md`.
 
 ### 🔸 Affected Files
@@ -693,12 +737,12 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 <a id="a-20260616t152500z"></a>[TOC](#toc-20260616t152500z)
 ### 🎯 Primary Goals & Requirements
 <a id="a-primarygoalsrequirements20260616t152500z"></a>[TOC](#toc-primarygoalsrequirements20260616t152500z)
-- **Recursively Structured Region-Based Config Matrix**: Transition the automatic `.ini` matrix compiler tool integrated into `HotWinAHK.ahk` from outputting a flat category table to generating a beautiful recursively nested folding structure utilizing standard IDE regions (e.g. `;   #region Move`, `    ;   #region MoveToGrid`, `; #endregion Move`).
-- **Sync Documentation Across All Markdown Assets**: Sync all descriptive markdown files (`README.md`, `MANUAL.md`, `SPEC.md`, `FEATURES.md`, `TESTING.md`) to reflect advanced feature updates, including customized Desk3D settings, layout Undo/Redo mechanisms, cursor hover-relative window swapping, column-then-row Gridify submenus, and region-based INI structure.
+- **Recursively Structured Region-Based Config Matrix**: Transition the automatic `.ini` matrix compiler tool integrated into [`HotWinAHK.ahk`](../HotWinAHK.ahk) from outputting a flat category table to generating a beautiful recursively nested folding structure utilizing standard IDE regions (e.g. `;   #region Move`, `    ;   #region MoveToGrid`, `; #endregion Move`).
+- **Sync Documentation Across All Markdown Assets**: Sync all descriptive markdown files ([`README.md`](../README.md), [`MANUAL.md`](MANUAL.md), [`SPEC.md`](SPEC.md), [`FEATURES.md`](FEATURES.md), [`TESTING.md`](TESTING.md)) to reflect advanced feature updates, including customized Desk3D settings, layout Undo/Redo mechanisms, cursor hover-relative window swapping, column-then-row Gridify submenus, and region-based INI structure.
 
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260616t152500z"></a>[TOC](#toc-completedchangesinthissession20260616t152500z)
-- **Programmed Folding-Regions Compiler**: Rewrote `UpdateIni()` in `HotWinAHK.ahk` to leverage standard region formatting wrappers. The compiler now accurately routes commands and automatically groups them into standard recursive nesting sections (e.g., `System { Utilities, Clipboard, Engine }`, `Window { Attributes, Tray, Interactive, Bulk }`, `Move { Precision, Align, MoveToGrid, JumpGrid, Interactive }`, etc.).
+- **Programmed Folding-Regions Compiler**: Rewrote `UpdateIni()` in [`HotWinAHK.ahk`](../HotWinAHK.ahk) to leverage standard region formatting wrappers. The compiler now accurately routes commands and automatically groups them into standard recursive nesting sections (e.g., `System { Utilities, Clipboard, Engine }`, `Window { Attributes, Tray, Interactive, Bulk }`, `Move { Precision, Align, MoveToGrid, JumpGrid, Interactive }`, etc.).
 - **Retained Indentations & Preferences**: Ensured that the compiler extracts and re-indents any active settings and values dynamically underneath their corresponding folding blocks, successfully matching missing keys while retaining custom configurations.
 - **Synchronized All System Documentation**: Thoroughly revised all markdown files with accurate technical details, equations, lists, and checklists matching the exact implementation of the updated workspace features.
 
@@ -787,7 +831,7 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 <a id="a-20260616t122600z"></a>[TOC](#toc-20260616t122600z)
 ### 🎯 Primary Goals & Requirements
 <a id="a-primarygoalsrequirements20260616t122600z"></a>[TOC](#toc-primarygoalsrequirements20260616t122600z)
-- **Interactive Settings Command**: Create an interactive, dark-themed configuration dialog (`Settings`) allowing the user to configure 'Silence All' (default: false), 'Silent on Windows Commands' (default: false), and 'Tip Windows Commands' (default: true), persisting configurations instantly to `HotWinAHK.ini`.
+- **Interactive Settings Command**: Create an interactive, dark-themed configuration dialog (`Settings`) allowing the user to configure 'Silence All' (default: false), 'Silent on Windows Commands' (default: false), and 'Tip Windows Commands' (default: true), persisting configurations instantly to [`HotWinAHK.ini`](../HotWinAHK.ini).
 - **Keyboard Shortcut KeyQuery Tracker**: Program a continuous listening command (`KeyQuery`) that presents a 500px dark dialog with resetting timeouts (8s) showing parsed physical key modifiers and looking up active HotWinAHK commands mapped to them, exiting cleanly on the Escape key.
 - **Repair DragWindow Interceptions**: Address the unresponsiveness and "milky white overlay" screen lockouts on drag start by rewriting the hover/Z-order tracking routines to alter opacity *only* on the singular dragged window frame rather than compiling and masking every background window simultaneously.
 
@@ -819,7 +863,7 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 - **Resolved Dark Context Menus**: Refactored `SetProcessDarkMode` to load `uxtheme.dll` explicitly and call undocumented ordinals 135 (`SetPreferredAppMode` with ForceDark option 2) and 136 (`FlushMenuThemes`) to seamlessly darken standard context menus.
 - **Fixed Dimension-Shifting in SafeMove**: Modified `SafeMove()` to query the active container's bounds (`WinGetPos`) when dimensions are omitted (`-1`), preventing the window from reverting to grid defaults during centering, MoveTad, or Movepx operations.
 - **Coded KeyDiagnostics Module**: Programmed the `StartKeyDiagnostics()` feature with high-fidelity GUI countdown elements, custom tactile confirm/warning tones, Escape key-aborts, NumLock-agnostic keypad captures, and automated clipboard aggregation logs. Fixed a compiler local variable warning by replacing `Ceiling` with standard `Ceil`, and fixed a runtime property error by replacing `.Reason` with the standard AHK v2 `.EndReason` attribute of the `InputHook` object.
-- **Synchronized Commands Catalog and Maps**: Registered `KeyDiagnostics` (`Win+Ctrl+Shift+K`) in `commandList`, `ExecuteCommandRegistry()`, compile permits, and categorized configurations in `HotWinAHK.ini` and `MANUAL.md`.
+- **Synchronized Commands Catalog and Maps**: Registered `KeyDiagnostics` (`Win+Ctrl+Shift+K`) in `commandList`, `ExecuteCommandRegistry()`, compile permits, and categorized configurations in [`HotWinAHK.ini`](../HotWinAHK.ini) and [`MANUAL.md`](MANUAL.md).
 
 ### 🔸 Affected Files
 <a id="a-affectedfiles20260616t122000z"></a>[TOC](#toc-affectedfiles20260616t122000z)
@@ -831,7 +875,7 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 
 ### 🔮 Future Suggestions & Next Steps
 <a id="a-futuresuggestionsnextsteps"></a>[TOC](#toc-futuresuggestionsnextsteps)
-- **Sound Feedback Custom Tuning**: Give users options within `HotWinAHK.ini` to adjust major tone frequencies or volume levels.
+- **Sound Feedback Custom Tuning**: Give users options within [`HotWinAHK.ini`](../HotWinAHK.ini) to adjust major tone frequencies or volume levels.
 - **Continuous Focus Logging**: Log precise foreground window handles and classes to a debug file during diagnostics to pinpoint conflicting software.
 
 ## [2026-06-16T12:00:00Z]
@@ -841,7 +885,7 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 - **Process-wide Dark Mode Popup Menus**: Force standard menus, context menus, and taskbar tray configurations to use Windows dark mode globally for a cohesive user interface.
 - **SysMenu Dynamic Closure Fix**: Fix the underlying loop scope/closure bug in the custom `SysMenu` commands list so each menu item correctly executes its respective command when clicked.
 - **Group & Compress Copied Keybindings**: Format copied binding arrays dynamically (e.g., merging `MoveToGridBottomLeft` Numpad key bindings into general `[MoveToGridX] -> NumpadX` patterns, and arrow movements into `[UntuckX] -> Modifier+Arrows`).
-- **Rename Move10px/Move1px to MoveTad/Movepx**: Standardize pixel nudging commands, update sections in `HotWinAHK.ini`, references in `MANUAL.md`, registry entries in `HotWinAHK.ahk`, and Help Screen labels.
+- **Rename Move10px/Move1px to MoveTad/Movepx**: Standardize pixel nudging commands, update sections in [`HotWinAHK.ini`](../HotWinAHK.ini), references in [`MANUAL.md`](MANUAL.md), registry entries in [`HotWinAHK.ahk`](../HotWinAHK.ahk), and Help Screen labels.
 - **Remove Focus Change Beep**: Silence the intrusive focus warning beep within the foreground listener callback window tracker.
 - **Visual/Aural Brand Styling**: Add beautiful major triad arpeggios for script startup, custom ascending sweep tones for administration commands, a tiny physical key click feedback tone, and elegant on-screen cursor tooltips (robot tipping) when windows commands are processed.
 
@@ -853,7 +897,7 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 - **Renamed Shift Commands**: Renamed `MoveLeft10px` etc. to `MoveTadLeft` and `MoveLeft1px` to `MovepxLeft`. Refactored regex parsers inside `ExecuteCommandRegistry()` to match and execute renamed labels flawlessly.
 - **Silenced Focus Changes**: Removed audible beep emissions from `AudibleFocusListenerCallback` for a quieter and cleaner focus switching cycle.
 - **Integrated High-Feedback Aural and Visual Cue Suite**: Designed and integrated `PlayStartupSound()`, `PlayBigCommandSound()`, `PlayToggleSuspensionSound()`, `PlayTinyFeedbackSound()` click-response cue sounds and smart temporary tooltip notifications (tipping) decorated with the program's official Robot (`🤖`) brand identity.
-- **Updated Manual and Configuration Map**: Refactored `HotWinAHK.ini` section headers, reference notes, and the core documentation matrix inside `MANUAL.md`.
+- **Updated Manual and Configuration Map**: Refactored [`HotWinAHK.ini`](../HotWinAHK.ini) section headers, reference notes, and the core documentation matrix inside [`MANUAL.md`](MANUAL.md).
 
 ### 🔸 Affected Files
 <a id="a-affectedfiles20260616t120000z"></a>[TOC](#toc-affectedfiles20260616t120000z)
@@ -865,7 +909,7 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 
 ### 🔮 Future Suggestions & Next Steps
 <a id="a-futuresuggestionsnextsteps-1"></a>[TOC](#toc-futuresuggestionsnextsteps-1)
-- **Customizable Step Sizes**: Expose pixel movement parameters (`g_z` factor) as a configurable key-value setting directly inside `HotWinAHK.ini` instead of hardcoding the dynamic 10px coefficient.
+- **Customizable Step Sizes**: Expose pixel movement parameters (`g_z` factor) as a configurable key-value setting directly inside [`HotWinAHK.ini`](../HotWinAHK.ini) instead of hardcoding the dynamic 10px coefficient.
 - **Animated OSD Option**: Offer users the ability to toggle between compact cursor tipping tooltips and the full screen-centered overlay HUD using an administrative preference.
 
 ## [2026-06-16T11:20:00Z]
@@ -879,11 +923,11 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260616t112000z"></a>[TOC](#toc-completedchangesinthissession20260616t112000z)
-- **Renamed Bindings Commands**: Renamed `BindingsAlpha` and `BindingsLocation` functions to `CopyBindingsAlpha` and `CopyBindingsLocation` in `HotWinAHK.ahk` and standardized all switch routers and key permits.
+- **Renamed Bindings Commands**: Renamed `BindingsAlpha` and `BindingsLocation` functions to `CopyBindingsAlpha` and `CopyBindingsLocation` in [`HotWinAHK.ahk`](../HotWinAHK.ahk) and standardized all switch routers and key permits.
 - **Implemented CopyCommandsAlpha**: Programmed the dynamic `CopyCommandsAlpha` function utilizing native AHK `Sort` after reading current registry items.
 - **Refactored CopyCommands to Categories**: Deleted the massive, fragile hardcoded command array and coded a dynamic iteration sorting commands cleanly by categories.
 - **Implemented SysMenu popup logic**: Built the OOP `SysMenu` function using AutoHotkey's `Menu()` constructor. Appends all registered system commands and their associated hotkeys dynamically and triggers actions in background windows seamlessly.
-- **Synchronized configuration and manuals**: Registered all new/renamed command bindings (`Win+Ctrl+Shift+A`, `Win+Ctrl+Shift+B`, `Win+Ctrl+Shift+L`, and `Win+Ctrl+Shift+S`) inside `HotWinAHK.ini` and documented the additions thoroughly inside `MANUAL.md`.
+- **Synchronized configuration and manuals**: Registered all new/renamed command bindings (`Win+Ctrl+Shift+A`, `Win+Ctrl+Shift+B`, `Win+Ctrl+Shift+L`, and `Win+Ctrl+Shift+S`) inside [`HotWinAHK.ini`](../HotWinAHK.ini) and documented the additions thoroughly inside [`MANUAL.md`](MANUAL.md).
 
 ### 🔸 Affected Files
 <a id="a-affectedfiles20260616t112000z"></a>[TOC](#toc-affectedfiles20260616t112000z)
@@ -906,21 +950,21 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
   - Implement 'TuckPeek' in four dimensions (Left, Right, Top, Bottom) to sequential-peek stowed windows using consecutive hotkey steps, with Escape cancelling the cycle
   - Implement 'EdgeIn' in eight dimensions to align window exactly one grid cell spacing inward from the relative screen border
   - Implement 'DragWindow' mode to draw the active window and overlapping windows translucent, following the mouse smoothly until LButton/Enter is pressed or restoring position on Escape
-  - Put a comprehensive categorized action commands checklist with descriptions in MANUAL.md
+  - Put a comprehensive categorized action commands checklist with descriptions in [MANUAL.md](MANUAL.md)
   - Implement 'CopyCommandsHelp' command and bind to Win+Ctrl+Shift+H to copy categorized action commands with descriptions to clipboard
   - Move untucked window to the top of the Z-order index upon edge bump
   - Implement physical drag resistance (4x perpendicular and 2x parallel damping tension) when pulling nestled windows from stowed bounds
   - Implement hysteresis pop-off release threshold (120px) to restore normal free-floating window states
   - Add dynamic Ctrl-hold Dock-Seeking mechanism with translucent cyan (`00FFCC`) predicted edge indicator band and snap-to-dock binding on release
   - Reverse engineer HotWinAHK window nudging and docking codebase
-  - Complete README.md with detailed script features and description
-  - Complete BUILD.md documenting compilation and asset pipelines
-  - Complete SPEC.md outlining requested specifications and solved technical concerns
-  - Complete MANUAL.md detailing structural architecture and core algorithms
-  - Complete FEATURES.md organizing and detailing individual feature items
-  - Complete TESTING.md outlining detailed testing procedures and interactive checklists
+  - Complete [README.md](../README.md) with detailed script features and description
+  - Complete [BUILD.md](BUILD.md) documenting compilation and asset pipelines
+  - Complete [SPEC.md](SPEC.md) outlining requested specifications and solved technical concerns
+  - Complete [MANUAL.md](MANUAL.md) detailing structural architecture and core algorithms
+  - Complete [FEATURES.md](FEATURES.md) organizing and detailing individual feature items
+  - Complete [TESTING.md](TESTING.md) outlining detailed testing procedures and interactive checklists
   - Rename WindowNudger, WindowHotkeys.ahk, and WindowHotkeys.ini to HotWinAHK/displayName variants, and update all codebase references
-  - Rename helper subprocess script from TrayHelper.ahk to HotWinAHK_tray.ahk and update all reference models
+  - Rename helper subprocess script from TrayHelper.ahk to [HotWinAHK_tray.ahk](../HotWinAHK_tray.ahk) and update all reference models
   - Implement SnapToGridEnlarge/Shrink grid snapping and multi-sided enlargement/shrinkage logic
   - Make app single-instance with auto-replacement of existing instance, silent on parameter-driven restarts, and direct command-line parameter execution on the hovered window's parent ancestor
   - Implement diagonal and corner variants (TopLeft, TopRight, BottomLeft, BottomRight) for MoveToGrid, StretchToGrid, PullToGrid, Grow, Trim, Add, Subtract, Stretch, and JumpGrid commands
@@ -934,14 +978,14 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 <a id="a-20260616t094000z"></a>[TOC](#toc-20260616t094000z)
 ### 🎯 Primary Goals & Requirements
 <a id="a-primarygoalsrequirements20260616t094000z"></a>[TOC](#toc-primarygoalsrequirements20260616t094000z)
-- **Categorized Commands Reference**: Complete the `MANUAL.md` documentation by listing all available action commands sorted by category with detailed explanations.
+- **Categorized Commands Reference**: Complete the [`MANUAL.md`](MANUAL.md) documentation by listing all available action commands sorted by category with detailed explanations.
 - **CopyCommandsHelp Action**: Create a new command `CopyCommandsHelp` (bound to `Win+Ctrl+Shift+H`) which generates and copies a fully categorized list of all commands and their descriptions to the clipboard.
 
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260616t094000z"></a>[TOC](#toc-completedchangesinthissession20260616t094000z)
-- **Updated MANUAL.md**: Injected a comprehensive reference section (`### 📋 Categorized Action Commands Reference`) organizing all commands under system, window, home, focus, tuck, move, and size groups alongside clear functional explanations.
+- **Updated [MANUAL.md](MANUAL.md)**: Injected a comprehensive reference section (`### 📋 Categorized Action Commands Reference`) organizing all commands under system, window, home, focus, tuck, move, and size groups alongside clear functional explanations.
 - **Implemented CopyCommandsHelp**: Built the dynamic `CopyCommandsHelp()` subroutine querying `GetGlobalCommandList()` dynamically to construct a beautifully formatted text summary of all active commands grouped under their corresponding categories.
-- **Registered command and keybinding**: Embedded the new command in the system bypass list and in `ExecuteAction`, and mapped `[CopyCommandsHelp]` in `HotWinAHK.ini` to its default shortcut `Win+Ctrl+Shift+H`.
+- **Registered command and keybinding**: Embedded the new command in the system bypass list and in `ExecuteAction`, and mapped `[CopyCommandsHelp]` in [`HotWinAHK.ini`](../HotWinAHK.ini) to its default shortcut `Win+Ctrl+Shift+H`.
 
 ### 🔸 Affected Files
 <a id="a-affectedfiles20260616t094000z"></a>[TOC](#toc-affectedfiles20260616t094000z)
@@ -1040,14 +1084,14 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 <a id="a-primarygoalsrequirements20260615t171000z"></a>[TOC](#toc-primarygoalsrequirements20260615t171000z)
 - **Overlapped Window Constraint**: Constrain commands sent by the AutoIt window commander (`ahk-window-cmdr.au3`) only to visible first-class overlapped windows underneath the mouse pointer.
 - **Ambient Home Status Dot**: Render visual indicators at `x + 28, y + 12` inside all desktop windows with home configurations saved in `window-hotkeys-homes.ini` (cyan dot when home is registered, green dot when perfectly aligned "at home").
-- **Reference Panel Alignment**: Update the interactive Reference help panel row definitions to align with updated hotkeys inside `HotWinAHK.ini`.
+- **Reference Panel Alignment**: Update the interactive Reference help panel row definitions to align with updated hotkeys inside [`HotWinAHK.ini`](../HotWinAHK.ini).
 
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260615t171000z"></a>[TOC](#toc-completedchangesinthissession20260615t171000z)
 - **Improved AutoIt Script**: Injected rigorous window state and style validation checks (IsWindowVisible, WS_CHILD, WS_POPUP bitmask filtering) to `/ahk-window-cmdr.au3`.
 - **Created Background Status Daemon**: Injected an O(1) memory cached `UpdateHomeIndicators()` ticker running every 250ms to draw cyan and green feedback status dots dynamically inside Windows.
 - **Matched Help Dashboard Row Models**: Rewrote row metadata in AHK's `GetGlobalCommandList` to fully document INI adjustments.
-- **Documented Features & Progress**: Updated `FEATURES.md`, `AITASKS.md`, and other tracking files.
+- **Documented Features & Progress**: Updated [`FEATURES.md`](FEATURES.md), `AITASKS.md`, and other tracking files.
 
 ### 🔸 Affected Files
 <a id="a-affectedfiles20260615t171000z"></a>[TOC](#toc-affectedfiles20260615t171000z)
@@ -1069,8 +1113,8 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260615t163000z"></a>[TOC](#toc-completedchangesinthissession20260615t163000z)
 - **Created AutoIt Launcher Script**: Created `/ahk-window-cmdr.au3` leveraging recursive topmost ancestor discovery and `WM_COPYDATA` messages.
-- **Embedded IPC Listener & Homing Core**: Built `ReceiveCopyData` and `SetWindowHome`/`ClearWindowHome`/`GoWindowHome`/`InteractiveHome`/`ShowHomePeek` functions inside `HotWinAHK.ahk`.
-- **Registered INI Bindings**: Injected default key configurations for new grow commands, `TrimAll`, and target home tracking within `HotWinAHK.ini`.
+- **Embedded IPC Listener & Homing Core**: Built `ReceiveCopyData` and `SetWindowHome`/`ClearWindowHome`/`GoWindowHome`/`InteractiveHome`/`ShowHomePeek` functions inside [`HotWinAHK.ahk`](../HotWinAHK.ahk).
+- **Registered INI Bindings**: Injected default key configurations for new grow commands, `TrimAll`, and target home tracking within [`HotWinAHK.ini`](../HotWinAHK.ini).
 - **Registered Reference Panel row definitions**: Added descriptions in `GetGlobalCommandList` and command strings to `CopyCommands` helper definitions.
 
 ### 🔸 Affected Files
@@ -1112,10 +1156,10 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260615t160000z"></a>[TOC](#toc-completedchangesinthissession20260615t160000z)
-- **INI Configuration Modifications**: Swapped key mappings for dynamic bindings in `HotWinAHK.ini`. Created configuration blocks for `ScaleExpandGridPart` and `ScaleReduceGridPart`.
-- **AutoHotkey Core Static Hooks**: Programmed static mapping dispatches inside `HotWinAHK_aux.ahk` for `Ctrl+NumpadAdd/Sub` and `Alt+NumpadAdd/Sub`.
+- **INI Configuration Modifications**: Swapped key mappings for dynamic bindings in [`HotWinAHK.ini`](../HotWinAHK.ini). Created configuration blocks for `ScaleExpandGridPart` and `ScaleReduceGridPart`.
+- **AutoHotkey Core Static Hooks**: Programmed static mapping dispatches inside [`HotWinAHK_aux.ahk`](../HotWinAHK_aux.ahk) for `Ctrl+NumpadAdd/Sub` and `Alt+NumpadAdd/Sub`.
 - **Symmetrical Half-Grid Tracking Math**: Added standard continuous index trackers (`FindLineX`, `FindRightX`, `FindLineY`, `FindBottomY`) to resolve snap coordinates and step-size boundaries along cell outer walls and cell midpoints.
-- **Polished Monitor Centering**: Refinced `case "Center":` inside `HotWinAHK.ahk` to center windows within the monitor's work area borders.
+- **Polished Monitor Centering**: Refinced `case "Center":` inside [`HotWinAHK.ahk`](../HotWinAHK.ahk) to center windows within the monitor's work area borders.
 - **Unified Command Reference**: Updated help rows and diagnostic array copy targets in `/HotWinAHK.ahk`.
 
 ### 🔸 Affected Files
@@ -1135,7 +1179,7 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260615t144500z"></a>[TOC](#toc-completedchangesinthissession20260615t144500z)
-- **Re-engineered SnapToGridEnlarge**: Re-coded the core case within `ExecuteCommandRegistry` in `HotWinAHK.ahk` to increment `cRight` & `rBottom` while decrementing `cLeft` & `rTop` dynamically when in-grid. Introduced standard mathematical sizing bounds `Max(1, Ceil((W + 6) / pX))` to map off-grid sizes favoring full enlargement.
+- **Re-engineered SnapToGridEnlarge**: Re-coded the core case within `ExecuteCommandRegistry` in [`HotWinAHK.ahk`](../HotWinAHK.ahk) to increment `cRight` & `rBottom` while decrementing `cLeft` & `rTop` dynamically when in-grid. Introduced standard mathematical sizing bounds `Max(1, Ceil((W + 6) / pX))` to map off-grid sizes favoring full enlargement.
 - **Re-engineered SnapToGridShrink**: Programmed standard mathematical sizing bounds `Max(1, Floor((W + 6) / pX))` for off-grid snapping favoring shrinkage. Implemented structured discrete centering logic for 2x2 and larger cells to smoothly shrink on all boundaries without jarring positional shifts.
 - **Checklist synchronization**: Synchronized completed items in `AITASKS.md`.
 
@@ -1156,11 +1200,11 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260610t232500z"></a>[TOC](#toc-completedchangesinthissession20260610t232500z)
-- **Built the Fuzzy Command Palette Console**: Developed `ShowCmdPalette()` inside `HotWinAHK.ahk` equipped with a dynamic input filtering field (`searchBox`), key combo details, and descriptions of each command layout. It integrates an auto-selecting first-match algorithm that updates on every keystroke, allowing quick selection-free navigation.
+- **Built the Fuzzy Command Palette Console**: Developed `ShowCmdPalette()` inside [`HotWinAHK.ahk`](../HotWinAHK.ahk) equipped with a dynamic input filtering field (`searchBox`), key combo details, and descriptions of each command layout. It integrates an auto-selecting first-match algorithm that updates on every keystroke, allowing quick selection-free navigation.
 - **Secured Target Key Event Dispatches**: Formulated focus preservation inside `ExecuteSelected()` within the Command Palette, capturing the active target window foreground identifier before opening, sleeping briefly on palette destruction to let Windows redirect keyboard focus, and subsequently launching the action directly onto the target.
 - **Created Unified Command Registry Retriever**: Refactored static entries into `GetGlobalCommandList()`, returning a structured metadata array of all execute cases (nudge, cycle, margins, grid, administrative) accessible symmetrically by both the Help Matrix screen and the new fuzzy Command Palette.
 - **Resolved Help Dialog Lifespan Exception Block**: Discovered that closed/destroyed Help GUI windows retained non-empty static object references. Subsequent activations threw Win32 interface errors trying to query raw pointers. Implemented try-catch validation blocks inside `ShowHelpScreen()` and `ShowCmdPalette()` that instantly wipe references on destruction, rendering them 100% stable across endless reopens.
-- **Wired Default Hotkeys**: Configured `[CmdPalette]` mapping inside `HotWinAHK.ini` pairing the command with `Win+Ctrl+Shift+C` and declared it as an administrative permit hotkey so it works instantly in any engine state.
+- **Wired Default Hotkeys**: Configured `[CmdPalette]` mapping inside [`HotWinAHK.ini`](../HotWinAHK.ini) pairing the command with `Win+Ctrl+Shift+C` and declared it as an administrative permit hotkey so it works instantly in any engine state.
 
 ### 🔸 Affected Files
 <a id="a-affectedfiles20260610t232500z"></a>[TOC](#toc-affectedfiles20260610t232500z)
@@ -1180,7 +1224,7 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260610t231700z"></a>[TOC](#toc-completedchangesinthissession20260610t231700z)
-- **Integrated Peek Tucked and Untuck Modules**: Programmed `Menu_PeekTucked()` and `Menu_Untuck()` inside `HotWinAHK.ahk` along with dedicated action routing cases and `.ini` binding templates (`Win+Ctrl+Shift+P`, `Win+Ctrl+Shift+U`). The menus dynamically fetch titles and sides of currently stowed windows, delivering seamless instant peeking or clean restoration positioning on selection.
+- **Integrated Peek Tucked and Untuck Modules**: Programmed `Menu_PeekTucked()` and `Menu_Untuck()` inside [`HotWinAHK.ahk`](../HotWinAHK.ahk) along with dedicated action routing cases and `.ini` binding templates (`Win+Ctrl+Shift+P`, `Win+Ctrl+Shift+U`). The menus dynamically fetch titles and sides of currently stowed windows, delivering seamless instant peeking or clean restoration positioning on selection.
 - **Formulated Active Window Dot Indicator**: Constructed `UpdateActiveWindowDot()` running on a reactive 100ms background thread, which paints a click-through, always-on-top status dot at the active window's top-left corner (color-coded `#00FF55` for active, `#EEDC00` for suspended) with automated blacklists for system layers.
 - **Redesigned Stowed Window Pulling Hysteresis**: Re-engineered dragging physics inside `HandleTuckedDrag()` to move 1:1 under 120px pull-distance, adding an interactive ASCII progress bar tooltip (`"Pull to Free: X% [███░░░]"`) showing the exact detachment progress, with an auditory confirmation beep upon release.
 - **Proactive Boundary Predicted Snapping**: Programmed dynamic docking indicator bounds highlight overlays (`dockIndicatorGui`) which render automatically when dragging a popped-off window within 80px of any monitor margin, enabling intuitive mouse snaps on click release.
@@ -1208,7 +1252,7 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 - **Keyboard Hook Prefix Forced Registration**: Upgraded the compiler function `CompileIniToStaticHotkeys()` to output the AutoHotkey precise keyboard hook prefix (`$`) to all generated hotkeys. This bypasses the buggy modifier-sensitive Windows `RegisterHotkey` API, guaranteeing standard number-row keys 2 and 4 are never misidentified or intercepted as Numpad inputs.
 - **Aggressive Process and Hook Cleanup on Startup**: Added an active process and hook cleanup routine at script startup (`_startups`) that terminates any previous zombie/dangling instances of our script or subprocesses, instantly releasing any unreleased keyboard hook allocations.
 - **Clean OS Hooks release on Shutdown**: Upgraded `ShutdownEngine()` to target and release the active focus event hooks `g_DiagnosticFocusHook` and `g_OsFocusHookHandle` via `UnhookWinEvent` DLL calls.
-- **Dangling Tray helper cleanup**: Enhanced `ShutdownEngine()` to query, target, and cleanly close running child tray processes (`HotWinAHK_tray.ahk`) using a `DetectHiddenWindows(true)` loop prior to exit, releasing their keyboard resource allocations.
+- **Dangling Tray helper cleanup**: Enhanced `ShutdownEngine()` to query, target, and cleanly close running child tray processes ([`HotWinAHK_tray.ahk`](../HotWinAHK_tray.ahk)) using a `DetectHiddenWindows(true)` loop prior to exit, releasing their keyboard resource allocations.
 - **Physical Input release on Suspension**: Rewrote `ToggleSuspension()` to natively interface with the built-in AutoHotkey `Suspend` API toggler. This releases keyboard hooks and allows the unmodified keystrokes to pass directly and naturally to the foreground application.
 - **Administrative Exemption Compiler**: Patched `CompileIniToStaticHotkeys()` to output the `Suspend("Permit")` directive for administrative and meta-hotkeys (`ToggleSuspension`, `ExitProgram`, `RestartProgram`, `ReloadConfig`, `EditConfig`, `HelpScreen`, `WinInfo`, etc.), guaranteeing they can be used even while hotkeys are globally suspended.
 - **Suspension Edge Checks Bypassing**: Injected a `g_bSuspended` check inside the continuous cursor edge bump monitoring callback `CheckScreenEdgeBumps()` to instantly disable edge docking behaviors when suspended.
@@ -1232,10 +1276,10 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260610t214400z"></a>[TOC](#toc-completedchangesinthissession20260610t214400z)
 - **Atomic GUI Instantiation & Transparency Safeguards**: Fixed the `WinSetTransparent` failure inside `HandleTuckedDrag()` by invoking `dockIndicatorGui.Show("Hide")` to fully register the window handle with the OS shell before applying alpha adjustments. Wrapped this routine inside a robust `try...catch` block to guarantee unhandled exceptions can never crash the script loop.
-- **Immediate State Locking & Polling Suspensions**: Upgraded `HandleTuckedDrag()` inside `HotWinAHK.ahk` to immediately acquire `g_IsUntuckLocked := true` and unregister `TrackUntuckedFocusLifecycle` on initial key down. This guarantees no focus/hover calculations can interfere with active layout transactions.
+- **Immediate State Locking & Polling Suspensions**: Upgraded `HandleTuckedDrag()` inside [`HotWinAHK.ahk`](../HotWinAHK.ahk) to immediately acquire `g_IsUntuckLocked := true` and unregister `TrackUntuckedFocusLifecycle` on initial key down. This guarantees no focus/hover calculations can interfere with active layout transactions.
 - **Robust containment safeguards**: Added `g_TuckedWindows.Has(g_ActiveUntuckedHwnd)` guards at key threshold check boundaries to cleanly handle late timer triggers or vanished targets without throwing property-of-undefined runtime fatal exceptions.
 - **Graceful Restoration lanes**: Mapped state-restoration execution blocks across all exits (normal pass-through clicks, successful pop-off releases, repositioning, and aborted maneuvers) to atomically release the locks and re-register standard polling timers smoothly.
-- **Documentation**: Updated `MANUAL.md` to reflect the multi-threaded synchronization architecture and deadlock prevention scheme.
+- **Documentation**: Updated [`MANUAL.md`](MANUAL.md) to reflect the multi-threaded synchronization architecture and deadlock prevention scheme.
 
 ### 🔸 Affected Files
 <a id="a-affectedfiles20260610t214400z"></a>[TOC](#toc-affectedfiles20260610t214400z)
@@ -1253,7 +1297,7 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260610t212200z"></a>[TOC](#toc-completedchangesinthissession20260610t212200z)
-- **Global Naming Synchronization**: Replaced legacy "CherryPucker" identifiers with unified `HotWinAHK` references in `TESTING.md`, `BUILD.md`, `MANUAL.md`, and `FEATURES.md`.
+- **Global Naming Synchronization**: Replaced legacy "CherryPucker" identifiers with unified `HotWinAHK` references in [`TESTING.md`](TESTING.md), [`BUILD.md`](BUILD.md), [`MANUAL.md`](MANUAL.md), and [`FEATURES.md`](FEATURES.md).
 - **Validation**: Performed full codebase pattern searches to guarantee total naming alignment.
 
 ### 🔸 Affected Files
@@ -1282,7 +1326,7 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
   - Interactive Dock-Seeking Mode (triggered by holding `Ctrl` while dragging) that renders a translucent cyan `00FFCC` highlight band predicting the target monitor margin and binds the window to that edge upon click release.
 - **Robust Momentary Z-Order Pinning**: Integrated a momentary `WinSetAlwaysOnTop(1)` then `WinSetAlwaysOnTop(0)` toggle in both `"BumpEdgeUntuck"` and `"BumpEdgeUntuckActivate"` to seize Z-order ranking and place revealed windows on top without giving them operational window focus, preventing other applications from occlusion.
 - **Copy Keybindings & Commands Clipboard Assistants**: Built `CopyCommands()` and `CopyBindings()` routines that dynamically fetch parsed ini variables and command registries, format lists into clean, readable text schemas, save them to the system clipboard `A_Clipboard`, and display confirmation tooltips.
-- **HotWinAHK.ini & HotWinAHK.ahk**: Standardized shortcut mappings `CopyCommands` (`Win+Ctrl+C`) and `CopyBindings` (`Win+Alt+C`) as custom meta-events in the global event routing matrix.
+- **[HotWinAHK.ini](../HotWinAHK.ini) & [HotWinAHK.ahk](../HotWinAHK.ahk)**: Standardized shortcut mappings `CopyCommands` (`Win+Ctrl+C`) and `CopyBindings` (`Win+Alt+C`) as custom meta-events in the global event routing matrix.
 
 ### 🔸 Affected Files
 <a id="a-affectedfiles20260607t203000z"></a>[TOC](#toc-affectedfiles20260607t203000z)
@@ -1307,10 +1351,10 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 - **Implement physical drag resistance (4x perpendicular and 2x parallel damping tension) when pulling nestled windows from stowed bounds**: Added non-linear mouse cursor tracking limits to pull sturdy nestled bounds with custom mechanical movement dampening.
 - **Implement hysteresis pop-off release threshold (120px) to restore normal free-floating window states**: Successfully unlocked windows from stowing parameters permanently when pulled past 120 absolute pixels away from their docking edge.
 - **Add dynamic Ctrl-hold Dock-Seeking mechanism with translucent cyan (`00FFCC`) predicted edge indicator band and snap-to-dock binding on release**: Handled floating overlay panels representing docking zones on active screen borders that trigger instant snap re-dock upon click release.
-- **HotWinAHK.ahk**: Declared `g_PeekX` and `g_PeekY` global variables. Refined `"BumpEdgeUntuck"` and `"BumpEdgeUntuckActivate"` to pull windows to the front using `WinMoveTop` without stealing foreground focus, and cached coordinates. Embedded a robust left-click drag tracking routine into `TrackUntuckedFocusLifecycle` that acts as a physical controller: limits movement with 4x perpendicular and 2x parallel drag dampening filters, executes Pop-off when a 120px travel trigger is exceeded, and activates a stunning translucent click-through cyan overlay band predicting screen margins when holding `Ctrl`, relocating and docking the window on release.
-- **FEATURES.md**: Documented the addition, behaviors, and hotkeys of the new drag, physical resistance, and Ctrl-hold adaptive docking features.
-- **MANUAL.md**: Added the physical equations, displacement resistance multipliers ($\Delta X \times 0.25$), pop-off limits, and overlay predicted docking coordinates.
-- **SPEC.md**: Indexed the specifications of the HWND_TOP index upgrades, drag hysteresis curbs, and predictive cyan highlight panels.
+- **[HotWinAHK.ahk](../HotWinAHK.ahk)**: Declared `g_PeekX` and `g_PeekY` global variables. Refined `"BumpEdgeUntuck"` and `"BumpEdgeUntuckActivate"` to pull windows to the front using `WinMoveTop` without stealing foreground focus, and cached coordinates. Embedded a robust left-click drag tracking routine into `TrackUntuckedFocusLifecycle` that acts as a physical controller: limits movement with 4x perpendicular and 2x parallel drag dampening filters, executes Pop-off when a 120px travel trigger is exceeded, and activates a stunning translucent click-through cyan overlay band predicting screen margins when holding `Ctrl`, relocating and docking the window on release.
+- **[FEATURES.md](FEATURES.md)**: Documented the addition, behaviors, and hotkeys of the new drag, physical resistance, and Ctrl-hold adaptive docking features.
+- **[MANUAL.md](MANUAL.md)**: Added the physical equations, displacement resistance multipliers ($\Delta X \times 0.25$), pop-off limits, and overlay predicted docking coordinates.
+- **[SPEC.md](SPEC.md)**: Indexed the specifications of the HWND_TOP index upgrades, drag hysteresis curbs, and predictive cyan highlight panels.
 - **AITASKS.md**: Verified and ticked off stowed window drag tasks as fully complete.
 
 ### 🔸 Affected Files
@@ -1332,10 +1376,10 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260607t193200z"></a>[TOC](#toc-completedchangesinthissession20260607t193200z)
-- **HotWinAHK.ahk**: Formally pre-declared `Global g_UntuckGraceTicks := 0` in the global variable registry header. Refactored references inside the `BumpEdgeUntuck` and `BumpEdgeUntuckActivate` handlers to initialize the grace countdown successfully. Stripped out illegal inline `global` redeclarations inside assignment blocks which were causing AutoHotkey runtime exception faults. Enhanced the graphical help layout with a clean 3-column color-coded matrix representing Numpad, Arrow, and Mouse matrices.
-- **FEATURES.md**: Documented the addition and implementation details of the new interactive reference panel under the configuration matrix group.
-- **MANUAL.md**: Added structural information detailing the hardened dual-anchor protection algorithm, recursive `GetAncestor` controller checks, and the `g_UntuckGraceTicks` countdown period logic.
-- **SPEC.md**: Updated structural spec sheets to list the unified dual-anchor physical cursor/keyboard focus logic alongside the grace latch thresholds.
+- **[HotWinAHK.ahk](../HotWinAHK.ahk)**: Formally pre-declared `Global g_UntuckGraceTicks := 0` in the global variable registry header. Refactored references inside the `BumpEdgeUntuck` and `BumpEdgeUntuckActivate` handlers to initialize the grace countdown successfully. Stripped out illegal inline `global` redeclarations inside assignment blocks which were causing AutoHotkey runtime exception faults. Enhanced the graphical help layout with a clean 3-column color-coded matrix representing Numpad, Arrow, and Mouse matrices.
+- **[FEATURES.md](FEATURES.md)**: Documented the addition and implementation details of the new interactive reference panel under the configuration matrix group.
+- **[MANUAL.md](MANUAL.md)**: Added structural information detailing the hardened dual-anchor protection algorithm, recursive `GetAncestor` controller checks, and the `g_UntuckGraceTicks` countdown period logic.
+- **[SPEC.md](SPEC.md)**: Updated structural spec sheets to list the unified dual-anchor physical cursor/keyboard focus logic alongside the grace latch thresholds.
 - **AITASKS.md**: Checked off completed task line-items related to bumper re-arming bugs, unticking coordination shifts, and reference help display refinements.
 - **AILOG.md**: Added this development log entry describing the scoping crash fix and the list of affected files.
 
@@ -1358,7 +1402,7 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260607t190100z"></a>[TOC](#toc-completedchangesinthissession20260607t190100z)
-- **HotWinAHK.ahk**: Implemented the Object-Oriented `ShowHelpScreen()` function. Created a lightweight, modern dark-themed GUI (`#121214`) using built-in high-performance AHK v2 GUI objects. Added a text field to filter table results instantly with non-blocking key triggers.
+- **[HotWinAHK.ahk](../HotWinAHK.ahk)**: Implemented the Object-Oriented `ShowHelpScreen()` function. Created a lightweight, modern dark-themed GUI (`#121214`) using built-in high-performance AHK v2 GUI objects. Added a text field to filter table results instantly with non-blocking key triggers.
 - **AITASKS.md & AILOG.md**: Documented completed status and resolved compile warnings.
 
 ### 🔸 Affected Files
@@ -1376,10 +1420,10 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260607t184100z"></a>[TOC](#toc-completedchangesinthissession20260607t184100z)
-- **File Renames**: Renamed `HotWinAHk.ahk`, `HotWinAHk_aux.ahk`, `HotWinAHk.ini`, and `HotWinAHk_tray.ahk` to `HotWinAHK.ahk`, `HotWinAHK_aux.ahk`, `HotWinAHK.ini`, and `HotWinAHK_tray.ahk` respectively.
-- **HotWinAHK.ahk**: Adjusted internal global variables `g_sIniFile`, `g_sGeneratedFile`, and log paths, updated `#Include "HotWinAHK_aux.ahk"`, and standardized child shell invokes pointing to `HotWinAHK_tray.ahk`.
-- **metadata.json & package.json**: Updated application identifier configurations and `displayName` values to reflect `HotWinAHK`.
-- **Markdown Documentation**: Performed search-and-replace alignments inside `README.md`, `BUILD.md`, `MANUAL.md`, `SPEC.md`, `FEATURES.md`, `TESTING.md`, and `AITASKS.md`.
+- **File Renames**: Renamed `HotWinAHk.ahk`, `HotWinAHk_aux.ahk`, `HotWinAHk.ini`, and `HotWinAHk_tray.ahk` to [`HotWinAHK.ahk`](../HotWinAHK.ahk), [`HotWinAHK_aux.ahk`](../HotWinAHK_aux.ahk), [`HotWinAHK.ini`](../HotWinAHK.ini), and [`HotWinAHK_tray.ahk`](../HotWinAHK_tray.ahk) respectively.
+- **[HotWinAHK.ahk](../HotWinAHK.ahk)**: Adjusted internal global variables `g_sIniFile`, `g_sGeneratedFile`, and log paths, updated `#Include "[HotWinAHK_aux.ahk](../HotWinAHK_aux.ahk)"`, and standardized child shell invokes pointing to [`HotWinAHK_tray.ahk`](../HotWinAHK_tray.ahk).
+- **metadata.json & [package.json](../package.json)**: Updated application identifier configurations and `displayName` values to reflect `HotWinAHK`.
+- **Markdown Documentation**: Performed search-and-replace alignments inside [`README.md`](../README.md), [`BUILD.md`](BUILD.md), [`MANUAL.md`](MANUAL.md), [`SPEC.md`](SPEC.md), [`FEATURES.md`](FEATURES.md), [`TESTING.md`](TESTING.md), and `AITASKS.md`.
 
 ### 🔸 Affected Files
 <a id="a-affectedfiles20260607t184100z"></a>[TOC](#toc-affectedfiles20260607t184100z)
@@ -1402,15 +1446,15 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 <a id="a-20260607t183800z"></a>[TOC](#toc-20260607t183800z)
 ### 🎯 Primary Goals & Requirements
 <a id="a-primarygoalsrequirements20260607t183800z"></a>[TOC](#toc-primarygoalsrequirements20260607t183800z)
-- Rename system tray delegation subprocess script to `HotWinAHK_tray.ahk` to fully align with the application `displayName` prefixing.
+- Rename system tray delegation subprocess script to [`HotWinAHK_tray.ahk`](../HotWinAHK_tray.ahk) to fully align with the application `displayName` prefixing.
 - Synchronize all caller invocations inside the core orchestrator script.
 - Update structural diagrams, component listings, and manual instructions across features descriptions, specs, and builds.
 
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260607t183800z"></a>[TOC](#toc-completedchangesinthissession20260607t183800z)
-- **HotWinAHK_tray.ahk**: Formatted and renamed from `TrayHelper.ahk`.
-- **HotWinAHK.ahk**: Re-mapped all dynamic launcher invocations (e.g. `ComObject("Shell.Application").ShellExecute(...)`) and path trackers to target `HotWinAHK_tray.ahk`.
-- **BUILD.md, FEATURES.md, SPEC.md, MANUAL.md, TESTING.md, AITASKS.md**: Updated reference documentation, build steps, executable compiler outputs, components breakdowns, and test instructions.
+- **[HotWinAHK_tray.ahk](../HotWinAHK_tray.ahk)**: Formatted and renamed from `TrayHelper.ahk`.
+- **[HotWinAHK.ahk](../HotWinAHK.ahk)**: Re-mapped all dynamic launcher invocations (e.g. `ComObject("Shell.Application").ShellExecute(...)`) and path trackers to target [`HotWinAHK_tray.ahk`](../HotWinAHK_tray.ahk).
+- **[BUILD.md](BUILD.md), [FEATURES.md](FEATURES.md), [SPEC.md](SPEC.md), [MANUAL.md](MANUAL.md), [TESTING.md](TESTING.md), AITASKS.md**: Updated reference documentation, build steps, executable compiler outputs, components breakdowns, and test instructions.
 
 ### 🔸 Affected Files
 <a id="a-affectedfiles20260607t183800z"></a>[TOC](#toc-affectedfiles20260607t183800z)
@@ -1434,11 +1478,11 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260607t183600z"></a>[TOC](#toc-completedchangesinthissession20260607t183600z)
-- **HotWinAHK.ahk**: Refactored from `WindowNudger.ahk`. Updated global configuration path references to use `HotWinAHK.ini` and `HotWinAHK_aux.ahk`, synchronized include directives, and updated the log writing references to `HotWinAHK.log`.
-- **HotWinAHK_aux.ahk**: Refactored and renamed from `WindowHotkeys.ahk`.
-- **HotWinAHK.ini**: Refactored and renamed from `WindowHotkeys.ini`.
+- **[HotWinAHK.ahk](../HotWinAHK.ahk)**: Refactored from `WindowNudger.ahk`. Updated global configuration path references to use [`HotWinAHK.ini`](../HotWinAHK.ini) and [`HotWinAHK_aux.ahk`](../HotWinAHK_aux.ahk), synchronized include directives, and updated the log writing references to `HotWinAHK.log`.
+- **[HotWinAHK_aux.ahk](../HotWinAHK_aux.ahk)**: Refactored and renamed from `WindowHotkeys.ahk`.
+- **[HotWinAHK.ini](../HotWinAHK.ini)**: Refactored and renamed from `WindowHotkeys.ini`.
 - **metadata.json**: Aligned application name with `displayName` parameter as `HotWinAHK`.
-- **BUILD.md, MANUAL.md, FEATURES.md, SPEC.md, README.md, TESTING.md**: Re-mapped all references and documentation files carefully.
+- **[BUILD.md](BUILD.md), [MANUAL.md](MANUAL.md), [FEATURES.md](FEATURES.md), [SPEC.md](SPEC.md), [README.md](../README.md), [TESTING.md](TESTING.md)**: Re-mapped all references and documentation files carefully.
 - **AITASKS.md**: Documented completed status of the renaming task.
 
 ### 🔸 Affected Files
@@ -1484,12 +1528,12 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 
 ### 🛠️ Completed Changes in this Session
 <a id="a-completedchangesinthissession20260607t175800z"></a>[TOC](#toc-completedchangesinthissession20260607t175800z)
-- **README.md**: Defined core pitch of the tool, adding primary features.
-- **BUILD.md**: Outlined the dynamic compilation stream and execution/packaging guides via Ahk2Exe.
-- **SPEC.md**: Parsed original user expectations alongside advanced optimization work (hooks, direct DLL calls, log cache queue, TrayHelper subprocess execution, invalid key correction layers).
-- **MANUAL.md**: Formulated Euclidean velocity bump math, quadratic eased moving transitions, frame rounding alignment cells mapping, event focus monitoring, and filters.
-- **FEATURES.md**: Aggregated individual actions and categories including snap layouts, fine-nudging, grid tiles, boundary marginal docks, and custom system context tray menus.
-- **TESTING.md**: Developed exhaustive step-by-step diagnostic verification checklists targeting real elevation, core logs, zappings, nudgings, opacities, grids, and edge bump untucks.
+- **[README.md](../README.md)**: Defined core pitch of the tool, adding primary features.
+- **[BUILD.md](BUILD.md)**: Outlined the dynamic compilation stream and execution/packaging guides via Ahk2Exe.
+- **[SPEC.md](SPEC.md)**: Parsed original user expectations alongside advanced optimization work (hooks, direct DLL calls, log cache queue, TrayHelper subprocess execution, invalid key correction layers).
+- **[MANUAL.md](MANUAL.md)**: Formulated Euclidean velocity bump math, quadratic eased moving transitions, frame rounding alignment cells mapping, event focus monitoring, and filters.
+- **[FEATURES.md](FEATURES.md)**: Aggregated individual actions and categories including snap layouts, fine-nudging, grid tiles, boundary marginal docks, and custom system context tray menus.
+- **[TESTING.md](TESTING.md)**: Developed exhaustive step-by-step diagnostic verification checklists targeting real elevation, core logs, zappings, nudgings, opacities, grids, and edge bump untucks.
 - **AITASKS.md**: Completed in-depth checklist task markers.
 
 ### 🔸 Affected Files
@@ -1517,7 +1561,7 @@ docs(aimd): thoroughly analyze AHK codebase and update markdown documentation su
 - **Consequences:** {{What are the trade-offs? What downstream constraints does this apply to your future code generation?}}
 
 ---
-## ������ Go to...
+## 🚀 Go to...
 <a id="a-goto"></a>[TOC](#toc-goto)
 - 🔹 [AGENTS.md](../AGENTS.md)
 - 🔹 [ARCHIVE.md](ARCHIVE.md)

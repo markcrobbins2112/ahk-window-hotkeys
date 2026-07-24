@@ -63,17 +63,15 @@ free to add/remove/modify these sections
   - [🔧 5. Workspace Build & Configuration](#a-5workspacebuildconfiguration) <a id="toc-5workspacebuildconfiguration"></a> ^toc-5workspacebuildconfiguration
   - [🔍 Diagnostics & Common Troubleshooting](#a-diagnosticscommontroubleshooting) <a id="toc-diagnosticscommontroubleshooting"></a> ^toc-diagnosticscommontroubleshooting
     - [Known Failure States & Remediations](#a-knownfailurestatesremediations) <a id="toc-knownfailurestatesremediations"></a> ^toc-knownfailurestatesremediations
-      - [🚨 Symptom: "The environment variable '{{CORE_ROOT}}' is not defined."](#a-symptomtheenvironmentvariablecorerootisnotdefined) <a id="toc-symptomtheenvironmentvariablecorerootisnotdefined"></a> ^toc-symptomtheenvironmentvariablecorerootisnotdefined
-      - [🚨 Symptom: Changes apply to files, but the visual interface does not update.](#a-symptomchangesapplytofilesbutthevisualinterfacedoesnotupdate) <a id="toc-symptomchangesapplytofilesbutthevisualinterfacedoesnotupdate"></a> ^toc-symptomchangesapplytofilesbutthevisualinterfacedoesnotupdate
+      - [🚨 Symptom: "HotWinAHK requiring Administrative Privileges"](#a-symptomhotwinahkrequiringadministrativeprivileges) <a id="toc-symptomhotwinahkrequiringadministrativeprivileges"></a> ^toc-symptomhotwinahkrequiringadministrativeprivileges
+      - [🚨 Symptom: Changes apply to [HotWinAHK.ini](../HotWinAHK.ini), but hotkeys do not update.](#a-symptomchangesapplytohotwinahkinihotwinahkinibuthotkeysdonotupdate) <a id="toc-symptomchangesapplytohotwinahkinihotwinahkinibuthotkeysdonotupdate"></a> ^toc-symptomchangesapplytohotwinahkinihotwinahkinibuthotkeysdonotupdate
   - [🚀 Go to...](#a-goto) <a id="toc-goto"></a> ^toc-goto
 ---
----
-
 ## 📥 Installation & Initial Deployment
 <a id="a-installationinitialdeployment"></a>[TOC](#toc-installationinitialdeployment)
 ### Setup Sequence
 <a id="a-setupsequence"></a>[TOC](#toc-setupsequence)
-- 1. **Compile/Build Assets:** Run the compile script or build pipeline as documented in `BUILD.md`.
+- 1. **Compile/Build Assets:** Run the compile script or build pipeline as documented in [`BUILD.md`](BUILD.md).
 - 2. **Apply Configurations:** Run administrative scripts or system configurations required for the base application environment.
 - 3. **Register Components:** Execute target registry configurations or system file bindings to link the software with the host operating system.
 
@@ -84,9 +82,9 @@ free to add/remove/modify these sections
   Include raw ASCII boxes or diagrams to make the architecture immediately obvious.
 -->
 HotWinAHK operates as a low-overhead orchestrator for the Windows desktop environment using an event-driven and polling-hybrid design:
-- **Central Core (`HotWinAHK.ahk`)**: Running with administrator authorization, this module loads global configuration matrices, locks the script's physical handle string sequence, initiates WinEvent hooks, and fires polling ticks for mouse collisions.
-- **Dynamic Key Listener Mappings (`HotWinAHK_aux.ahk`)**: Compiled on-the-fly, this file registers relative hotkey combos with the Windows kernel, routing them to action selectors based on state filters.
-- **Isolator Subprocesses (`HotWinAHK_tray.ahk`)**: Minimizes background locking by spawning lightweight individual handlers whenever windows are stowed away into custom system trays.
+- **Central Core ([`HotWinAHK.ahk`](../HotWinAHK.ahk))**: Running with administrator authorization, this module loads global configuration matrices, locks the script's physical handle string sequence, initiates WinEvent hooks, and fires polling ticks for mouse collisions.
+- **Dynamic Key Listener Mappings ([`HotWinAHK_aux.ahk`](../HotWinAHK_aux.ahk))**: Compiled on-the-fly, this file registers relative hotkey combos with the Windows kernel, routing them to action selectors based on state filters.
+- **Isolator Subprocesses ([`HotWinAHK_tray.ahk`](../HotWinAHK_tray.ahk))**: Minimizes background locking by spawning lightweight individual handlers whenever windows are stowed away into custom system trays.
 
 ---
 
@@ -131,7 +129,7 @@ The application's crown jewel is its mathematical screen-edge docking and mouse-
 - **Durable State History (Undo/Redo)**: Records window positions, sizes, min/max status, titles, processes, and timestamp markers to file sections inside `HotWinAHK_history.ini` per application before `SafeMove()` layout updates run. Facilitates instant layout Undo/Redo commands traversing the undo stack, or selective target restorations of up to 20 past configurations per process via a pop-up context-picker.
 - **Active Window Swapping Mechanics**: Performs physical interchange swaps (`Swap`, `SwapSize`, `SwapPosition`) of position and/or size dimensions of the active foreground window container with whichever window frame rests directly below the mouse cursor by utilizing low-level DLL/Win32 APIs. Engages a continuous cursor tracking state machine for hands-free pick-swapping (`SwapPick`, `SwapPickSize`, `SwapPickPosition`) where a user clicks any window to trigger the swap.
 - **Columns-Then-Rows Gridify Nesting Menus**: Launches nested AHK-native Popup Menus displaying a grid matrix up to 9x9. Slices the active monitor dimensions symmetrically, centering, wrapping, and aligning the active window exactly into selected column and row slots.
-- **Recursive Nested Region-Based INI Compiler**: Upgrades the automatic `.ini` matrix compilation engine to format `HotWinAHK.ini` recursively inside folding blocks of regions using standard IDE syntax (`;   #region <Category>`, `; #endregion <Category>`). It extracts active settings from the old matrix, creates backup points, translates keyboard modifier chains, and writes default templates for missing keys without corrupting custom user-configured keybindings.
+- **Recursive Nested Region-Based INI Compiler**: Upgrades the automatic `.ini` matrix compilation engine to format [`HotWinAHK.ini`](../HotWinAHK.ini) recursively inside folding blocks of regions using standard IDE syntax (`;   #region <Category>`, `; #endregion <Category>`). It extracts active settings from the old matrix, creates backup points, translates keyboard modifier chains, and writes default templates for missing keys without corrupting custom user-configured keybindings.
 
 ## 🛰️ 4. Commands, Keybindings & Context Flags
 <a id="a-4commandskeybindingscontextflags"></a>[TOC](#toc-4commandskeybindingscontextflags)
@@ -162,8 +160,8 @@ Every action from simple moves to grid mapping is indexed inside the INI command
 - **KeyQuery**: Display an interactive dark dialog with a timer to capture raw keyboard strokes and identify active command bindings in real-time until ESC is pressed.
 - **Settings**: Open a GUI configurations dialog allowing user customization of toggle settings: Silence All sounds (default: false), Silent on Window Commands (default: false), and Tip Windows Commands (default: true).
 - **ToggleSuspension**: Suspend or resume all HotWinAHK modifier triggers and mouse gestures instantly.
-- **ReloadConfig**: Hot-reload preferences from HotWinAHK.ini and compile hotkeys dynamically.
-- **EditConfig**: Open HotWinAHK.ini configurations in system default text editor.
+- **ReloadConfig**: Hot-reload preferences from [HotWinAHK.ini](../HotWinAHK.ini) and compile hotkeys dynamically.
+- **EditConfig**: Open [HotWinAHK.ini](../HotWinAHK.ini) configurations in system default text editor.
 - **ExitProgram**: Safely close physical hooks and terminate the HotWinAHK background process.
 - **RestartProgram**: Instantly reload configuration parameters and reboot the active execution engine.
 - **Active Window Dot**: Draws a persistent telemetry status dot at the active window's top-left margin of the target layout.
@@ -261,9 +259,9 @@ Every action from simple moves to grid mapping is indexed inside the INI command
 
 ## 🔧 5. Workspace Build & Configuration
 <a id="a-5workspacebuildconfiguration"></a>[TOC](#toc-5workspacebuildconfiguration)
-- **Script Customization**: Changes to standard profiles are added to the `HotWinAHK.ini` table.
+- **Script Customization**: Changes to standard profiles are added to the [`HotWinAHK.ini`](../HotWinAHK.ini) table.
 - **On-The-Fly Compilation**: Hotkeys automatically re-compile and reboot on save or whenever `ReloadConfig` triggers.
-- **Distribution Compile Step**: Source directories can be bundled into standard Windows binaries using compiler commands (`Ahk2Exe.exe /in HotWinAHK.ahk /out HotWinAHK.exe`).
+- **Distribution Compile Step**: Source directories can be bundled into standard Windows binaries using compiler commands (`Ahk2Exe.exe /in [HotWinAHK.ahk](../HotWinAHK.ahk) /out HotWinAHK.exe`).
 
 
 ---
@@ -276,11 +274,11 @@ Every action from simple moves to grid mapping is indexed inside the INI command
 #### 🚨 Symptom: "HotWinAHK requiring Administrative Privileges"
 <a id="a-symptomhotwinahkrequiringadministrativeprivileges"></a>[TOC](#toc-symptomhotwinahkrequiringadministrativeprivileges)
 - **Root Cause:** Certain target elevated applications (such as Task Manager or Administrative Command Prompts) block un-elevated Win32 API window messages.
-- **Remediation:** Relaunch `HotWinAHK.ahk` using administrative rights (`RunAs Administrator`), which is triggered automatically by the script's self-elevation check at startup.
+- **Remediation:** Relaunch [`HotWinAHK.ahk`](../HotWinAHK.ahk) using administrative rights (`RunAs Administrator`), which is triggered automatically by the script's self-elevation check at startup.
 
-#### 🚨 Symptom: Changes apply to HotWinAHK.ini, but hotkeys do not update.
-<a id="a-symptomchangesapplytohotwinahkinibuthotkeysdonotupdate"></a>[TOC](#toc-symptomchangesapplytohotwinahkinibuthotkeysdonotupdate)
-- **Root Cause:** The dynamic hotkey generator has not compiled the new INI definitions into `HotWinAHK_aux.ahk`.
+#### 🚨 Symptom: Changes apply to [HotWinAHK.ini](../HotWinAHK.ini), but hotkeys do not update.
+<a id="a-symptomchangesapplytohotwinahkinihotwinahkinibuthotkeysdonotupdate"></a>[TOC](#toc-symptomchangesapplytohotwinahkinihotwinahkinibuthotkeysdonotupdate)
+- **Root Cause:** The dynamic hotkey generator has not compiled the new INI definitions into [`HotWinAHK_aux.ahk`](../HotWinAHK_aux.ahk).
 - **Remediation:** Trigger hot-reload via `Win+Ctrl+F5` (`ReloadConfig`), or choose "Reload Config" from the system tray menu.
 
 ---

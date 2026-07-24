@@ -58,14 +58,14 @@ and runtime execution.
 
 ## 🛠️ Build & Packaging Pipeline
 <a id="a-buildpackagingpipeline"></a>[TOC](#toc-buildpackagingpipeline)
-`HotWinAHK` comprises a dynamically compiling AutoHotkey system. The core engine translates highly customizable matrix definitions from a simple structure file (`HotWinAHK.ini`) directly into clean AutoHotkey macros (`HotWinAHK_aux.ahk`). On runtime initialization, these hotkeys compiled to static assets are dynamically parsed and registered natively with Windows Shell.
+`HotWinAHK` comprises a dynamically compiling AutoHotkey system. The core engine translates highly customizable matrix definitions from a simple structure file ([`HotWinAHK.ini`](../HotWinAHK.ini)) directly into clean AutoHotkey macros ([`HotWinAHK_aux.ahk`](../HotWinAHK_aux.ahk)). On runtime initialization, these hotkeys compiled to static assets are dynamically parsed and registered natively with Windows Shell.
 
 ### 📦 Key Components
 <a id="a-keycomponents"></a>[TOC](#toc-keycomponents)
-- **`HotWinAHK.ahk`**: The main execution engine. Operates as the orchestrator, initializing logging, diagnostic window systems, focus listener hooks, thread queues, and the velocity-bump poll loops.
-- **`HotWinAHK.ini`**: The master user preference panel. Standardized key combination layout mapping strings to commands and conditional activation filters (such as window title patterns or program executable names).
-- **`HotWinAHK_aux.ahk`**: The generated middle-layer compiled script. Restructures definitions from the INI file natively into standard AHK Hotkey mappings with execution handlers.
-- **`HotWinAHK_tray.ahk`**: Independent system tray delegator application. Handles custom status tray iconography, hover instructions, and right-click window restoration/closing behaviors for minimized applications.
+- **[`HotWinAHK.ahk`](../HotWinAHK.ahk)**: The main execution engine. Operates as the orchestrator, initializing logging, diagnostic window systems, focus listener hooks, thread queues, and the velocity-bump poll loops.
+- **[`HotWinAHK.ini`](../HotWinAHK.ini)**: The master user preference panel. Standardized key combination layout mapping strings to commands and conditional activation filters (such as window title patterns or program executable names).
+- **[`HotWinAHK_aux.ahk`](../HotWinAHK_aux.ahk)**: The generated middle-layer compiled script. Restructures definitions from the INI file natively into standard AHK Hotkey mappings with execution handlers.
+- **[`HotWinAHK_tray.ahk`](../HotWinAHK_tray.ahk)**: Independent system tray delegator application. Handles custom status tray iconography, hover instructions, and right-click window restoration/closing behaviors for minimized applications.
 
 ---
 
@@ -76,8 +76,8 @@ and runtime execution.
   - Native command executed internally: `CompileIniToStaticHotkeys()` reads `/HotWinAHK.ini`, validates combinations using `IsValidAhkKey()`, formats keys using `CompileStrokeToAHK(...)`, and rewrites `/HotWinAHK_aux.ahk` using safe stream flushes.
 - **Packaging and Compilation to Standalone Executables**:
   - To compile the script files into standalone `.exe` programs for Windows environment distribution:
-    - Run `Ahk2Exe.exe /in HotWinAHK.ahk /out HotWinAHK.exe`
-    - Run `Ahk2Exe.exe /in HotWinAHK_tray.ahk /out HotWinAHK_tray.exe`
+    - Run `Ahk2Exe.exe /in [HotWinAHK.ahk](../HotWinAHK.ahk) /out HotWinAHK.exe`
+    - Run `Ahk2Exe.exe /in [HotWinAHK_tray.ahk](../HotWinAHK_tray.ahk) /out HotWinAHK_tray.exe`
   - Ensure Windows Defender exclusions are defined for generated binaries, as custom keyboard hooking tools sometimes trigger generic false positives on basic heuristics.
 
 ---
@@ -86,7 +86,7 @@ and runtime execution.
 <a id="a-postbuildverificationrules"></a>[TOC](#toc-postbuildverificationrules)
 - 1. **Size Checking:** Verify that the output executable or bundle size is greater than `0 KB`.
 - 2. **Path Verification:** Check that the output file is located exactly within the target distribution directory layout.
-- 3. **Smoke Test Command:** `"C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" /validate HotWinAHK.ahk`
+- 3. **Smoke Test Command:** `"C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" /validate [HotWinAHK.ahk](../HotWinAHK.ahk)`
 ## 🚀 Go to...
 <a id="a-goto"></a>[TOC](#toc-goto)
 - 🔹 [AGENTS.md](../AGENTS.md)

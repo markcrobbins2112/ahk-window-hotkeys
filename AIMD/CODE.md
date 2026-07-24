@@ -57,9 +57,9 @@ ordering, and regions formatting. Every single code file must adhere strictly to
 - Use dashes (`-`) instead of asterisks (`*`) for Bullet list items.
 - Maintain UPPERCASE.md documents cleanly with alphabetical features lists, updated logs, and checked backlogs.
 - Always update UPPERCASE.md files (such as AITASKS.md, AILOG.md, etc.) when tasks are completed or work is performed
-- Put all chat task requests from the user on TASKS.md first before working on them
+- Put all chat task requests from the user on [TASKS.md](TASKS.md) first before working on them
 - If the user says 'do tasks', always state what you are going to do and then wait for the user's adjustments and approval before proceeding
-- LOG: The top of LOG.md should always feature a "Commit Message" section maintained by the AI, which must be cleared whenever the user says they have committed or appended the changes
+- LOG: The top of [LOG.md](LOG.md) should always feature a "Commit Message" section maintained by the AI, which must be cleared whenever the user says they have committed or appended the changes
 
 ## ✒️ Formatting & Syntax Style
 <a id="a-formattingsyntaxstyle"></a>[TOC](#toc-formattingsyntaxstyle)

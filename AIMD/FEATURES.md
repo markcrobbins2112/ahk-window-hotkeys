@@ -144,7 +144,7 @@ When a hidden window is pulled out via an Edge Bump, the system temporarily enga
 ### Configuration Matrix Compiler
 <a id="a-configurationmatrixcompiler"></a>[TOC](#toc-configurationmatrixcompiler)
 - Group: [Administrative Controls & Dynamic Compiler](#z1)
-The engine reads the flat user preference file (`HotWinAHK.ini`), filters active elements, maps keybindings, and automatically writes native AHK Hotkey scripts on-the-fly.
+The engine reads the flat user preference file ([`HotWinAHK.ini`](../HotWinAHK.ini)), filters active elements, maps keybindings, and automatically writes native AHK Hotkey scripts on-the-fly.
 
 ### Grid Alignment Enlarge & Shrink
 <a id="a-gridalignmentenlargeshrink"></a>[TOC](#toc-gridalignmentenlargeshrink)
@@ -220,7 +220,7 @@ Slides window structures past physical screen walls. Leaves narrow active margin
 ### Tray Helper App Solitary Execution
 <a id="a-trayhelperappsolitaryexecution"></a>[TOC](#toc-trayhelperappsolitaryexecution)
 - Group: [Dedicated Subprocess Shell Minification](#z5)
-Spawns individual tray notifier processes (`HotWinAHK_tray.ahk`) for each hidden handle, ensuring the main application remains responsive.
+Spawns individual tray notifier processes ([`HotWinAHK_tray.ahk`](../HotWinAHK_tray.ahk)) for each hidden handle, ensuring the main application remains responsive.
 
 ### Velocity Bump Restorations
 <a id="a-velocitybumprestorations"></a>[TOC](#toc-velocitybumprestorations)
@@ -288,7 +288,7 @@ Integrates a multi-tier columns-then-rows nested context layout system. Allows s
 ### Nested Region-Based Configuration Matrix Hierarchy
 <a id="a-nestedregionbasedconfigurationmatrixhierarchy"></a>[TOC](#toc-nestedregionbasedconfigurationmatrixhierarchy)
 - Group: [Administrative Controls & Dynamic Compiler](#z1)
-Upgrades the automatic config-matrix updating engine to structure `HotWinAHK.ini` recursively using standard IDE-folding region boundaries (e.g. `;   #region Move`, `    ;   #region MoveToGrid`, `; #endregion Move`), maintaining absolute clean structures while dynamically patching missing keys or retaining custom overrides.
+Upgrades the automatic config-matrix updating engine to structure [`HotWinAHK.ini`](../HotWinAHK.ini) recursively using standard IDE-folding region boundaries (e.g. `;   #region Move`, `    ;   #region MoveToGrid`, `; #endregion Move`), maintaining absolute clean structures while dynamically patching missing keys or retaining custom overrides.
 
 
 ---

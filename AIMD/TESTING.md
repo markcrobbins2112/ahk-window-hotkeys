@@ -50,15 +50,13 @@ You can use this interactive test sheet directly with VS Code / Cursor to verify
   - [🚀 Keybinding Configuration & Picker Tests](#a-keybindingconfigurationpickertests) <a id="toc-keybindingconfigurationpickertests"></a> ^toc-keybindingconfigurationpickertests
   - [💎 Advanced Interactive Workspace Features](#a-advancedinteractiveworkspacefeatures) <a id="toc-advancedinteractiveworkspacefeatures"></a> ^toc-advancedinteractiveworkspacefeatures
   - [🗃️ QA Validation History (Sign-Off Log)](#a-qavalidationhistorysignofflog) <a id="toc-qavalidationhistorysignofflog"></a> ^toc-qavalidationhistorysignofflog
-    - [📅 [YYYY-MM-DD] - Build v{{X.X.X}}](#a-yyyymmddbuildvxxx) <a id="toc-yyyymmddbuildvxxx"></a> ^toc-yyyymmddbuildvxxx
+    - [📅 2026-07-23 - Build v2.1.0](#a-20260723buildv210) <a id="toc-20260723buildv210"></a> ^toc-20260723buildv210
   - [🚀 Go to...](#a-goto) <a id="toc-goto"></a> ^toc-goto
 ---
----
-
 ## 🔵 Setup & Environment Check
 <a id="a-setupenvironmentcheck"></a>[TOC](#toc-setupenvironmentcheck)
 - [ ] Admin Elevation Check
-    - **Instructions**: Launch HotWinAHK (`HotWinAHK.ahk`).
+    - **Instructions**: Launch HotWinAHK ([`HotWinAHK.ahk`](../HotWinAHK.ahk)).
     - **Expected Results**: Prompt for administrator privileges if not already elevated; launches correctly without errors.
 - [ ] EVENT_SYSTEM_FOREGROUND Focus Audio Listener
     - **Instructions**: Switch focus between various open application windows (e.g., NotePad, VS Code).
@@ -70,7 +68,7 @@ You can use this interactive test sheet directly with VS Code / Cursor to verify
 ## 🟢 Template & Basic Copying Checks
 <a id="a-templatebasiccopyingchecks"></a>[TOC](#toc-templatebasiccopyingchecks)
 - [ ] Compiler Stream Rewrite Check
-    - **Instructions**: Make a minor change in `HotWinAHK.ini` (e.g. enable a commented line) and trigger reload.
+    - **Instructions**: Make a minor change in [`HotWinAHK.ini`](../HotWinAHK.ini) (e.g. enable a commented line) and trigger reload.
     - **Expected Results**: File modification timestamps on `/HotWinAHK_aux.ahk` shift immediately; new hotkeys register.
 - [ ] Disk Collision RAM Log Cache Check
     - **Instructions**: Perform high-speed continuous movements to trigger a barrage of `SafeMove` logs.
@@ -113,7 +111,7 @@ You can use this interactive test sheet directly with VS Code / Cursor to verify
     - **Expected Results**: Cursor vector velocities trigger the untuck action, sliding the stowed window immediately and smoothly out.
 - [ ] Tray Helper Subprocess Isolation Test
     - **Instructions**: Strike Minimize to Tray shortcut (`Win+Shift+PgDn`) on NotePad.
-    - **Expected Results**: Notepad frame vanishes from window view. A standalone subprocess tray icon (represented by NotePad's native application icon asset) registers in system workspace tray area displaying customized mouse-over tooltips (driven by `HotWinAHK_tray.ahk`).
+    - **Expected Results**: Notepad frame vanishes from window view. A standalone subprocess tray icon (represented by NotePad's native application icon asset) registers in system workspace tray area displaying customized mouse-over tooltips (driven by [`HotWinAHK_tray.ahk`](../HotWinAHK_tray.ahk)).
 
 ## 💎 Advanced Interactive Workspace Features
 <a id="a-advancedinteractiveworkspacefeatures"></a>[TOC](#toc-advancedinteractiveworkspacefeatures)

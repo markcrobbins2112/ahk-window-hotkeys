@@ -19,7 +19,7 @@ compatibility constraints, and platform limits.
 # SPEC
 <a id="a-spec"></a>[TOC](#toc-spec)
 
-This document compiles the user requirements and instructions from `AGENTS.md` and related files and provides detailed documentation of how the extension was architected and built.
+This document compiles the user requirements and instructions from [`AGENTS.md`](../AGENTS.md) and related files and provides detailed documentation of how the extension was architected and built.
 
 ## 📑 AI Primary Files
 <a id="a-aiprimaryfiles"></a>[TOC](#toc-aiprimaryfiles)
@@ -44,7 +44,7 @@ This document compiles the user requirements and instructions from `AGENTS.md` a
 - [SPEC](#a-spec) <a id="toc-spec"></a> ^toc-spec
   - [📑 AI Primary Files](#a-aiprimaryfiles) <a id="toc-aiprimaryfiles"></a> ^toc-aiprimaryfiles
   - [🔗 External Application Protocols & URI Schemes](#a-externalapplicationprotocolsurischemes) <a id="toc-externalapplicationprotocolsurischemes"></a> ^toc-externalapplicationprotocolsurischemes
-    - [{{Protocol/Application Name}} Link Contract](#a-protocolapplicationnamelinkcontract) <a id="toc-protocolapplicationnamelinkcontract"></a> ^toc-protocolapplicationnamelinkcontract
+    - [HotWinAHK Internal IPC Protocol](#a-hotwinahkinternalipcprotocol) <a id="toc-hotwinahkinternalipcprotocol"></a> ^toc-hotwinahkinternalipcprotocol
   - [💻 Native OS Integration Details](#a-nativeosintegrationdetails) <a id="toc-nativeosintegrationdetails"></a> ^toc-nativeosintegrationdetails
     - [Registry / Configuration Mappings](#a-registryconfigurationmappings) <a id="toc-registryconfigurationmappings"></a> ^toc-registryconfigurationmappings
     - [File & Folder Attribute Masks](#a-filefolderattributemasks) <a id="toc-filefolderattributemasks"></a> ^toc-filefolderattributemasks
@@ -55,8 +55,6 @@ This document compiles the user requirements and instructions from `AGENTS.md` a
     - [Data Models & State Layouts](#a-datamodelsstatelayouts) <a id="toc-datamodelsstatelayouts"></a> ^toc-datamodelsstatelayouts
   - [🚀 Go to...](#a-goto) <a id="toc-goto"></a> ^toc-goto
 ---
----
-
 ## 🔗 External Application Protocols & URI Schemes
 <a id="a-externalapplicationprotocolsurischemes"></a>[TOC](#toc-externalapplicationprotocolsurischemes)
 ### HotWinAHK Internal IPC Protocol
@@ -66,7 +64,7 @@ This document compiles the user requirements and instructions from `AGENTS.md` a
 
   | Parameter | Type | Required | Description / Constraints |
   | :--- | :--- | :--- | :--- |
-  | `cmd` | `String` | Yes | Target command name matching a valid function in `HotWinAHK.ini`. |
+  | `cmd` | `String` | Yes | Target command name matching a valid function in [`HotWinAHK.ini`](../HotWinAHK.ini). |
   | `hwnd` | `Integer` | No | Target Win32 HWND window handle (hexadecimal or decimal). |
 
 ---
@@ -77,14 +75,14 @@ This document compiles the user requirements and instructions from `AGENTS.md` a
 <a id="a-registryconfigurationmappings"></a>[TOC](#toc-registryconfigurationmappings)
 - **Startup Registration:** `HKCU\Software\Microsoft\Windows\CurrentVersion\Run\HotWinAHK`
 - **Properties Mapping:**
-  - `HotWinAHK` (Default): `"C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" "C:\Path\To\HotWinAHK.ahk"`
+  - `HotWinAHK` (Default): `"C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" "C:\Path\To\[HotWinAHK.ahk](../HotWinAHK.ahk)"`
   - `Icon`: Absolute path to `HotWinAHK` icon resource.
 
 ### File & Folder Attribute Masks
 <a id="a-filefolderattributemasks"></a>[TOC](#toc-filefolderattributemasks)
-- **Configuration Context Target:** `HotWinAHK.ini` (Master settings file).
-- **Test Matrix Storage:** `tests.ini` (Walkthrough ratings and test states).
-- **Home Coordinates Database:** `windows-hotkeys-homes.ini` (Saved home positions and bounds).
+- **Configuration Context Target:** [`HotWinAHK.ini`](../HotWinAHK.ini) (Master settings file).
+- **Test Matrix Storage:** [`tests.ini`](../tests.ini) (Walkthrough ratings and test states).
+- **Home Coordinates Database:** [`windows-hotkeys-homes.ini`](../windows-hotkeys-homes.ini) (Saved home positions and bounds).
 
 ---
 
@@ -105,7 +103,7 @@ To deliver ultra-low overhead, maximum robustness, and seamless user experiences
 - **Quadratic Ease-Out Animation Engine**: Implemented mathematical easing (`t * (2 - t)`) over 12 frame iterations inside a 150ms step duration to slide windows smoothly into state grids instead of hard jumping.
 - **SafeMove Log Queue Cache**: Safely handles disk writing collisions (e.g., when multiple commands run in rapid succession). If log flushes fail, log details are cached temporarily in RAM and retried on the next tick loop.
 - **User32 API Layer Bypass**: Rather than calling nested high-level helpers, the engine communicates directly with User32 DLLs (e.g., `SetLayeredWindowAttributes` for transparent alpha maps, and `SetWindowHasTranslucency` properties) to maximize responsiveness.
-- **Tray Helper Subprocess Isolation**: Minimizing applications to the system tray spawns a lightweight standalone helper context (`HotWinAHK_tray.ahk`) per window handle. This keeps the primary keyboard polling threads free from GUI wait states.
+- **Tray Helper Subprocess Isolation**: Minimizing applications to the system tray spawns a lightweight standalone helper context ([`HotWinAHK_tray.ahk`](../HotWinAHK_tray.ahk)) per window handle. This keeps the primary keyboard polling threads free from GUI wait states.
 - **Modifier Casing Standardization Layer**: Converts complex INI key definitions (like LAlt, RCtrl, etc.) to clean standard lowercase strings before registering combinations, eliminating AutoHotkey v2 crash states on compound modifier double-registration.
 - **Dual-Anchor Tracking with Grace Period Latch**: Utilizes a dual checking mechanism (system focus check and physical cursor hover validation using Win32 API `GetAncestor` calls recursively on child handles) alongside a 500ms (`10` tick) grace countdown system (`g_UntuckGraceTicks`). This prevents erratic window collapse and focus theft during complex desktop mouse interactions.
 - **Z-Order Elevation on Untuck**: Whenever a stowed window is peeked open by mouse hover or border edge bump, it is elevated to the top of the Z-order stack (`HWND_TOP`) using `WinMoveTop("ahk_id " . hwnd)`, ensuring it draws over everything on the screen without stealing active text cursor focus.
@@ -119,7 +117,7 @@ To deliver ultra-low overhead, maximum robustness, and seamless user experiences
 - **Durable Window Position & State History (Undo/Redo)**: Records window coordinates, min/max metrics, binaries, titles, and Unix timestamp indexes into safe entries in `HotWinAHK_history.ini` before size updates occur. Facilitates layout Undo/Redo or selective restauration of up to 20 configurations per process via a pop-up context-picker.
 - **Interactive Space-Swapping & Hover-Targeting**: Provides immediate spatial swaps (`Swap`, `SwapSize`, `SwapPosition`) of position and/or dimension metrics of the active foreground container with whatever window sits directly beneath the mouse pointer. Features a hands-free dual-stage cursor-hover picking utility (`SwapPick`, `SwapPickSize`, `SwapPickPosition`) executing remotely on click.
 - **Columns-Then-Rows Gridify Nesting Menus**: Standardizes monitor-bounded cell slicing into 2-tier submenus, yielding rapid symmetrical layouts (grid cells up to 9x9) without tedious click series.
-- **IDE folding-Region Config Parser**: Refactored INI parsing routines so `HotWinAHK.ini` formats and groups lines utilizing structural region separators (`;   #region <Section>`, `    ; #endregion <Section>`), merging new definitions while maintaining pristine user preferences.
+- **IDE folding-Region Config Parser**: Refactored INI parsing routines so [`HotWinAHK.ini`](../HotWinAHK.ini) formats and groups lines utilizing structural region separators (`;   #region <Section>`, `    ; #endregion <Section>`), merging new definitions while maintaining pristine user preferences.
 
 ---
 
@@ -132,7 +130,7 @@ To deliver ultra-low overhead, maximum robustness, and seamless user experiences
 | :--- | :--- | :--- |
 | `0` | `Success` | Complete flawless lifecycle execution. |
 | `1` | `ERR_MISSING_ARGS` | Script executed without required parameters. |
-| `2` | `ERR_CONFIG_INVALID` | Incomplete or unparseable `HotWinAHK.ini` structure. |
+| `2` | `ERR_CONFIG_INVALID` | Incomplete or unparseable [`HotWinAHK.ini`](../HotWinAHK.ini) structure. |
 | `3` | `ERR_PATH_NOT_FOUND` | Missing target application or dependency path. |
 | `4` | `ERR_ELEVATION_FAILED` | Administrative elevation attempt failed or was rejected by user. |
 

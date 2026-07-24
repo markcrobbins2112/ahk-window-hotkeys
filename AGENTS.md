@@ -128,10 +128,10 @@ Adhere strictly to the boundaries and prompts defined for your assigned persona.
 -->
 ## 📂 Project Context
 <a id="a-projectcontext"></a>[TOC](#toc-projectcontext)
-- HotWinAHK.ahk is the entry point to the program
-- HotWinAHK.ini is used to create HowWinAHK_aux.ahk
-- HotWinAHK_tray.ahk is used for tray management
-- windows-hotkeys-homes.ini is data used to reposition windows
+- [HotWinAHK.ahk](HotWinAHK.ahk) is the entry point to the program
+- [HotWinAHK.ini](HotWinAHK.ini) is used to create HowWinAHK_aux.ahk
+- [HotWinAHK_tray.ahk](HotWinAHK_tray.ahk) is used for tray management
+- [windows-hotkeys-homes.ini](windows-hotkeys-homes.ini) is data used to reposition windows
 
 ---
 
@@ -143,15 +143,15 @@ Adhere strictly to the boundaries and prompts defined for your assigned persona.
 -->
 ## 📦 Build
 <a id="a-build"></a>[TOC](#toc-build)
-- **Tasks given through chat**: Record tasks in TASKS.md
-- **Take in other Tasks from TASKS.md**: 
+- **Tasks given through chat**: Record tasks in [TASKS.md](AIMD/TASKS.md)
+- **Take in other Tasks from [TASKS.md](AIMD/TASKS.md)**: 
   - New Changes
   - New Settings
   - New Commands
   - New Bindings
   - New Features
-- **Record Tasks in LOG.md**
-- **Record Commit Msg in LOG.md** 
+- **Record Tasks in [LOG.md](AIMD/LOG.md)**
+- **Record Commit Msg in [LOG.md](AIMD/LOG.md)** 
 
 ## 🎨 Code Styling and Preferences
 <a id="a-codestylingandpreferences"></a>[TOC](#toc-codestylingandpreferences)

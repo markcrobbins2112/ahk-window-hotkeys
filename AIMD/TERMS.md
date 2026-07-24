@@ -49,15 +49,15 @@ When generating code comments, documentation, or logs, always use these exact te
 ## 🔤 Core Glossary A-Z
 <a id="a-coreglossaryaz"></a>[TOC](#toc-coreglossaryaz)
 ### Tuck / Untuck
-<a id="a-tuckuntuck)</a>[TOC](#toc-tuckuntuck)
+<a id="a-tuckuntuck"></a>[TOC](#toc-tuckuntuck)
 - **Definition:** Stowing an active window frame off-screen against a monitor boundary, leaving only a tiny clickable/hoverable margin edge visible (Tuck), and restoring it when triggered (Untuck).
-- **Code Implementation Context:** Managed via `TuckWindow()` and `UntuckWindow()` functions in `HotWinAHK.ahk`.
+- **Code Implementation Context:** Managed via `TuckWindow()` and `UntuckWindow()` functions in [`HotWinAHK.ahk`](../HotWinAHK.ahk).
 - **Synonyms / Avoid:** Avoid using "hide/unhide" or "minimize/restore" as Tuck refers specifically to margin docking.
 
 ### Velocity Bump
 <a id="a-velocitybump"></a>[TOC](#toc-velocitybump)
 - **Definition:** Accelerating the mouse pointer rapidly against a screen margin to untuck a stowed window without needing hotkeys or clicking.
-- **Code Implementation Context:** Evaluated every 25ms in the main loop of `HotWinAHK.ahk` by calculating Euclidean cursor travel distance.
+- **Code Implementation Context:** Evaluated every 25ms in the main loop of [`HotWinAHK.ahk`](../HotWinAHK.ahk) by calculating Euclidean cursor travel distance.
 
 ---
 
