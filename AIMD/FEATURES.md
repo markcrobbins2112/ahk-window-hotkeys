@@ -5,7 +5,7 @@ title: FEATURES
 <!-- TEMPLATE: FEATURES.template.md -->
 <!-- 
 FEATURES
-Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
+Any text bounded by double curly braces like this is a placeholder for you to fill out.
 Replace those placeholders with real paths, rules, and project constraints.
 
 INSTRUCTIONS FOR THE AI AGENT:
@@ -295,8 +295,8 @@ Upgrades the automatic config-matrix updating engine to structure `HotWinAHK.ini
 
 ## 📉 Deprecated / Removed Features
 <a id="a-deprecatedremovedfeatures"></a>[TOC](#toc-deprecatedremovedfeatures)
-- **[!] {{Feature Name}}:** {{Describe why the feature asset was legacy tagged and stripped from production versions, noting previous errors or architectural adjustments.}}
-  - **Replacement Pattern:** {{Explicitly reference the newly introduced loop, file structural change, or strategy that supersedes it.}}
+- **[!] Express/Vite Web Server Bridge:** Removed external Node.js server dependencies and client-side web previews to maintain focus as a pure desktop AutoHotkey v2.0 application.
+  - **Replacement Pattern:** Direct native Win32 GUI screens (`HelpScreen`, `CmdPalette`, `Settings`).
 
 ---
 ## 🚀 Go to...

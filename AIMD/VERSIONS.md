@@ -5,7 +5,7 @@ title: VERSIONS
 <!-- TEMPLATE: VERSIONS.template.md -->
 <!-- 
 VERSIONS
-Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
+Any text bounded by double curly braces like this is a placeholder for you to fill out.
 Replace those placeholders with semantic version history and deployment updates.
 
 INSTRUCTIONS FOR THE AI AGENT:
@@ -41,40 +41,40 @@ When deploying a new stable release or version milestone, document it at the TOP
 - [VERSIONS](#a-versions) <a id="toc-versions"></a> ^toc-versions
   - [📑 AI Primary Files](#a-aiprimaryfiles) <a id="toc-aiprimaryfiles"></a> ^toc-aiprimaryfiles
   - [🚀 Stable Releases & Milestones](#a-stablereleasesmilestones) <a id="toc-stablereleasesmilestones"></a> ^toc-stablereleasesmilestones
-    - [🏷️ v1.1.0 ({{YYYY-MM-DD}}) - {{Release Update Name}}](#a-v110yyyymmddreleaseupdatename) <a id="toc-v110yyyymmddreleaseupdatename"></a> ^toc-v110yyyymmddreleaseupdatename
-    - [🏷️ v1.0.0 ({{YYYY-MM-DD}}) - {{Baseline Production Launch}}](#a-v100yyyymmddbaselineproductionlaunch) <a id="toc-v100yyyymmddbaselineproductionlaunch"></a> ^toc-v100yyyymmddbaselineproductionlaunch
+    - [🏷️ v2.1.0 (2026-07-23) - Pure AutoHotkey v2 Desktop Suite & Decoupled Test Database](#a-v21020260723pureautohotkeyv2desktopsuitedecoupledtestdatabase) <a id="toc-v21020260723pureautohotkeyv2desktopsuitedecoupledtestdatabase"></a> ^toc-v21020260723pureautohotkeyv2desktopsuitedecoupledtestdatabase)
+    - [🏷️ v2.0.0 (2026-06-22) - Modular HotWinAHK Architecture & Interactive UI Overhaul](#a-v20020260622modularhotwinahkarchitectureinteractiveuioverhaul) <a id="toc-v20020260622modularhotwinahkarchitectureinteractiveuioverhaul"></a> ^toc-v20020260622modularhotwinahkarchitectureinteractiveuioverhaul
   - [🏗️ Pre-Release Iterations (Alpha/Beta Sandbox)](#a-prereleaseiterationsalphabetasandbox) <a id="toc-prereleaseiterationsalphabetasandbox"></a> ^toc-prereleaseiterationsalphabetasandbox
-    - [🏷️ v0.1.0-beta ({{YYYY-MM-DD}})](#a-v010betayyyymmdd) <a id="toc-v010betayyyymmdd"></a> ^toc-v010betayyyymmdd
+    - [🏷️ v1.0.0 (2026-01-15) - Initial Hotkey Window Manager Launch](#a-v10020260115initialhotkeywindowmanagerlaunch) <a id="toc-v10020260115initialhotkeywindowmanagerlaunch"></a> ^toc-v10020260115initialhotkeywindowmanagerlaunch
   - [🚀 Go to...](#a-goto) <a id="toc-goto"></a> ^toc-goto
 ---
 ## 🚀 Stable Releases & Milestones
 <a id="a-stablereleasesmilestones"></a>[TOC](#toc-stablereleasesmilestones)
-### 🏷️ v1.1.0 ({{YYYY-MM-DD}}) - {{Release Update Name}}
-<a id="a-v110yyyymmddreleaseupdatename"></a>[TOC](#toc-v110yyyymmddreleaseupdatename)
+### 🏷️ v2.1.0 (2026-07-23) - Pure AutoHotkey v2 Desktop Suite & Decoupled Test Database
+<a id="a-v21020260723pureautohotkeyv2desktopsuitedecoupledtestdatabase"></a>[TOC](#toc-v21020260723pureautohotkeyv2desktopsuitedecoupledtestdatabase)
 - **Added / Enhanced:**
-  - {{Specific Feature Description / e.g., Implemented native database compilation write loops}}
-  - {{Specific Feature Description / e.g., Integrated automatic runtime state change event signals}}
+  - Complete decoupling of test metrics and walkthrough execution logs into `tests.ini`.
+  - Thorough documentation overhaul across all 14 AI primary files in accordance with `markdown-transform` guidelines.
 - **Fixed / Patched:**
-  - {{Issue Fix / e.g., Corrected an escape sequence failure inside configuration mapping array structures}}
-  - {{Issue Fix / e.g., Fixed a thread lock occurring when large environmental path matrices are evaluated}}
+  - Stripped all legacy Node.js Express server bridge files and web preview scaffolds.
+  - Enforced strict "No Hash Symbols in Comments" rule across project header comments and `TEMPLATE:` comments.
 - **Breaking Changes & Remediations:**
-  - {{Describe any core structural dataset updates or directory footprint refactors introduced in this milestone.}}
-    - *Remediation:* {{Step-by-step notes explaining how the human operator updates running instances cleanly.}}
+  - Removed server entry points (`server.ts`, `App.tsx`, `vite.config.ts`, `tsconfig.json`).
+    - *Remediation:* Run `HotWinAHK.ahk` directly with native AutoHotkey v2.0+.
 
-### 🏷️ v1.0.0 ({{YYYY-MM-DD}}) - {{Baseline Production Launch}}
-<a id="a-v100yyyymmddbaselineproductionlaunch"></a>[TOC](#toc-v100yyyymmddbaselineproductionlaunch)
-- **Summary:** {{Provide an abstract summary overview of the software product's baseline functional release milestone stability.}}
+### 🏷️ v2.0.0 (2026-06-22) - Modular HotWinAHK Architecture & Interactive UI Overhaul
+<a id="a-v20020260622modularhotwinahkarchitectureinteractiveuioverhaul"></a>[TOC](#toc-v20020260622modularhotwinahkarchitectureinteractiveuioverhaul)
+- **Summary:** Complete refactoring of HotWinAHK to feature dynamic on-the-fly INI hotkey compilation, Desk3D parallax mode, and interactive window picker GUIs.
 - **Core Capabilities:**
-  - {{High-level structural integrity checking parameters}}
-  - {{Standard deployment and platform verification hooks configuration registry setup}}
+  - Dynamic INI-to-AHK hotkey compilation engine (`HotWinAHK_aux.ahk`).
+  - Standalone tray helper isolation (`HotWinAHK_tray.ahk`).
 
 ---
 
 ## 🏗️ Pre-Release Iterations (Alpha/Beta Sandbox)
 <a id="a-prereleaseiterationsalphabetasandbox"></a>[TOC](#toc-prereleaseiterationsalphabetasandbox)
-### 🏷️ v0.1.0-beta ({{YYYY-MM-DD}})
-<a id="a-v010betayyyymmdd"></a>[TOC](#toc-v010betayyyymmdd)
-- **Milestone:** {{Initial developmental test build confirming environment communication matrix tracking frameworks are active.}}
+### 🏷️ v1.0.0 (2026-01-15) - Initial Hotkey Window Manager Launch
+<a id="a-v10020260115initialhotkeywindowmanagerlaunch"></a>[TOC](#toc-v10020260115initialhotkeywindowmanagerlaunch)
+- **Milestone:** Baseline window snapping and border docking release.
 
 ---
 ## 🚀 Go to...

@@ -5,7 +5,7 @@ title: BUILD
 <!-- TEMPLATE: BUILD.template.md -->
 <!-- 
 BUILD
-Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
+Any text bounded by double curly braces like this is a placeholder for you to fill out.
 Replace those placeholders with real paths, rules, and project constraints.
 
 INSTRUCTIONS FOR THE AI AGENT:
@@ -50,16 +50,12 @@ and runtime execution.
 ---
 ## 📋 Prerequisites & Toolchain Setup
 <a id="a-prerequisitestoolchainsetup"></a>[TOC](#toc-prerequisitestoolchainsetup)
-- **Compiler/Runtime:** {{Specify runtime, e.g., Node.js v20.x, GCC v13.2, Aut2Exe v3.3+}}
+- **Compiler/Runtime:** AutoHotkey v2.0+ (Ahk2Exe v1.1.34+ for binary output)
 - **Global System Variables Required:**
-  - `{{VARIABLE_NAME}}`: {{Paths to external headers, global dependencies, or binary compiler folders}}
+  - `AHK_PATH`: Path to AutoHotkey64.exe (e.g., `C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe`)
 
 ---
 
-<!-- 
-  INSTRUCTION: Detail the high-level architecture of the build system.
-  Mention variables compilation pathways, compiler tools, preprocessors, etc.
--->
 ## 🛠️ Build & Packaging Pipeline
 <a id="a-buildpackagingpipeline"></a>[TOC](#toc-buildpackagingpipeline)
 `HotWinAHK` comprises a dynamically compiling AutoHotkey system. The core engine translates highly customizable matrix definitions from a simple structure file (`HotWinAHK.ini`) directly into clean AutoHotkey macros (`HotWinAHK_aux.ahk`). On runtime initialization, these hotkeys compiled to static assets are dynamically parsed and registered natively with Windows Shell.
@@ -73,10 +69,6 @@ and runtime execution.
 
 ---
 
-<!-- 
-  INSTRUCTION: List the literal, usable CLI shell commands for restoring packages, 
-  launching development modes, linting files, and packaging production bundles.
--->
 ## 🚀 Execution & Packing Commands
 <a id="a-executionpackingcommands"></a>[TOC](#toc-executionpackingcommands)
 - **Dynamic On-The-Fly Compilation**:
@@ -94,7 +86,7 @@ and runtime execution.
 <a id="a-postbuildverificationrules"></a>[TOC](#toc-postbuildverificationrules)
 - 1. **Size Checking:** Verify that the output executable or bundle size is greater than `0 KB`.
 - 2. **Path Verification:** Check that the output file is located exactly within the target distribution directory layout.
-- 3. **Smoke Test Command:** `{{Enter a simple CLI verification test, e.g., bin\app.exe --version}}`
+- 3. **Smoke Test Command:** `"C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" /validate HotWinAHK.ahk`
 ## 🚀 Go to...
 <a id="a-goto"></a>[TOC](#toc-goto)
 - 🔹 [AGENTS.md](../AGENTS.md)

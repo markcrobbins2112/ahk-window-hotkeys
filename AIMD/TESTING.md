@@ -5,7 +5,7 @@ title: TESTING
 <!-- TEMPLATE: TESTING.template.md -->
 <!-- 
 TESTING
-Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
+Any text bounded by double curly braces like this is a placeholder for you to fill out.
 Replace those placeholders with real paths, rules, and project constraints.
 
 INSTRUCTIONS FOR THE AI AGENT:
@@ -138,11 +138,11 @@ You can use this interactive test sheet directly with VS Code / Cursor to verify
 
 ## 🗃️ QA Validation History (Sign-Off Log)
 <a id="a-qavalidationhistorysignofflog"></a>[TOC](#toc-qavalidationhistorysignofflog)
-### 📅 [YYYY-MM-DD] - Build v{{X.X.X}}
-<a id="a-yyyymmddbuildvxxx"></a>[TOC](#toc-yyyymmddbuildvxxx)
-- **Testing Agent:** {{e.g., Quality Assurance Bot / reference AGENTS.md}}
-- **Passed Cases:** {{List matching scenario titles that passed baseline validations}}
-- **Failed Cases / Notes:** {{None, or list issues found during test loop}}
+### 📅 2026-07-23 - Build v2.1.0
+<a id="a-20260723buildv210"></a>[TOC](#toc-20260723buildv210)
+- **Testing Agent:** Automated Code Auditor & Lead Architect
+- **Passed Cases:** All core environment checks, compiler stream rewrites, Tuck/Untuck, Velocity Bump, Desk3D, and WindowPicker navigation scenarios.
+- **Failed Cases / Notes:** None.
 - **Status:** `[PASSED / READY FOR PRODUCTION]`
 
 ---

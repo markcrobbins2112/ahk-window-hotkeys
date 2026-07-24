@@ -5,7 +5,7 @@ title: SPEC
 <!-- TEMPLATE: SPEC.template.md -->
 <!-- 
 SPEC
-Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
+Any text bounded by double curly braces like this is a placeholder for you to fill out.
 Replace those placeholders with real paths, rules, and project constraints.
 
 INSTRUCTIONS FOR THE AI AGENT:
@@ -59,15 +59,15 @@ This document compiles the user requirements and instructions from `AGENTS.md` a
 
 ## 🔗 External Application Protocols & URI Schemes
 <a id="a-externalapplicationprotocolsurischemes"></a>[TOC](#toc-externalapplicationprotocolsurischemes)
-### {{Protocol/Application Name}} Link Contract
-<a id="a-protocolapplicationnamelinkcontract"></a>[TOC](#toc-protocolapplicationnamelinkcontract)
-- **Target Schema:** `{{schema://action}}`
+### HotWinAHK Internal IPC Protocol
+<a id="a-hotwinahkinternalipcprotocol"></a>[TOC](#toc-hotwinahkinternalipcprotocol)
+- **Target Schema:** `hotwinahk://cmd/{ActionName}`
 - **Query String Map:**
 
   | Parameter | Type | Required | Description / Constraints |
   | :--- | :--- | :--- | :--- |
-  | `{{param1}}` | `{{String}}` | Yes | {{Absolute target path. Must be URL-encoded (UTF-8).}} |
-  | `{{param2}}` | `{{String}}` | No | {{Optional workspace name override fallback logic.}} |
+  | `cmd` | `String` | Yes | Target command name matching a valid function in `HotWinAHK.ini`. |
+  | `hwnd` | `Integer` | No | Target Win32 HWND window handle (hexadecimal or decimal). |
 
 ---
 
@@ -75,15 +75,16 @@ This document compiles the user requirements and instructions from `AGENTS.md` a
 <a id="a-nativeosintegrationdetails"></a>[TOC](#toc-nativeosintegrationdetails)
 ### Registry / Configuration Mappings
 <a id="a-registryconfigurationmappings"></a>[TOC](#toc-registryconfigurationmappings)
-- **System Hook Target:** `{{HKEY_CLASSES_ROOT\Directory\shell\YourAction}}`
+- **Startup Registration:** `HKCU\Software\Microsoft\Windows\CurrentVersion\Run\HotWinAHK`
 - **Properties Mapping:**
-  - `{{KeyName}}` (Default): `"{{Action Display Name}}"`
-  - `"{{Icon}}"`: `{{REG_SZ}}` absolute path to targeted graphic resource asset.
+  - `HotWinAHK` (Default): `"C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" "C:\Path\To\HotWinAHK.ahk"`
+  - `Icon`: Absolute path to `HotWinAHK` icon resource.
 
 ### File & Folder Attribute Masks
 <a id="a-filefolderattributemasks"></a>[TOC](#toc-filefolderattributemasks)
-- **Configuration Context Target:** `{{filename.ext}}` (Must be set to `{{+H}}` Hidden and `{{+S}}` System).
-- **Directory Workspace Parent:** Must have the `{{+R}}` Read-Only flag set for host engine processing loop.
+- **Configuration Context Target:** `HotWinAHK.ini` (Master settings file).
+- **Test Matrix Storage:** `tests.ini` (Walkthrough ratings and test states).
+- **Home Coordinates Database:** `windows-hotkeys-homes.ini` (Saved home positions and bounds).
 
 ---
 
@@ -129,19 +130,20 @@ To deliver ultra-low overhead, maximum robustness, and seamless user experiences
 
 | Code (Integer) | Semantic Definition | Trigger Condition |
 | :--- | :--- | :--- |
-| `0` | `Success` | Complete flawless lifecycle termination. |
-| `1` | `{{ERR_MISSING_ARGS}}` | Script executed without critical incoming command-line arguments. |
-| `2` | `{{ERR_ENV_UNDEFINED}}` | Target environment variables were unreadable, corrupt, or blank. |
-| `3` | `{{ERR_PATH_NOT_FOUND}}` | Physical asset disk lookup evaluation loop failed. |
-| `4` | `{{ERR_LINK_COLLISION}}` | Colliding structural link or directory target already occupied. |
+| `0` | `Success` | Complete flawless lifecycle execution. |
+| `1` | `ERR_MISSING_ARGS` | Script executed without required parameters. |
+| `2` | `ERR_CONFIG_INVALID` | Incomplete or unparseable `HotWinAHK.ini` structure. |
+| `3` | `ERR_PATH_NOT_FOUND` | Missing target application or dependency path. |
+| `4` | `ERR_ELEVATION_FAILED` | Administrative elevation attempt failed or was rejected by user. |
 
 ### Data Models & State Layouts
 <a id="a-datamodelsstatelayouts"></a>[TOC](#toc-datamodelsstatelayouts)
 ```ini
-; Expected raw configuration template dataset example
-[{{SectionHeader}}]
-{{KeyName}}={{C:\Path\To\Asset.ext}}
-{{IndexName}}={{0}}
+; Example HotWinAHK.ini configuration section
+[MoveToGrid]
+TopLeft=Win+Numpad7
+TopHalf=Win+Numpad8
+TopRight=Win+Numpad9
 ```
 
 ---

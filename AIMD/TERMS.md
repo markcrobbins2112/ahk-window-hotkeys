@@ -5,7 +5,7 @@ title: TERMS
 <!-- TEMPLATE: TERMS.template.md -->
 <!-- 
 TERMS
-Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
+Any text bounded by double curly braces like this is a placeholder for you to fill out.
 Replace those placeholders with real project terms, definitions, and acronym boundaries.
 
 INSTRUCTIONS FOR THE AI AGENT:
@@ -41,23 +41,23 @@ When generating code comments, documentation, or logs, always use these exact te
 - [TERMS](#a-terms) <a id="toc-terms"></a> ^toc-terms
   - [📑 AI Primary Files](#a-aiprimaryfiles) <a id="toc-aiprimaryfiles"></a> ^toc-aiprimaryfiles
   - [🔤 Core Glossary A-Z](#a-coreglossaryaz) <a id="toc-coreglossaryaz"></a> ^toc-coreglossaryaz
-    - [{{Term / e.g., Junction Link}}](#a-termegjunctionlink) <a id="toc-termegjunctionlink"></a> ^toc-termegjunctionlink
-    - [{{Term / e.g., Parameter1}}](#a-termegparameter1) <a id="toc-termegparameter1"></a> ^toc-termegparameter1
+    - [Tuck / Untuck](#a-tuckuntuck) <a id="toc-tuckuntuck"></a> ^toc-tuckuntuck
+    - [Velocity Bump](#a-velocitybump) <a id="toc-velocitybump"></a> ^toc-velocitybump
   - [🗂️ System Acronym Quick-Reference](#a-systemacronymquickreference) <a id="toc-systemacronymquickreference"></a> ^toc-systemacronymquickreference
   - [🚀 Go to...](#a-goto) <a id="toc-goto"></a> ^toc-goto
 ---
 ## 🔤 Core Glossary A-Z
 <a id="a-coreglossaryaz"></a>[TOC](#toc-coreglossaryaz)
-### {{Term / e.g., Junction Link}}
-<a id="a-termegjunctionlink"></a>[TOC](#toc-termegjunctionlink)
-- **Definition:** {{Detailed domain explanation or hardware/software abstraction mechanism definition}}
-- **Code Implementation Context:** {{Citing explicit hooks, scripts, or loops managing this element}}
-- **Synonyms / Avoid:** {{List phrases or naming alternatives to prohibit across comments and logs}}
+### Tuck / Untuck
+<a id="a-tuckuntuck)</a>[TOC](#toc-tuckuntuck)
+- **Definition:** Stowing an active window frame off-screen against a monitor boundary, leaving only a tiny clickable/hoverable margin edge visible (Tuck), and restoring it when triggered (Untuck).
+- **Code Implementation Context:** Managed via `TuckWindow()` and `UntuckWindow()` functions in `HotWinAHK.ahk`.
+- **Synonyms / Avoid:** Avoid using "hide/unhide" or "minimize/restore" as Tuck refers specifically to margin docking.
 
-### {{Term / e.g., Parameter1}}
-<a id="a-termegparameter1"></a>[TOC](#toc-termegparameter1)
-- **Definition:** {{Details}}
-- **Code Implementation Context:** {{Details}}
+### Velocity Bump
+<a id="a-velocitybump"></a>[TOC](#toc-velocitybump)
+- **Definition:** Accelerating the mouse pointer rapidly against a screen margin to untuck a stowed window without needing hotkeys or clicking.
+- **Code Implementation Context:** Evaluated every 25ms in the main loop of `HotWinAHK.ahk` by calculating Euclidean cursor travel distance.
 
 ---
 
@@ -65,9 +65,9 @@ When generating code comments, documentation, or logs, always use these exact te
 <a id="a-systemacronymquickreference"></a>[TOC](#toc-systemacronymquickreference)
 | Acronym / Token | Full Expansion | Technical Scope |
 | :--- | :--- | :--- |
-| **`{{LE}}`** | {{Little Endian}} | {{The specific structural byte ordering required for parsing configurations.}} |
-| **`{{BOM}}`** | {{Byte Order Mark}} | {{The leading invisible system bytes used to verify configuration encoding compatibility.}} |
-| **`{{UDF}}`** | {{User Defined Function}} | {{External, reusable module script files imported into the core application loop engine.}} |
+| **`AHK`** | AutoHotkey | The scripting language and execution engine for HotWinAHK. |
+| **`HWND`** | Handle to Window | Win32 unique identifier for an active window instance. |
+| **`COM`** | Component Object Model | Microsoft binary-code interface standard used for shell integration. |
 
 ---
 ## 🚀 Go to...

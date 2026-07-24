@@ -5,7 +5,7 @@ title: TASKS
 <!-- TEMPLATE: TASKS.template.md -->
 <!-- 
 TASKS
-Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
+Any text bounded by double curly braces like this is a placeholder for you to fill out.
 Replace those placeholders with real paths, rules, and project constraints.
 
 INSTRUCTIONS FOR THE AI AGENT:
@@ -57,80 +57,67 @@ are received) and mark items completed ([x]) once verified.
 ---
 ## 💬 Incoming tasks from chat
 <a id="a-incomingtasksfromchat"></a>[TOC](#toc-incomingtasksfromchat)
-- [ ] {{Immediate chat task title 1}}
-  - {{Sub-details or acceptance criteria string}}
-- [ ] {{Immediate chat task title 2}}
+- [x] **Markdown Comment Cleaning Rule**: Strip hash (`#`) symbols from file header comments and `TEMPLATE:` single-line HTML comments across all Markdown documentation files.
+- [x] **Skill Rule Addition**: Update `skills/markdown-transform/SKILL.md` and `skills/system_skills/markdown-transform/SKILL.md` with the refined rule: "This rule applies strictly to the first multi-line HTML comment block (file header comment) and single-line comments that start with TEMPLATE:".
+- [x] **Server Cleanup & Single-View Constraints**: Purge web server files (`App.tsx`, `server.ts`, etc.) to enforce desktop AutoHotkey suite focus without unrequested server UI layers.
+- [x] **Code Analysis & AIMD Documentation Update**: Perform thorough static analysis on `HotWinAHK.ahk`, `HotWinAHK.ini`, `HotWinAHK_aux.ahk`, and `HotWinAHK_tray.ahk` to update all AIMD Markdown documentation files (`TASKS.md`, `LOG.md`, `README.md`, `AGENTS.md`, `BUILD.md`, `CODE.md`, `DESIGN.md`, `FEATURES.md`, `MANUAL.md`, `SPEC.md`, `TERMS.md`, `TESTING.md`, `VERSIONS.md`, `ARCHIVE.md`).
 
-<!-- 
-  INSTRUCTION: Checklists of ongoing file structural, layout, or backend changes.
--->
 ## 🔄 New Changes
 <a id="a-newchanges"></a>[TOC](#toc-newchanges)
-- [ ] Change {{Source}} to {{Target}}
-  - {{Describe what is being reorganized or cleaned up in the files}}
+- [x] Refactored `SKILL.md` in `skills/markdown-transform` and `skills/system_skills/markdown-transform` to restrict the hash-stripping comment rule to file headers and TEMPLATE comments.
+- [x] Updated `AIMD/*.md` files to replace double curly brace placeholders with real AutoHotkey v2.0 domain details.
 
-<!-- 
-  INSTRUCTION: Specify any new application configurations, environment overrides, 
-  or system values in local settings containers (.json, .ini, .env).
--->
 ## ⚙️ New Settings
 <a id="a-newsettings"></a>[TOC](#toc-newsettings)
-- [ ] {{Setting Key or Property Name}}
-  - {{Value format and explanation of how it affects runtime states}}
+- [x] `SilenceAll`: Boolean flag in `HotWinAHK.ini` under `[Settings]` controlling sound notifications across execution routines.
+- [x] `SilentOnWinCmds`: Boolean flag suppressing audio confirmation on window commands.
+- [x] `TipWinCmds`: Boolean flag displaying visual tooltips on window movement and docking actions.
 
-<!-- 
-  INSTRUCTION: Tasks mapping to newly registered commands (e.g., VS Code commands, AHK actions).
--->
 ## 🕹️ New Commands
 <a id="a-newcommands"></a>[TOC](#toc-newcommands)
-- [ ] Command: `{{Command ID / Name}}`
-  - {{Key callback and functionality definition}}
+- [x] Command: `HelpScreen` - Interactive keyboard command reference panel (`Win+/`).
+- [x] Command: `CmdPalette` - Fuzzy-search command palette for manual trigger and testing (`Win+\`).
+- [x] Command: `DragWindow` - Translucent interactive mouse dragging & edge tucking (`Win+F6`).
 
-<!-- 
-  INSTRUCTION: Tasks mapping to newly configured keystroke hotkeys or shortcuts.
--->
 ## ⌨️ New Bindings
 <a id="a-newbindings"></a>[TOC](#toc-newbindings)
-- [ ] Binding: `{{Keys Combination, e.g. Ctrl+Shift+S}}`
-  - {{Callback command or action triggering mapping}}
+- [x] Binding: `Win + Alt + Numpad 1-9` - Positions active window in 3x3 grid zones.
+- [x] Binding: `Win + Alt + Arrow Keys` - Snaps active window to screen edge margins.
+- [x] Binding: `Win + Ctrl + Pause` - Toggles suspension of all HotWinAHK hotkey triggers.
 
-<!-- 
-  INSTRUCTION: Checklists of newly requested major feature modules.
--->
 ## 🚀 New Features
 <a id="a-newfeatures"></a>[TOC](#toc-newfeatures)
-- [ ] Feature Name: {{Feature Description}}
-  - {{User-facing outcome and core sub-modules list}}
+- [x] Feature Name: AutoHotkey v2.0 Self-Compiling Static Hotkey Generator
+  - Compiles `HotWinAHK.ini` configuration rules into `HotWinAHK_aux.ahk` at startup for zero-latency execution.
 
 ---
 
 ## 🛑 Blocked Items & Impediments
 <a id="a-blockeditemsimpediments"></a>[TOC](#toc-blockeditemsimpediments)
-- **Blocked Task:** {{TASK-00X}}
-  - **Reason for Block:** {{Describe the specific error, missing file, or ambiguity}}
-  - **Action Required From:** `[Human]` or `{{Agent Name}}`
+- None. All tasks completed and verified.
 
 ---
 
 ## 🗃️ Completed Backlog (Archive)
 <a id="a-completedbacklogarchive"></a>[TOC](#toc-completedbacklogarchive)
-- [x] **{{TASK-000}} - Baseline Environment Layout Initialization** (By {{AgentName}} on {{2026-06-23}})
+- [x] **TASK-001 - Markdown Comment Hash Removal & Skill Documentation Update** (By Lead Architect on 2026-07-23)
+- [x] **TASK-002 - Web Server Purge & AIMD Documentation Alignment** (By Lead Architect on 2026-07-23)
 
 ### 🛠️ Settings
 <a id="a-settings"></a>[TOC](#toc-settings)
-- [ ] {{Configured/Established settings reference metadata}}
+- [x] Configured `HotWinAHK.ini` settings matrix with 200+ commands and default parameters (`SilenceAll=false`, `SilentOnWinCmds=false`, `TipWinCmds=true`).
 
 ### 💻 Commands
 <a id="a-commands"></a>[TOC](#toc-commands)
-- [ ] {{Configured/Established commands reference metadata}}
+- [x] Registered full command spectrum including `WindowPicker`, `Desk3d`, `SetHome`, `GoHome`, `MinimizeToTray`, `PickFromTray`, `AlwaysOnTop`, `SetOpacity70`.
 
 ### 🔗 Bindings
 <a id="a-bindings"></a>[TOC](#toc-bindings)
-- [ ] {{Configured/Established hotkeys reference metadata}}
+- [x] Configured hotkeys for grid zones, edge docking, home snap, window history, and system utilities.
 
 ### 📦 Features
 <a id="a-features"></a>[TOC](#toc-features)
-- [ ] {{Configured/Established user-facing features reference metadata}}
+- [x] High-performance window management suite written in AutoHotkey v2.0 with velocity edge tucking, 3x3 grid snapping, and tray stowing.
 
 ---
 ## 🚀 Go to...

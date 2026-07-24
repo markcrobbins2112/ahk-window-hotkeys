@@ -5,7 +5,7 @@ title: MANUAL
 <!-- TEMPLATE: MANUAL.template.md -->
 <!-- 
 MANUAL
-Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
+Any text bounded by double curly braces like this is a placeholder for you to fill out.
 Replace those placeholders with real paths, rules, and project constraints.
 
 INSTRUCTIONS FOR THE AI AGENT:
@@ -273,15 +273,15 @@ Every action from simple moves to grid mapping is indexed inside the INI command
 ### Known Failure States & Remediations
 <a id="a-knownfailurestatesremediations"></a>[TOC](#toc-knownfailurestatesremediations)
 
-#### 🚨 Symptom: "The environment variable '{{CORE_ROOT}}' is not defined."
-<a id="a-symptomtheenvironmentvariablecorerootisnotdefined"></a>[TOC](#toc-symptomtheenvironmentvariablecorerootisnotdefined)
-- **Root Cause:** The application was triggered before the system or user environment profile saved the location variable.
-- **Remediation:** Run a system setup terminal command to bind the path, or manually apply it via host operating system environment parameters.
+#### 🚨 Symptom: "HotWinAHK requiring Administrative Privileges"
+<a id="a-symptomhotwinahkrequiringadministrativeprivileges"></a>[TOC](#toc-symptomhotwinahkrequiringadministrativeprivileges)
+- **Root Cause:** Certain target elevated applications (such as Task Manager or Administrative Command Prompts) block un-elevated Win32 API window messages.
+- **Remediation:** Relaunch `HotWinAHK.ahk` using administrative rights (`RunAs Administrator`), which is triggered automatically by the script's self-elevation check at startup.
 
-#### 🚨 Symptom: Changes apply to files, but the visual interface does not update.
-<a id="a-symptomchangesapplytofilesbutthevisualinterfacedoesnotupdate"></a>[TOC](#toc-symptomchangesapplytofilesbutthevisualinterfacedoesnotupdate)
-- **Root Cause:** The operating system shell is serving a cached variation of the directory infrastructure layout.
-- **Remediation:** Re-trigger a shell refresh cycle or restart the host file architecture window manager.
+#### 🚨 Symptom: Changes apply to HotWinAHK.ini, but hotkeys do not update.
+<a id="a-symptomchangesapplytohotwinahkinibuthotkeysdonotupdate"></a>[TOC](#toc-symptomchangesapplytohotwinahkinibuthotkeysdonotupdate)
+- **Root Cause:** The dynamic hotkey generator has not compiled the new INI definitions into `HotWinAHK_aux.ahk`.
+- **Remediation:** Trigger hot-reload via `Win+Ctrl+F5` (`ReloadConfig`), or choose "Reload Config" from the system tray menu.
 
 ---
 ## 🚀 Go to...

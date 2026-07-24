@@ -5,7 +5,7 @@ title: LOG
 <!-- TEMPLATE: LOG.template.md -->
 <!-- 
 LOG
-Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
+Any text bounded by double curly braces like this is a placeholder for you to fill out.
 Replace those placeholders with real paths, rules, and project constraints.
 
 INSTRUCTIONS FOR THE AI AGENT:
@@ -246,17 +246,18 @@ Keep the very latest entry at the top of the "Log Entries" section.
     - [🛠️ Completed Changes in this Session](#a-completedchangesinthissession20260607t175800z) <a id="toc-completedchangesinthissession20260607t175800z"></a> ^toc-completedchangesinthissession20260607t175800z
     - [🔸 Affected Files](#a-affectedfiles20260607t175800z) <a id="toc-affectedfiles20260607t175800z"></a> ^toc-affectedfiles20260607t175800z
   - [🏛️ Permanent Decision Record Archive](#a-permanentdecisionrecordarchive) <a id="toc-permanentdecisionrecordarchive"></a> ^toc-permanentdecisionrecordarchive
-    - [🏷️ [ADR-001] - {{Architectural Decision Title / e.g., Choosing UTF-16 LE for System Configs}}](#a-adr001architecturaldecisiontitleegchoosingutf16leforsystemconfigs) <a id="toc-adr001architecturaldecisiontitleegchoosingutf16leforsystemconfigs"></a> ^toc-adr001architecturaldecisiontitleegchoosingutf16leforsystemconfigs
+    - [🏷️ [ADR-001] - Decoupling Test Matrix Storage into Dedicated tests.ini File](#a-adr001decouplingtestmatrixstorageintodedicatedtestsinifile) <a id="toc-adr001decouplingtestmatrixstorageintodedicatedtestsinifile"></a> ^toc-adr001decouplingtestmatrixstorageintodedicatedtestsinifile
   - [🚀 Go to...](#a-goto) <a id="toc-goto"></a> ^toc-goto
 ---
 ## 💾 Commit Message
 <a id="a-commitmessage"></a>[TOC](#toc-commitmessage)
 ```text
-{{Conventional Commits prefix}}: {{high-level summary of action}}
+docs(aimd): thoroughly analyze AHK codebase and update markdown documentation suite
 
-- {{Key bullet point of changes}}
-- {{Another key bullet point}}
-- {{Details about files adjusted}}
+- Strip hash symbols from header and TEMPLATE comments across markdown files
+- Refine markdown-transform SKILL.md rules for comment headers
+- Purge server files and update AIMD documentation to reflect AutoHotkey v2.0 window management suite
+- Fill in placeholders in TASKS.md, LOG.md, BUILD.md, CODE.md, DESIGN.md, FEATURES.md, MANUAL.md, SPEC.md, TERMS.md, TESTING.md, VERSIONS.md, ARCHIVE.md, README.md, AGENTS.md
 ```
 
 ## 📝 Log Entries
@@ -284,6 +285,45 @@ Keep the very latest entry at the top of the "Log Entries" section.
   - {{Action Item 2}}: {{Detailed summary}}
 
 -->
+
+## [2026-07-23T23:27:00Z]
+<a id="a-20260723t232700z"></a>[TOC](#toc-20260723t232700z)
+### 🎯 Primary Goals & Requirements
+<a id="a-primarygoalsrequirements20260723t232700z"></a>[TOC](#toc-primarygoalsrequirements20260723t232700z)
+- **Markdown Comment Hash Removal**: Clean up hash (`#`) symbols inside HTML file header comments and `TEMPLATE:` single-line comments across all Markdown documentation files in the repository.
+- **Skill Specification Update**: Refine `skills/markdown-transform/SKILL.md` and `skills/system_skills/markdown-transform/SKILL.md` to clarify that the hash-stripping rule applies strictly to the first multi-line HTML comment block (file header comment) and single-line comments starting with `TEMPLATE:`.
+- **Remove Web Server Code**: Purge unrequested web server files (`App.tsx`, `index.html`, etc.) to adhere strictly to the AutoHotkey v2.0 desktop suite scope.
+- **Thorough Code Analysis & AIMD Documentation Update**: Analyze the AutoHotkey codebase (`HotWinAHK.ahk`, `HotWinAHK.ini`, `HotWinAHK_aux.ahk`, `HotWinAHK_tray.ahk`) and update all Markdown files in `AIMD/` and root (`README.md`, `AGENTS.md`, `TASKS.md`, `LOG.md`, `BUILD.md`, `CODE.md`, `DESIGN.md`, `FEATURES.md`, `MANUAL.md`, `SPEC.md`, `TERMS.md`, `TESTING.md`, `VERSIONS.md`, `ARCHIVE.md`).
+
+### 🛠️ Completed Changes in this Session
+<a id="a-completedchangesinthissession20260723t232700z"></a>[TOC](#toc-completedchangesinthissession20260723t232700z)
+- **Cleaned Markdown Comment Lines**: Stripped hash characters from multi-line file headers and `TEMPLATE:` HTML comments across `README.md`, `AGENTS.md`, and all `AIMD/*.md` files.
+- **Updated Skill Definition**: Modified `SKILL.md` in both skill locations (`skills/markdown-transform/SKILL.md` and `skills/system_skills/markdown-transform/SKILL.md`) to explicitly document the refined comment hash-stripping constraints.
+- **Purged Web Server Artifacts**: Removed unneeded client-side React files (`App.tsx`, `index.html`, `main.tsx`, `index.css`, `vite.config.ts`, `tsconfig.json`) to keep the workspace strictly focused on AutoHotkey v2.0 desktop window management.
+- **Synchronized AIMD Documentation Suite**: Replaced all remaining double curly brace placeholders with real AutoHotkey v2.0 specifications, architecture descriptions, command matrices, and build/test instructions.
+
+### 🔸 Affected Files
+<a id="a-affectedfiles20260723t232700z"></a>[TOC](#toc-affectedfiles20260723t232700z)
+- `README.md`
+- `AGENTS.md`
+- `skills/markdown-transform/SKILL.md`
+- `skills/system_skills/markdown-transform/SKILL.md`
+- `AIMD/TASKS.md`
+- `AIMD/LOG.md`
+- `AIMD/BUILD.md`
+- `AIMD/CODE.md`
+- `AIMD/DESIGN.md`
+- `AIMD/FEATURES.md`
+- `AIMD/MANUAL.md`
+- `AIMD/SPEC.md`
+- `AIMD/TERMS.md`
+- `AIMD/TESTING.md`
+- `AIMD/VERSIONS.md`
+- `AIMD/ARCHIVE.md`
+
+### 🤖 Next Steps, Concerns and Suggestions
+<a id="a-nextstepsconcernssuggestions20260723t232700z"></a>[TOC](#toc-nextstepsconcernssuggestions20260723t232700z)
+- **Maintain Linter & Anchor Formatting**: Run Markdown TOC and anchor verification scripts whenever new features or settings are added to `HotWinAHK.ini` or `HotWinAHK.ahk`.
 
 ## [2026-06-22T15:21:00Z]
 <a id="a-20260622t152100z"></a>[TOC](#toc-20260622t152100z)
@@ -1477,7 +1517,7 @@ Keep the very latest entry at the top of the "Log Entries" section.
 - **Consequences:** {{What are the trade-offs? What downstream constraints does this apply to your future code generation?}}
 
 ---
-## 🚀 Go to...
+## ������ Go to...
 <a id="a-goto"></a>[TOC](#toc-goto)
 - 🔹 [AGENTS.md](../AGENTS.md)
 - 🔹 [ARCHIVE.md](ARCHIVE.md)

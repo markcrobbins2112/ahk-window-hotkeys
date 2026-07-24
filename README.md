@@ -5,7 +5,7 @@ title: README
 <!-- TEMPLATE: README.template.md -->
 <!-- 
 README
-Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
+Any text bounded by double curly braces like this is a placeholder for you to fill out.
 Replace those placeholders with real paths, rules, and project constraints.
 
 INSTRUCTIONS FOR THE AI AGENT:
@@ -57,15 +57,15 @@ High-performance window-management suite written in AutoHotkey v2.0
 ---
 ## 🎯 Project Abstract & Core Value
 <a id="a-projectabstractcorevalue"></a>[TOC](#toc-projectabstractcorevalue)
-- {{A robust system tool designed to seamlessly accomplish domain objectives, manage system states, and optimize operational pipelines.}}
+- A high-performance AutoHotkey v2.0 window management system providing 3x3 grid positioning, screen edge docking with velocity flick tucking, persistent home snap restoration, system-tray stowing, interactive translucent drag-and-drop, and real-time command palettes.
 
 ---
 
 ## 🛠️ Technology Stack at a Glance
 <a id="a-technologystackataglance"></a>[TOC](#toc-technologystackataglance)
 - **Target Operating System:** Windows 10+
-- **Core Languages & Runtimes:** AutoHotKey v2
-- **Integrations:** Avoid Standard window keys
+- **Core Languages & Runtimes:** AutoHotkey v2.0
+- **Integrations:** Native Windows API (User32.dll, Shell32.dll)
 
 ---
 
@@ -85,12 +85,12 @@ High-performance window-management suite written in AutoHotkey v2.0
 - **`AIMD/TERMS.md`** ➔ Technical glossary, definitions, and vocabulary indexes.
 - **`AIMD/TESTING.md`** ➔ Automation suites, edge cases, and QA assertion routines.
 - **`AIMD/VERSIONS.md`** ➔ Change trackers and version milestone evolution lists.
-- **`HotWinAHK_aux.ahk`** ➔ Dynamically generated keybindings
-- **`HotWinAHK_tray.ahk`** ➔ Tray functions
-- **`HotWinAHK.ahk`** ➔ Main Program
-- **`HotWinAHK.ini`** ➔ Key Assignments
-- **`HotWinAHK.log`** ➔ Diagnostics
-- **`windows-hotkeys-homes.ini`** ➔ Store Positions
+- **`HotWinAHK_aux.ahk`** ➔ Dynamically compiled static hotkey mappings.
+- **`HotWinAHK_tray.ahk`** ➔ System tray icon context menu and stowing routines.
+- **`HotWinAHK.ahk`** ➔ Main execution orchestrator engine.
+- **`HotWinAHK.ini`** ➔ Dynamic command assignments and application settings.
+- **`tests.ini`** ➔ Dedicated database tracking testing state, logs, and walkthrough metrics.
+- **`windows-hotkeys-homes.ini`** ➔ Persistent database storing custom home positions.
 
 ---
 
@@ -98,16 +98,16 @@ High-performance window-management suite written in AutoHotkey v2.0
 <a id="a-quickstartforaidevelopers"></a>[TOC](#toc-quickstartforaidevelopers)
 ### 1. Verify Environment
 <a id="a-1verifyenvironment"></a>[TOC](#toc-1verifyenvironment)
-- No Env Vars
+- Requires AutoHotkey v2.0 installed on Windows 10+. Verify runtime version:
 ```cmd
-{{Command to test environment variables or prerequisites / e.g., echo %ENV_ROOT%}}
+AutoHotkey.exe /ErrorStdOut "HotWinAHK.ahk"
 ```
 
 ### 2. Compile & Run Tests
 <a id="a-2compileruntests"></a>[TOC](#toc-2compileruntests)
-- No Tests Currently
+- Trigger the built-in walkthrough test suite via hotkey `Win+Ctrl+Alt+T` (`CommandTest`) or `Win+Ctrl+Alt+K` (`KeyboardTest`).
 ```cmd
-{{High-level system execution command chain / e.g., run_build.bat && run_test.bat}}
+"C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" HotWinAHK.ahk
 ```
 
 ---

@@ -5,7 +5,7 @@ title: DESIGN
 <!-- TEMPLATE: DESIGN.template.md -->
 <!-- 
 DESIGN
-Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
+Any text bounded by double curly braces like this is a placeholder for you to fill out.
 Replace those placeholders with real paths, rules, and project constraints.
 
 INSTRUCTIONS FOR THE AI AGENT:
@@ -70,11 +70,14 @@ Do not propose code or modifications that violate the patterns, structural layou
 ## 📂 Core File Structure Layout
 <a id="a-corefilestructurelayout"></a>[TOC](#toc-corefilestructurelayout)
 ```text
-📂 Project Root/ # source and ini
-├── 📂 AIMD/     # AI Markdown
-├── 📂 {{tests_dir}}/      # Automated validation suites and fixture mock blocks
-├── 📂 {{assets_dir}}/     # Graphic binaries, configuration templates, resources
-└── 📂 docs/               # Technical specifications and human runbook maps
+📂 Project Root/                  # Root source, scripts, and INI configs
+├── 📂 AIMD/                      # AI Primary Markdown specifications & logs
+├── 📄 HotWinAHK.ahk              # Main execution engine and event orchestrator
+├── 📄 HotWinAHK.ini              # Master user hotkey and settings configuration
+├── 📄 HotWinAHK_aux.ahk          # Dynamically compiled static AHK hotkey mappings
+├── 📄 HotWinAHK_tray.ahk         # System tray icon and window stowing menu delegate
+├── 📄 tests.ini                  # Walkthrough test states, ratings, and diagnostic logs
+└── 📄 windows-hotkeys-homes.ini  # Persistent saved home window positions and bounds
 ```
 
 ---
@@ -83,7 +86,7 @@ Do not propose code or modifications that violate the patterns, structural layou
 <a id="a-designprinciplesguardrails"></a>[TOC](#toc-designprinciplesguardrails)
 - **Dependency Minimization:** Avoid adding external packages/libraries unless natively impossible.
 - **Separation of Concerns:** Keep presentation/UI entirely decoupled from system-level business logic.
-- **Security Constraints:** {{Specify validation rules, e.g., Absolute sanitization metrics on incoming path parameters against injection mutations}}
+- **Security Constraints:** Enforce administrative self-elevation (`RunAs`) for Win32 API window control, and sanitize hotkey string parsing against unvalidated input sequences.
 
 ---
 ## 🚀 Go to...
