@@ -2,24 +2,26 @@
 title: MANUAL
 ---
 
-<!-- # TEMPLATE: MANUAL.template.md -->
+<!-- TEMPLATE: MANUAL.template.md -->
 <!-- 
-# MANUAL
-# Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
-# Replace those placeholders with real paths, rules, and project constraints.
-#
-# INSTRUCTIONS FOR THE AI AGENT:
-# This file is the developer's handbook. It maps structural topologies, data flow,
-# core algorithms, algebraic formulas, configuration guidelines, and technical specifications.
+MANUAL
+Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
+Replace those placeholders with real paths, rules, and project constraints.
+
+INSTRUCTIONS FOR THE AI AGENT:
+This file is the developer's handbook. It maps structural topologies, data flow,
+core algorithms, algebraic formulas, configuration guidelines, and technical specifications.
 -->
 
 <!-- markdownlint-disable MD013 -->
 
 # MANUAL
+<a id="a-manual"></a>[TOC](#toc-manual)
 
 This guide describes the structural architecture, module layout, internal algorithms, optimization behaviors, and technical specifications of the **HotWinAHK** codebase.
 
 ## 📑 AI Primary Files
+<a id="a-aiprimaryfiles"></a>[TOC](#toc-aiprimaryfiles)
 - 🔹 [AGENTS.md](../AGENTS.md)
 - 🔹 [ARCHIVE.md](ARCHIVE.md)
 - 🔹 [BUILD.md](BUILD.md)
@@ -40,24 +42,37 @@ AI to use a free form format with groups here
 free to add/remove/modify these sections
 -->
 
+<!-- TOC location -->
 ## 🔍 Table of Contents
-- [[#📥 Installation & Initial Deployment]] ^toc-install
-- [[#🏗️ 1. Architecture Overview]] ^toc-architecture
-- [[#🧠 2. Core Modules & Systems]] ^toc-modules
-- [[#🔎 3. Core Algorithm & Mathematical Formulas]] ^toc-math
-- [[#🛰️ 4. Commands, Keybindings & Context Flags]] ^toc-commands
-- [[#🔧 5. Workspace Build & Configuration]] ^toc-config
-- [[#🔍 Diagnostics & Common Troubleshooting]] ^toc-diagnostics
-- [[#Go to...]] ^toc-goto
-
-This guide describes the structural architecture, module layout, internal algorithms, optimization behaviors, and technical specifications of the **{{Specify Application Name}}** codebase.
-
+<!-- Maintained by script -->
+- [MANUAL](#a-manual) <a id="toc-manual"></a> ^toc-manual
+  - [📑 AI Primary Files](#a-aiprimaryfiles) <a id="toc-aiprimaryfiles"></a> ^toc-aiprimaryfiles
+  - [📥 Installation & Initial Deployment](#a-installationinitialdeployment) <a id="toc-installationinitialdeployment"></a> ^toc-installationinitialdeployment
+    - [Setup Sequence](#a-setupsequence) <a id="toc-setupsequence"></a> ^toc-setupsequence
+  - [🧠 2. Core Modules & Systems](#a-2coremodulessystems) <a id="toc-2coremodulessystems"></a> ^toc-2coremodulessystems
+  - [🔎 3. Core Algorithm](#a-3corealgorithm) <a id="toc-3corealgorithm"></a> ^toc-3corealgorithm
+  - [🛰️ 4. Commands, Keybindings & Context Flags](#a-4commandskeybindingscontextflags) <a id="toc-4commandskeybindingscontextflags"></a> ^toc-4commandskeybindingscontextflags
+    - [📋 Categorized Action Commands Reference](#a-categorizedactioncommandsreference) <a id="toc-categorizedactioncommandsreference"></a> ^toc-categorizedactioncommandsreference
+      - [⚙️ SYSTEM (Orchestration & Tools)](#a-systemorchestrationtools) <a id="toc-systemorchestrationtools"></a> ^toc-systemorchestrationtools
+      - [🪟 WINDOW (Attributes, Trays & Bulk)](#a-windowattributestraysbulk) <a id="toc-windowattributestraysbulk"></a> ^toc-windowattributestraysbulk
+      - [🏠 HOME (Window Persistence)](#a-homewindowpersistence) <a id="toc-homewindowpersistence"></a> ^toc-homewindowpersistence
+      - [🎯 FOCUS (Z-Order, History & Swaps)](#a-focuszorderhistoryswaps) <a id="toc-focuszorderhistoryswaps"></a> ^toc-focuszorderhistoryswaps
+      - [🫥 TUCK (Docker & Auto-Hide)](#a-tuckdockerautohide) <a id="toc-tuckdockerautohide"></a> ^toc-tuckdockerautohide
+      - [🗺️ MOVE (Grid Matrix Positioning)](#a-movegridmatrixpositioning) <a id="toc-movegridmatrixpositioning"></a> ^toc-movegridmatrixpositioning
+      - [📐 SIZE (Boundary Scaling, Margins & Trimming)](#a-sizeboundaryscalingmarginstrimming) <a id="toc-sizeboundaryscalingmarginstrimming"></a> ^toc-sizeboundaryscalingmarginstrimming
+  - [🔧 5. Workspace Build & Configuration](#a-5workspacebuildconfiguration) <a id="toc-5workspacebuildconfiguration"></a> ^toc-5workspacebuildconfiguration
+  - [🔍 Diagnostics & Common Troubleshooting](#a-diagnosticscommontroubleshooting) <a id="toc-diagnosticscommontroubleshooting"></a> ^toc-diagnosticscommontroubleshooting
+    - [Known Failure States & Remediations](#a-knownfailurestatesremediations) <a id="toc-knownfailurestatesremediations"></a> ^toc-knownfailurestatesremediations
+      - [🚨 Symptom: "The environment variable '{{CORE_ROOT}}' is not defined."](#a-symptomtheenvironmentvariablecorerootisnotdefined) <a id="toc-symptomtheenvironmentvariablecorerootisnotdefined"></a> ^toc-symptomtheenvironmentvariablecorerootisnotdefined
+      - [🚨 Symptom: Changes apply to files, but the visual interface does not update.](#a-symptomchangesapplytofilesbutthevisualinterfacedoesnotupdate) <a id="toc-symptomchangesapplytofilesbutthevisualinterfacedoesnotupdate"></a> ^toc-symptomchangesapplytofilesbutthevisualinterfacedoesnotupdate
+  - [🚀 Go to...](#a-goto) <a id="toc-goto"></a> ^toc-goto
+---
 ---
 
 ## 📥 Installation & Initial Deployment
-[[#^toc-install|TOC]]
-
+<a id="a-installationinitialdeployment"></a>[TOC](#toc-installationinitialdeployment)
 ### Setup Sequence
+<a id="a-setupsequence"></a>[TOC](#toc-setupsequence)
 - 1. **Compile/Build Assets:** Run the compile script or build pipeline as documented in `BUILD.md`.
 - 2. **Apply Configurations:** Run administrative scripts or system configurations required for the base application environment.
 - 3. **Register Components:** Execute target registry configurations or system file bindings to link the software with the host operating system.
@@ -80,6 +95,7 @@ HotWinAHK operates as a low-overhead orchestrator for the Windows desktop enviro
   and persistent background loops that govern state transitions.
 -->
 ## 🧠 2. Core Modules & Systems
+<a id="a-2coremodulessystems"></a>[TOC](#toc-2coremodulessystems)
 The codebase is composed of highly specialized systems that collaborate without thread blocks:
 - **Hotkeys Dynamic Compiler**: Parsed using `IniRead` arrays. Identifies active sections, extracts mapping keys, maps virtual modifier sequences (Ctrl, Alt, Shift, Win), verifies standard character formats, and structures `.ahk` trigger blocks with execution safety gates. Automatically registers matching counterparts for Numpad hotkeys (such as mapping standard layout keys with their non-lock navigation equivalents) during compilation so bindings work flawlessly under any keyboard state.
 - **Velocity Bump Tracker**: An active thread loop running on a tight 25ms interval. Evaluates physical mouse velocities and boundary positions against configured edge parameters.
@@ -87,6 +103,7 @@ The codebase is composed of highly specialized systems that collaborate without 
 - **Dark-Themed Tooltip Engine**: Intercepts active Windows tooltips (`ahk_class tooltips_class32`) and forces dark theme styling natively using the Windows UX Theme library (`SetWindowTheme` API).
 
 ## 🔎 3. Core Algorithm
+<a id="a-3corealgorithm"></a>[TOC](#toc-3corealgorithm)
 The application's crown jewel is its mathematical screen-edge docking and mouse-bumping algorithm:
 - **Euclidean Vector Speed Calculation**: On every 25ms cycle, it measures the vector travel distance of the mouse:
   $$\text{pixelDistance} = \sqrt{\Delta X^2 + \Delta Y^2}$$
@@ -117,6 +134,7 @@ The application's crown jewel is its mathematical screen-edge docking and mouse-
 - **Recursive Nested Region-Based INI Compiler**: Upgrades the automatic `.ini` matrix compilation engine to format `HotWinAHK.ini` recursively inside folding blocks of regions using standard IDE syntax (`;   #region <Category>`, `; #endregion <Category>`). It extracts active settings from the old matrix, creates backup points, translates keyboard modifier chains, and writes default templates for missing keys without corrupting custom user-configured keybindings.
 
 ## 🛰️ 4. Commands, Keybindings & Context Flags
+<a id="a-4commandskeybindingscontextflags"></a>[TOC](#toc-4commandskeybindingscontextflags)
 Every action from simple moves to grid mapping is indexed inside the INI command table:
 - **Modifier Bindings**: Standardized representation allows compound keys to be written easily (e.g. `Win+Ctrl+Shift+Left`).
 - **Contextual Execution Filters**: Hotkey combinations can be targeted to run conditionally using key filters:
@@ -125,8 +143,10 @@ Every action from simple moves to grid mapping is indexed inside the INI command
   - `winexeis=text` (direct executable restriction filters)
 
 ### 📋 Categorized Action Commands Reference
+<a id="a-categorizedactioncommandsreference"></a>[TOC](#toc-categorizedactioncommandsreference)
 
 #### ⚙️ SYSTEM (Orchestration & Tools)
+<a id="a-systemorchestrationtools"></a>[TOC](#toc-systemorchestrationtools)
 - **HelpScreen**: Display the interactive keyboard command reference panel containing on-screen documentation.
 - **CmdPalette**: Display the interactive fuzzy-search Command Palette for manual trigger / dry-run testing.
 - **WinInfo**: Display active window physical bounds, handle ID, class name, and executable system path.
@@ -149,6 +169,7 @@ Every action from simple moves to grid mapping is indexed inside the INI command
 - **Active Window Dot**: Draws a persistent telemetry status dot at the active window's top-left margin of the target layout.
 
 #### 🪟 WINDOW (Attributes, Trays & Bulk)
+<a id="a-windowattributestraysbulk"></a>[TOC](#toc-windowattributestraysbulk)
 - **AlwaysOnTop**: Toggle Always-On-Top focus pinning attribute on active window frame.
 - **SetOpacity70**: Set alpha opacity transparency level to 70% on active window frame.
 - **RemoveOpacity**: Restore active window opacity to full solid visibility.
@@ -166,6 +187,7 @@ Every action from simple moves to grid mapping is indexed inside the INI command
 - **MinimizeAllMaximized**: Minimize all currently maximized windows.
 
 #### 🏠 HOME (Window Persistence)
+<a id="a-homewindowpersistence"></a>[TOC](#toc-homewindowpersistence)
 - **SetHome**: Save active window class/process/fuzzy title signature to persistent home location.
 - **ClearHome**: Delete saved home location configuration for active window.
 - **GoHome**: Relocate window to its persistent home position.
@@ -173,6 +195,7 @@ Every action from simple moves to grid mapping is indexed inside the INI command
 - **HomePeek**: Momentarily draw a transparent overlay footprint of the window's home location on screen.
 
 #### 🎯 FOCUS (Z-Order, History & Swaps)
+<a id="a-focuszorderhistoryswaps"></a>[TOC](#toc-focuszorderhistoryswaps)
 - **NextWindow**: Cycle focus smoothly forward across open desktop window frames.
 - **PrevWindow**: Cycle focus smoothly backward across open desktop window frames.
 - **NextClassWindow**: Cycle focus specifically forward between windows of identical process class path.
@@ -192,6 +215,7 @@ Every action from simple moves to grid mapping is indexed inside the INI command
 - **Gridify**: Opens a rapid Columns-Then-Rows nested layout placement menu mapping cells up to 9x9.
 
 #### 🫥 TUCK (Docker & Auto-Hide)
+<a id="a-tuckdockerautohide"></a>[TOC](#toc-tuckdockerautohide)
 - **TuckLeft**: Tuck window past left screen wall, exposing a 20px dock indicator bar.
 - **TuckRight**: Tuck window past right screen wall, exposing a 20px dock indicator bar.
 - **TuckUp**: Tuck window past top screen wall, exposing a 20px dock indicator bar.
@@ -205,6 +229,7 @@ Every action from simple moves to grid mapping is indexed inside the INI command
 - **TuckedPeekAll** / **TuckedPeekLeft** / **TuckedPeekRight** / **TuckedPeekTop** / **TuckedPeekBottom**: Spawns edge-filtered interactive pop-up lists of stowed handles displaying full Hexadecimal HWND identifiers.
 
 #### 🗺️ MOVE (Grid Matrix Positioning)
+<a id="a-movegridmatrixpositioning"></a>[TOC](#toc-movegridmatrixpositioning)
 - **Center**: Move active window to center of screen without sizing changes.
 - **MoveTadLeft** / **MoveTadRight** / **MoveTadUp** / **MoveTadDown**: Shift active window by 1/4 of a cell width/height (106px horizontally, 58px vertically) coarse-scale (tad nudge).
 - **MovepxLeft** / **MovepxRight** / **MovepxUp** / **MovepxDown**: Nudge active window with fine precision (10px horizontally, 5px vertically) (px nudge).
@@ -216,6 +241,7 @@ Every action from simple moves to grid mapping is indexed inside the INI command
 - **MoveToGridLeft** / **MoveToGridRight** / **MoveToGridUp** / **MoveToGridDown** / **MoveToGridTopLeft** / **MoveToGridTopRight** / **MoveToGridBottomLeft** / **MoveToGridBottomRight**: Shift active window between virtual grid units/aspects.
 
 #### 📐 SIZE (Boundary Scaling, Margins & Trimming)
+<a id="a-sizeboundaryscalingmarginstrimming"></a>[TOC](#toc-sizeboundaryscalingmarginstrimming)
 - **MouseToGrid**: Warp window beneath mouse cursor directly to closest grid block.
 - **MouseRelativeSize**: Resize window dynamically relative to cursor movement boundary vectors.
 - **SnapToGridEnlarge**: Grow active window boundaries to span next adjacent grid aspect cell.
@@ -234,6 +260,7 @@ Every action from simple moves to grid mapping is indexed inside the INI command
 
 
 ## 🔧 5. Workspace Build & Configuration
+<a id="a-5workspacebuildconfiguration"></a>[TOC](#toc-5workspacebuildconfiguration)
 - **Script Customization**: Changes to standard profiles are added to the `HotWinAHK.ini` table.
 - **On-The-Fly Compilation**: Hotkeys automatically re-compile and reboot on save or whenever `ReloadConfig` triggers.
 - **Distribution Compile Step**: Source directories can be bundled into standard Windows binaries using compiler commands (`Ahk2Exe.exe /in HotWinAHK.ahk /out HotWinAHK.exe`).
@@ -242,21 +269,23 @@ Every action from simple moves to grid mapping is indexed inside the INI command
 ---
 
 ## 🔍 Diagnostics & Common Troubleshooting
-[[#^toc-diagnostics|TOC]]
-
+<a id="a-diagnosticscommontroubleshooting"></a>[TOC](#toc-diagnosticscommontroubleshooting)
 ### Known Failure States & Remediations
+<a id="a-knownfailurestatesremediations"></a>[TOC](#toc-knownfailurestatesremediations)
 
 #### 🚨 Symptom: "The environment variable '{{CORE_ROOT}}' is not defined."
+<a id="a-symptomtheenvironmentvariablecorerootisnotdefined"></a>[TOC](#toc-symptomtheenvironmentvariablecorerootisnotdefined)
 - **Root Cause:** The application was triggered before the system or user environment profile saved the location variable.
 - **Remediation:** Run a system setup terminal command to bind the path, or manually apply it via host operating system environment parameters.
 
 #### 🚨 Symptom: Changes apply to files, but the visual interface does not update.
+<a id="a-symptomchangesapplytofilesbutthevisualinterfacedoesnotupdate"></a>[TOC](#toc-symptomchangesapplytofilesbutthevisualinterfacedoesnotupdate)
 - **Root Cause:** The operating system shell is serving a cached variation of the directory infrastructure layout.
 - **Remediation:** Re-trigger a shell refresh cycle or restart the host file architecture window manager.
 
 ---
 ## 🚀 Go to...
-[[#^toc-goto|TOC]]
+<a id="a-goto"></a>[TOC](#toc-goto)
 - 🔹 [AGENTS.md](../AGENTS.md)
 - 🔹 [ARCHIVE.md](ARCHIVE.md)
 - 🔹 [BUILD.md](BUILD.md)
@@ -272,4 +301,4 @@ Every action from simple moves to grid mapping is indexed inside the INI command
 - 🔹 [TESTING.md](TESTING.md)
 - 🔹 [VERSIONS.md](VERSIONS.md)
 
-<!-- # TEMPLATE: MANUAL.template.md -->
+<!-- TEMPLATE: MANUAL.template.md -->

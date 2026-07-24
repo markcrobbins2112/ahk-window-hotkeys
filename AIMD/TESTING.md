@@ -2,25 +2,27 @@
 title: TESTING
 ---
 
-<!-- # TEMPLATE: TESTING.template.md -->
+<!-- TEMPLATE: TESTING.template.md -->
 <!-- 
-# TESTING
-# Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
-# Replace those placeholders with real paths, rules, and project constraints.
-#
-# INSTRUCTIONS FOR THE AI AGENT:
-# This file is an interactive QA test sheet. Use it to coordinate regression checks, 
-# layout edits, interface interactions, calculations checks, state transitions, and border boundaries.
-# Every major feature module must map back to an actionable checkbox item with expected outcomes.
+TESTING
+Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
+Replace those placeholders with real paths, rules, and project constraints.
+
+INSTRUCTIONS FOR THE AI AGENT:
+This file is an interactive QA test sheet. Use it to coordinate regression checks, 
+layout edits, interface interactions, calculations checks, state transitions, and border boundaries.
+Every major feature module must map back to an actionable checkbox item with expected outcomes.
 -->
 
 <!-- markdownlint-disable MD013 -->
 
 # TESTING
+<a id="a-testing"></a>[TOC](#toc-testing)
 
 You can use this interactive test sheet directly with VS Code / Cursor to verify that all systems in **HotWinAHK** are fully functional. Put your cursor on these checkbox lines, and mark them done!
 
 ## 📑 AI Primary Files
+<a id="a-aiprimaryfiles"></a>[TOC](#toc-aiprimaryfiles)
 - 🔹 [AGENTS.md](../AGENTS.md)
 - 🔹 [ARCHIVE.md](ARCHIVE.md)
 - 🔹 [BUILD.md](BUILD.md)
@@ -36,20 +38,25 @@ You can use this interactive test sheet directly with VS Code / Cursor to verify
 - 🔸 [TESTING.md](TESTING.md)
 - 🔹 [VERSIONS.md](VERSIONS.md)
 
+<!-- TOC location -->
 ## 🔍 Table of Contents
-- [[#🔵 1. Setup & Environment Initializations]] ^toc-setup
-- [[#🟢 2. Primary Functionality & Core Operations]] ^toc-core
-- [[#⚡ 3. Granular Property Checks & Edge Boundaries]] ^toc-edge
-- [[#🕹️ 4. Layout, Rendering & States Loops]] ^toc-rendering
-- [[#🚀 5. Advanced Integrations, Backends & Performance Checks]] ^toc-advanced
-- [[#🗃️ QA Validation History (Sign-Off Log)]] ^toc-history
-- [[#🚀 Go to...]] ^toc-goto
-
-You can use this interactive test sheet directly with VS Code / Cursor to verify that all systems in **{{Specify Program Name}}** are fully functional. Put your cursor on these checkbox lines, and mark them done!
-
+<!-- Maintained by script -->
+- [TESTING](#a-testing) <a id="toc-testing"></a> ^toc-testing
+  - [📑 AI Primary Files](#a-aiprimaryfiles) <a id="toc-aiprimaryfiles"></a> ^toc-aiprimaryfiles
+  - [🔵 Setup & Environment Check](#a-setupenvironmentcheck) <a id="toc-setupenvironmentcheck"></a> ^toc-setupenvironmentcheck
+  - [🟢 Template & Basic Copying Checks](#a-templatebasiccopyingchecks) <a id="toc-templatebasiccopyingchecks"></a> ^toc-templatebasiccopyingchecks
+  - [⚡ Granular Property & Line Actions](#a-granularpropertylineactions) <a id="toc-granularpropertylineactions"></a> ^toc-granularpropertylineactions
+  - [🕹️ Structural Reordering & Array Edits](#a-structuralreorderingarrayedits) <a id="toc-structuralreorderingarrayedits"></a> ^toc-structuralreorderingarrayedits
+  - [🚀 Keybinding Configuration & Picker Tests](#a-keybindingconfigurationpickertests) <a id="toc-keybindingconfigurationpickertests"></a> ^toc-keybindingconfigurationpickertests
+  - [💎 Advanced Interactive Workspace Features](#a-advancedinteractiveworkspacefeatures) <a id="toc-advancedinteractiveworkspacefeatures"></a> ^toc-advancedinteractiveworkspacefeatures
+  - [🗃️ QA Validation History (Sign-Off Log)](#a-qavalidationhistorysignofflog) <a id="toc-qavalidationhistorysignofflog"></a> ^toc-qavalidationhistorysignofflog
+    - [📅 [YYYY-MM-DD] - Build v{{X.X.X}}](#a-yyyymmddbuildvxxx) <a id="toc-yyyymmddbuildvxxx"></a> ^toc-yyyymmddbuildvxxx
+  - [🚀 Go to...](#a-goto) <a id="toc-goto"></a> ^toc-goto
+---
 ---
 
 ## 🔵 Setup & Environment Check
+<a id="a-setupenvironmentcheck"></a>[TOC](#toc-setupenvironmentcheck)
 - [ ] Admin Elevation Check
     - **Instructions**: Launch HotWinAHK (`HotWinAHK.ahk`).
     - **Expected Results**: Prompt for administrator privileges if not already elevated; launches correctly without errors.
@@ -61,6 +68,7 @@ You can use this interactive test sheet directly with VS Code / Cursor to verify
     - **Expected Results**: Status tray registers the mouse context event and emits a diagnostic 2-tone audio beep confirmation.
 
 ## 🟢 Template & Basic Copying Checks
+<a id="a-templatebasiccopyingchecks"></a>[TOC](#toc-templatebasiccopyingchecks)
 - [ ] Compiler Stream Rewrite Check
     - **Instructions**: Make a minor change in `HotWinAHK.ini` (e.g. enable a commented line) and trigger reload.
     - **Expected Results**: File modification timestamps on `/HotWinAHK_aux.ahk` shift immediately; new hotkeys register.
@@ -72,6 +80,7 @@ You can use this interactive test sheet directly with VS Code / Cursor to verify
     - **Expected Results**: Compiler identifies the invalid character string, automatically deletes that faulty line from `/HotWinAHK.ini`, and reboots silently to prevent program crashes.
 
 ## ⚡ Granular Property & Line Actions
+<a id="a-granularpropertylineactions"></a>[TOC](#toc-granularpropertylineactions)
 - [ ] Pixel-Precision 1px Fine-Nudges
     - **Instructions**: Focus an application window and strike `Win+Shift+Left / Right / Up / Down`.
     - **Expected Results**: The focused frame shifts coordinate coordinates by exactly 1 pixel in the input vector direction.
@@ -83,6 +92,7 @@ You can use this interactive test sheet directly with VS Code / Cursor to verify
     - **Expected Results**: Window fades immediately to translucent rendering, then restores cleanly to opaque without flashing.
 
 ## 🕹️ Structural Reordering & Array Edits
+<a id="a-structuralreorderingarrayedits"></a>[TOC](#toc-structuralreorderingarrayedits)
 - [ ] Absolute Work Area Margin Snapping
     - **Instructions**: Strike snap commands (e.g. `Ctrl+Numpad5` for center, `Ctrl+Numpad7` for Top-Left corner).
     - **Expected Results**: Frame shifts immediately into position with seamless ease-out animations over 150ms.
@@ -94,6 +104,7 @@ You can use this interactive test sheet directly with VS Code / Cursor to verify
     - **Expected Results**: The frame shrinks by one tile factor down to a minimum 1x1 block index footprint.
 
 ## 🚀 Keybinding Configuration & Picker Tests
+<a id="a-keybindingconfigurationpickertests"></a>[TOC](#toc-keybindingconfigurationpickertests)
 - [ ] Monitor Edge Slip Tuck System
     - **Instructions**: Strike tuck dock shortcut (e.g. `Win+Ctrl+Shift+Left` which maps to `TuckLeft`).
     - **Expected Results**: Window frame glides past the monitor margin. Screen boundary leaves exactly a 20px wide tactile border band. Focus switches to the underlying window.
@@ -105,6 +116,7 @@ You can use this interactive test sheet directly with VS Code / Cursor to verify
     - **Expected Results**: Notepad frame vanishes from window view. A standalone subprocess tray icon (represented by NotePad's native application icon asset) registers in system workspace tray area displaying customized mouse-over tooltips (driven by `HotWinAHK_tray.ahk`).
 
 ## 💎 Advanced Interactive Workspace Features
+<a id="a-advancedinteractiveworkspacefeatures"></a>[TOC](#toc-advancedinteractiveworkspacefeatures)
 - [ ] Overhauled Button-based WindowPicker Navigation
     - **Instructions**: Open WindowPicker, type search filters.
     - **Expected Results**: Dark themed GUI pop-up lists up to 8 matched rows. Navigates smoothly via mouse-hover, arrow keys, or hitting specific numeric indices, launching focus to target on Enter or click.
@@ -125,9 +137,9 @@ You can use this interactive test sheet directly with VS Code / Cursor to verify
 ---
 
 ## 🗃️ QA Validation History (Sign-Off Log)
-[[#^toc-history|TOC]]
-
+<a id="a-qavalidationhistorysignofflog"></a>[TOC](#toc-qavalidationhistorysignofflog)
 ### 📅 [YYYY-MM-DD] - Build v{{X.X.X}}
+<a id="a-yyyymmddbuildvxxx"></a>[TOC](#toc-yyyymmddbuildvxxx)
 - **Testing Agent:** {{e.g., Quality Assurance Bot / reference AGENTS.md}}
 - **Passed Cases:** {{List matching scenario titles that passed baseline validations}}
 - **Failed Cases / Notes:** {{None, or list issues found during test loop}}
@@ -136,7 +148,7 @@ You can use this interactive test sheet directly with VS Code / Cursor to verify
 ---
 
 ## 🚀 Go to...
-[[#^toc-goto|TOC]]
+<a id="a-goto"></a>[TOC](#toc-goto)
 - 🔹 [AGENTS.md](../AGENTS.md)
 - 🔹 [ARCHIVE.md](ARCHIVE.md)
 - 🔹 [BUILD.md](BUILD.md)
@@ -152,4 +164,4 @@ You can use this interactive test sheet directly with VS Code / Cursor to verify
 - 🔸 [TESTING.md](TESTING.md)
 - 🔹 [VERSIONS.md](VERSIONS.md)
 
-<!-- # TEMPLATE: TESTING.template.md -->
+<!-- TEMPLATE: TESTING.template.md -->

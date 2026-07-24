@@ -2,25 +2,27 @@
 title: SPEC
 ---
 
-<!-- # TEMPLATE: SPEC.template.md -->
+<!-- TEMPLATE: SPEC.template.md -->
 <!-- 
-# SPEC
-# Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
-# Replace those placeholders with real paths, rules, and project constraints.
-#
-# INSTRUCTIONS FOR THE AI AGENT:
-# This file tracks formal specifications, comparing originally requested guidelines 
-# against actual implemented items. Document architectural challenges, optimization rules,
-# compatibility constraints, and platform limits.
+SPEC
+Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
+Replace those placeholders with real paths, rules, and project constraints.
+
+INSTRUCTIONS FOR THE AI AGENT:
+This file tracks formal specifications, comparing originally requested guidelines 
+against actual implemented items. Document architectural challenges, optimization rules,
+compatibility constraints, and platform limits.
 -->
 
 <!-- markdownlint-disable MD013 -->
 
 # SPEC
+<a id="a-spec"></a>[TOC](#toc-spec)
 
 This document compiles the user requirements and instructions from `AGENTS.md` and related files and provides detailed documentation of how the extension was architected and built.
 
 ## 📑 AI Primary Files
+<a id="a-aiprimaryfiles"></a>[TOC](#toc-aiprimaryfiles)
 - 🔹 [AGENTS.md](../AGENTS.md)
 - 🔹 [ARCHIVE.md](ARCHIVE.md)
 - 🔹 [BUILD.md](BUILD.md)
@@ -36,22 +38,29 @@ This document compiles the user requirements and instructions from `AGENTS.md` a
 - 🔹 [TESTING.md](TESTING.md)
 - 🔹 [VERSIONS.md](VERSIONS.md)
 
+<!-- TOC location -->
 ## 🔍 Table of Contents
-- [[#🔗 External Application Protocols & URI Schemes]] ^toc-uri
-- [[#💻 Native OS Integration Details]] ^toc-os
-- [[#📋 Originally Requested Specifications]] ^toc-requested
-- [[#🎯 Implemented Technical Concerns & Optimization Features]] ^toc-optimization
-- [[#🚦 Internal Function Signatures & System Exit Codes]] ^toc-codes
-- [[#Go to...]] ^toc-goto
-
-This document compiles the user requirements and instructions from `AGENTS.md` and related files and provides detailed documentation of how the extension was architected and built.
-
+<!-- Maintained by script -->
+- [SPEC](#a-spec) <a id="toc-spec"></a> ^toc-spec
+  - [📑 AI Primary Files](#a-aiprimaryfiles) <a id="toc-aiprimaryfiles"></a> ^toc-aiprimaryfiles
+  - [🔗 External Application Protocols & URI Schemes](#a-externalapplicationprotocolsurischemes) <a id="toc-externalapplicationprotocolsurischemes"></a> ^toc-externalapplicationprotocolsurischemes
+    - [{{Protocol/Application Name}} Link Contract](#a-protocolapplicationnamelinkcontract) <a id="toc-protocolapplicationnamelinkcontract"></a> ^toc-protocolapplicationnamelinkcontract
+  - [💻 Native OS Integration Details](#a-nativeosintegrationdetails) <a id="toc-nativeosintegrationdetails"></a> ^toc-nativeosintegrationdetails
+    - [Registry / Configuration Mappings](#a-registryconfigurationmappings) <a id="toc-registryconfigurationmappings"></a> ^toc-registryconfigurationmappings
+    - [File & Folder Attribute Masks](#a-filefolderattributemasks) <a id="toc-filefolderattributemasks"></a> ^toc-filefolderattributemasks
+  - [📋 Originally Requested Specifications](#a-originallyrequestedspecifications) <a id="toc-originallyrequestedspecifications"></a> ^toc-originallyrequestedspecifications
+  - [🎯 Implemented Technical Concerns & Optimization Features](#a-implementedtechnicalconcernsoptimizationfeatures) <a id="toc-implementedtechnicalconcernsoptimizationfeatures"></a> ^toc-implementedtechnicalconcernsoptimizationfeatures
+  - [🚦 Internal Function Signatures & System Exit Codes](#a-internalfunctionsignaturessystemexitcodes) <a id="toc-internalfunctionsignaturessystemexitcodes"></a> ^toc-internalfunctionsignaturessystemexitcodes
+    - [Engine Error / Exit Status Codes](#a-engineerrorexitstatuscodes) <a id="toc-engineerrorexitstatuscodes"></a> ^toc-engineerrorexitstatuscodes
+    - [Data Models & State Layouts](#a-datamodelsstatelayouts) <a id="toc-datamodelsstatelayouts"></a> ^toc-datamodelsstatelayouts
+  - [🚀 Go to...](#a-goto) <a id="toc-goto"></a> ^toc-goto
+---
 ---
 
 ## 🔗 External Application Protocols & URI Schemes
-[[#^toc-uri|TOC]]
-
+<a id="a-externalapplicationprotocolsurischemes"></a>[TOC](#toc-externalapplicationprotocolsurischemes)
 ### {{Protocol/Application Name}} Link Contract
+<a id="a-protocolapplicationnamelinkcontract"></a>[TOC](#toc-protocolapplicationnamelinkcontract)
 - **Target Schema:** `{{schema://action}}`
 - **Query String Map:**
 
@@ -63,21 +72,23 @@ This document compiles the user requirements and instructions from `AGENTS.md` a
 ---
 
 ## 💻 Native OS Integration Details
-[[#^toc-os|TOC]]
-
+<a id="a-nativeosintegrationdetails"></a>[TOC](#toc-nativeosintegrationdetails)
 ### Registry / Configuration Mappings
+<a id="a-registryconfigurationmappings"></a>[TOC](#toc-registryconfigurationmappings)
 - **System Hook Target:** `{{HKEY_CLASSES_ROOT\Directory\shell\YourAction}}`
 - **Properties Mapping:**
   - `{{KeyName}}` (Default): `"{{Action Display Name}}"`
   - `"{{Icon}}"`: `{{REG_SZ}}` absolute path to targeted graphic resource asset.
 
 ### File & Folder Attribute Masks
+<a id="a-filefolderattributemasks"></a>[TOC](#toc-filefolderattributemasks)
 - **Configuration Context Target:** `{{filename.ext}}` (Must be set to `{{+H}}` Hidden and `{{+S}}` System).
 - **Directory Workspace Parent:** Must have the `{{+R}}` Read-Only flag set for host engine processing loop.
 
 ---
 
 ## 📋 Originally Requested Specifications
+<a id="a-originallyrequestedspecifications"></a>[TOC](#toc-originallyrequestedspecifications)
 HotWinAHK began as a native multi-monitor window arrangement assistant to overcome Windows Snap limitations:
 - **Comprehensive Positioning**: Instant snapping, relative pixel-precision shifts, and dynamic padding adjustments on any screen edge.
 - **Aspect Snapping Matrix**: Alignment of application frames onto standard grids without manual sizing, preventing overlapping layout clutter.
@@ -87,6 +98,7 @@ HotWinAHK began as a native multi-monitor window arrangement assistant to overco
 
 
 ## 🎯 Implemented Technical Concerns & Optimization Features
+<a id="a-implementedtechnicalconcernsoptimizationfeatures"></a>[TOC](#toc-implementedtechnicalconcernsoptimizationfeatures)
 To deliver ultra-low overhead, maximum robustness, and seamless user experiences on Windows, several advanced engineering patterns were implemented:
 - **EVENT_SYSTEM_FOREGROUND WinEventHook**: Natively registers direct hooks inside the Windows OS kernel to listen for active focused window updates. Triggers responsive 750Hz (40ms) tone sounds without active polling loops.
 - **Quadratic Ease-Out Animation Engine**: Implemented mathematical easing (`t * (2 - t)`) over 12 frame iterations inside a 150ms step duration to slide windows smoothly into state grids instead of hard jumping.
@@ -111,9 +123,9 @@ To deliver ultra-low overhead, maximum robustness, and seamless user experiences
 ---
 
 ## 🚦 Internal Function Signatures & System Exit Codes
-[[#^toc-codes|TOC]]
-
+<a id="a-internalfunctionsignaturessystemexitcodes"></a>[TOC](#toc-internalfunctionsignaturessystemexitcodes)
 ### Engine Error / Exit Status Codes
+<a id="a-engineerrorexitstatuscodes"></a>[TOC](#toc-engineerrorexitstatuscodes)
 
 | Code (Integer) | Semantic Definition | Trigger Condition |
 | :--- | :--- | :--- |
@@ -124,6 +136,7 @@ To deliver ultra-low overhead, maximum robustness, and seamless user experiences
 | `4` | `{{ERR_LINK_COLLISION}}` | Colliding structural link or directory target already occupied. |
 
 ### Data Models & State Layouts
+<a id="a-datamodelsstatelayouts"></a>[TOC](#toc-datamodelsstatelayouts)
 ```ini
 ; Expected raw configuration template dataset example
 [{{SectionHeader}}]
@@ -133,7 +146,7 @@ To deliver ultra-low overhead, maximum robustness, and seamless user experiences
 
 ---
 ## 🚀 Go to...
-[[#^toc-goto|TOC]]
+<a id="a-goto"></a>[TOC](#toc-goto)
 - 🔹 [AGENTS.md](../AGENTS.md)
 - 🔹 [ARCHIVE.md](ARCHIVE.md)
 - 🔹 [BUILD.md](BUILD.md)
@@ -149,4 +162,4 @@ To deliver ultra-low overhead, maximum robustness, and seamless user experiences
 - 🔹 [TESTING.md](TESTING.md)
 - 🔹 [VERSIONS.md](VERSIONS.md)
 
-<!-- # TEMPLATE: SPEC.template.md -->
+<!-- TEMPLATE: SPEC.template.md -->

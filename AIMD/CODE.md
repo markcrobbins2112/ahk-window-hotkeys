@@ -2,22 +2,24 @@
 title: CODE
 ---
 
-<!-- # TEMPLATE: CODE.template.md -->
+<!-- TEMPLATE: CODE.template.md -->
 <!-- 
-# CODE
-# Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
-# Replace those placeholders with real paths, rules, and project constraints.
-#
-# INSTRUCTIONS FOR THE AI AGENT:
-# This file governs programming guidelines, syntax conventions, indentation (tabs vs spaces), 
-# ordering, and regions formatting. Every single code file must adhere strictly to these rules!
+CODE
+Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
+Replace those placeholders with real paths, rules, and project constraints.
+
+INSTRUCTIONS FOR THE AI AGENT:
+This file governs programming guidelines, syntax conventions, indentation (tabs vs spaces), 
+ordering, and regions formatting. Every single code file must adhere strictly to these rules!
 -->
 
 <!-- markdownlint-disable MD013 -->
 
 # CODE
+<a id="a-code"></a>[TOC](#toc-code)
 
 ## 📑 AI Primary Files
+<a id="a-aiprimaryfiles"></a>[TOC](#toc-aiprimaryfiles)
 - 🔹 [AGENTS.md](../AGENTS.md)
 - 🔹 [ARCHIVE.md](ARCHIVE.md)
 - 🔹 [BUILD.md](BUILD.md)
@@ -33,21 +35,25 @@ title: CODE
 - 🔹 [TESTING.md](TESTING.md)
 - 🔹 [VERSIONS.md](VERSIONS.md)
 
+<!-- TOC location -->
 ## 🔍 Table of Contents
-- [[#Implementation Guidelines]] ^toc-guidelines
-- [[#Markdown Guidelines]] ^toc-markdown
-- [[#Formatting & Syntax Style]] ^toc-syntax
-- [[#🛡️ Robustness & Error-Handling Frameworks]] ^toc-errors
-- [[#Regions Division Style]] ^toc-regions
-- [[#🚀 Go to...]] ^toc-goto
-
+<!-- Maintained by script -->
+- [CODE](#a-code) <a id="toc-code"></a> ^toc-code
+  - [📑 AI Primary Files](#a-aiprimaryfiles) <a id="toc-aiprimaryfiles"></a> ^toc-aiprimaryfiles
+  - [🛠️ Implementation Guidelines](#a-implementationguidelines) <a id="toc-implementationguidelines"></a> ^toc-implementationguidelines
+  - [📝 Markdown Guidelines](#a-markdownguidelines) <a id="toc-markdownguidelines"></a> ^toc-markdownguidelines
+  - [✒️ Formatting & Syntax Style](#a-formattingsyntaxstyle) <a id="toc-formattingsyntaxstyle"></a> ^toc-formattingsyntaxstyle
+  - [🛡️ Robustness & Error-Handling Frameworks](#a-robustnesserrorhandlingframeworks) <a id="toc-robustnesserrorhandlingframeworks"></a> ^toc-robustnesserrorhandlingframeworks
+  - [📂 Regions Division Style](#a-regionsdivisionstyle) <a id="toc-regionsdivisionstyle"></a> ^toc-regionsdivisionstyle
+  - [🚀 Go to...](#a-goto) <a id="toc-goto"></a> ^toc-goto
+---
 ## 🛠️ Implementation Guidelines
-[[#^toc-guidelines|TOC]]
+<a id="a-implementationguidelines"></a>[TOC](#toc-implementationguidelines)
 - **Encoding Safety**: Preserve UTF-8 signatures. Ensure icons, characters, emojis, and unicode symbols are written cleanly without corruption (mojibake).
 - **Target Changes Only**: Avoid complete file rewrites. Prefer minor, highly precise surgical patches to retain existing code blocks and comments intact.
 
 ## 📝 Markdown Guidelines
-[[#^toc-markdown|TOC]]
+<a id="a-markdownguidelines"></a>[TOC](#toc-markdownguidelines)
 - Use dashes (`-`) instead of asterisks (`*`) for Bullet list items.
 - Maintain UPPERCASE.md documents cleanly with alphabetical features lists, updated logs, and checked backlogs.
 - Always update UPPERCASE.md files (such as AITASKS.md, AILOG.md, etc.) when tasks are completed or work is performed
@@ -56,7 +62,7 @@ title: CODE
 - LOG: The top of LOG.md should always feature a "Commit Message" section maintained by the AI, which must be cleared whenever the user says they have committed or appended the changes
 
 ## ✒️ Formatting & Syntax Style
-[[#^toc-syntax|TOC]]
+<a id="a-formattingsyntaxstyle"></a>[TOC](#toc-formattingsyntaxstyle)
 - **Indentation**: Use tabs for indentation.
 - **Braces and Blocks**: Always use braces for control expressions, never inline single-line statements without brackets
 - **Naming Conventions**: 
@@ -69,7 +75,7 @@ title: CODE
 ---
 
 ## 🛡️ Robustness & Error-Handling Frameworks
-[[#^toc-errors|TOC]]
+<a id="a-robustnesserrorhandlingframeworks"></a>[TOC](#toc-robustnesserrorhandlingframeworks)
 - **Primary Paradigm:** Structured Try/Catch blocks using Error Objects, supplemented by native AHK v2 runtime error throwing
 - **Defensive Coding Checks:** Use `FileExist()` and `WinExist()` to validate paths and window handles before running destructive disk mutations or UI automation. Use `HasProp()` or type functions like `IsObject()` to check arguments since AHK is dynamically typed.
 - **Logging Integration:** Route diagnostics using `OutputDebug()` for real-time IDE debugging, or use `FileAppend()` to target a dedicated local log or redirect to standard error via the `"*"` stream. Extract `.Message`, `.What`, and `.Line` from catchable Error Objects to populate failure logs.
@@ -128,11 +134,11 @@ try {
 ---
 
 <!-- 
-  INSTRUCTION: Specify standard regions delimiters (#region / #endregion) 
+  INSTRUCTION: Specify standard regions delimiters (region / endregion) 
   and naming rules to group structures systematically.
 -->
 ## 📂 Regions Division Style
-[[#^toc-regions|TOC]]
+<a id="a-regionsdivisionstyle"></a>[TOC](#toc-regionsdivisionstyle)
 - **Structures**: Wrap classes or data blocks inside system structures regions named `_globals`, `_classes`, or custom container dividers.
 - **Example Regions Map**:
 ```autohotkey
@@ -159,7 +165,7 @@ CleanString(inputData) {
 ```
 ---
 ## 🚀 Go to...
-[[#^toc-goto|TOC]]
+<a id="a-goto"></a>[TOC](#toc-goto)
 - 🔹 [AGENTS.md](../AGENTS.md)
 - 🔹 [ARCHIVE.md](ARCHIVE.md)
 - 🔹 [BUILD.md](BUILD.md)
@@ -175,4 +181,4 @@ CleanString(inputData) {
 - 🔹 [TESTING.md](TESTING.md)
 - 🔹 [VERSIONS.md](VERSIONS.md)
 
-<!-- # TEMPLATE: CODE.template.md -->
+<!-- TEMPLATE: CODE.template.md -->

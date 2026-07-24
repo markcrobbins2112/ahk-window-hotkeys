@@ -2,22 +2,23 @@
 title: README
 ---
 
-<!-- # TEMPLATE: README.template.md -->
+<!-- TEMPLATE: README.template.md -->
 <!-- 
-# README
-# Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
-# Replace those placeholders with real paths, rules, and project constraints.
-#
-# INSTRUCTIONS FOR THE AI AGENT:
-# This file tracks formal specifications, comparing originally requested guidelines 
-# against actual implemented items. Document architectural challenges, optimization rules,
-# compatibility constraints, and platform limits.
+README
+Any text bounded by double curly braces {{like this}} is a placeholder for you to fill out.
+Replace those placeholders with real paths, rules, and project constraints.
+
+INSTRUCTIONS FOR THE AI AGENT:
+This file tracks formal specifications, comparing originally requested guidelines 
+against actual implemented items. Document architectural challenges, optimization rules,
+compatibility constraints, and platform limits.
 -->
 
 
 <!-- markdownlint-disable MD013 -->
 
 # HotWinAHK
+<a id="a-hotwinahk"></a>[TOC](#toc-hotwinahk)
 
 High-performance window-management suite written in AutoHotkey v2.0
 
@@ -25,6 +26,7 @@ High-performance window-management suite written in AutoHotkey v2.0
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/markcrobbins)
 
 ## 📑 AI Primary Files
+<a id="a-aiprimaryfiles"></a>[TOC](#toc-aiprimaryfiles)
 - 🔹 [AGENTS.md](AGENTS.md)
 - 🔹 [ARCHIVE.md](AIMD/ARCHIVE.md)
 - 🔹 [BUILD.md](AIMD/BUILD.md)
@@ -40,21 +42,27 @@ High-performance window-management suite written in AutoHotkey v2.0
 - 🔹 [TESTING.md](AIMD/TESTING.md)
 - 🔹 [VERSIONS.md](AIMD/VERSIONS.md)
 
+<!-- TOC location -->
 ## 🔍 Table of Contents
-- [[#🎯 Project Abstract & Core Value]] ^toc-abstract
-- [[#🛠️ Technology Stack at a Glance]] ^toc-stack
-- [[#🗺️ Project Layout Blueprint]] ^toc-blueprint
-- [[#⚡ Quick Start for AI Developers]] ^toc-quickstart
-- [[#Go to...]] ^toc-goto
-
+<!-- Maintained by script -->
+- [HotWinAHK](#a-hotwinahk) <a id="toc-hotwinahk"></a> ^toc-hotwinahk
+  - [📑 AI Primary Files](#a-aiprimaryfiles) <a id="toc-aiprimaryfiles"></a> ^toc-aiprimaryfiles
+  - [🎯 Project Abstract & Core Value](#a-projectabstractcorevalue) <a id="toc-projectabstractcorevalue"></a> ^toc-projectabstractcorevalue
+  - [🛠️ Technology Stack at a Glance](#a-technologystackataglance) <a id="toc-technologystackataglance"></a> ^toc-technologystackataglance
+  - [🗺️ Project Layout Blueprint](#a-projectlayoutblueprint) <a id="toc-projectlayoutblueprint"></a> ^toc-projectlayoutblueprint
+  - [⚡ Quick Start for AI Developers](#a-quickstartforaidevelopers) <a id="toc-quickstartforaidevelopers"></a> ^toc-quickstartforaidevelopers
+    - [1. Verify Environment](#a-1verifyenvironment) <a id="toc-1verifyenvironment"></a> ^toc-1verifyenvironment
+    - [2. Compile & Run Tests](#a-2compileruntests) <a id="toc-2compileruntests"></a> ^toc-2compileruntests
+  - [🚀 Go to...](#a-goto) <a id="toc-goto"></a> ^toc-goto
+---
 ## 🎯 Project Abstract & Core Value
-[[#^toc-abstract|TOC]]
+<a id="a-projectabstractcorevalue"></a>[TOC](#toc-projectabstractcorevalue)
 - {{A robust system tool designed to seamlessly accomplish domain objectives, manage system states, and optimize operational pipelines.}}
 
 ---
 
 ## 🛠️ Technology Stack at a Glance
-[[#^toc-stack|TOC]]
+<a id="a-technologystackataglance"></a>[TOC](#toc-technologystackataglance)
 - **Target Operating System:** Windows 10+
 - **Core Languages & Runtimes:** AutoHotKey v2
 - **Integrations:** Avoid Standard window keys
@@ -62,7 +70,7 @@ High-performance window-management suite written in AutoHotkey v2.0
 ---
 
 ## 🗺️ Project Layout Blueprint
-[[#^toc-blueprint|TOC]]
+<a id="a-projectlayoutblueprint"></a>[TOC](#toc-projectlayoutblueprint)
 - **`AGENTS.md`** ➔ System prompts and operational boundaries for AI teammates.
 - **`AIMD/ARCHIVE.md`** ➔ Scriptorium for scrapped ideas and sunset components.
 - **`AIMD/BUILD.md`** ➔ Compiler pipelines, flags, and packaging steps.
@@ -87,15 +95,16 @@ High-performance window-management suite written in AutoHotkey v2.0
 ---
 
 ## ⚡ Quick Start for AI Developers
-[[#^toc-quickstart|TOC]]
-
+<a id="a-quickstartforaidevelopers"></a>[TOC](#toc-quickstartforaidevelopers)
 ### 1. Verify Environment
+<a id="a-1verifyenvironment"></a>[TOC](#toc-1verifyenvironment)
 - No Env Vars
 ```cmd
 {{Command to test environment variables or prerequisites / e.g., echo %ENV_ROOT%}}
 ```
 
 ### 2. Compile & Run Tests
+<a id="a-2compileruntests"></a>[TOC](#toc-2compileruntests)
 - No Tests Currently
 ```cmd
 {{High-level system execution command chain / e.g., run_build.bat && run_test.bat}}
@@ -103,7 +112,7 @@ High-performance window-management suite written in AutoHotkey v2.0
 
 ---
 ## 🚀 Go to...
-[[#^toc-goto|TOC]]
+<a id="a-goto"></a>[TOC](#toc-goto)
 - 🔹 [AGENTS.md](AGENTS.md)
 - 🔹 [ARCHIVE.md](AIMD/ARCHIVE.md)
 - 🔹 [BUILD.md](AIMD/BUILD.md)
@@ -119,4 +128,4 @@ High-performance window-management suite written in AutoHotkey v2.0
 - 🔹 [TESTING.md](AIMD/TESTING.md)
 - 🔹 [VERSIONS.md](AIMD/VERSIONS.md)
 
-<!-- # TEMPLATE: README.template.md -->
+<!-- TEMPLATE: README.template.md -->
