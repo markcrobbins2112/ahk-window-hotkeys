@@ -43,8 +43,6 @@ This document compiles the user requirements and instructions from [`AGENTS.md`]
 <!-- Maintained by script -->
 - [SPEC](#a-spec) <a id="toc-spec"></a> ^toc-spec
   - [📑 AI Primary Files](#a-aiprimaryfiles) <a id="toc-aiprimaryfiles"></a> ^toc-aiprimaryfiles
-  - [🔗 External Application Protocols & URI Schemes](#a-externalapplicationprotocolsurischemes) <a id="toc-externalapplicationprotocolsurischemes"></a> ^toc-externalapplicationprotocolsurischemes
-    - [HotWinAHK Internal IPC Protocol](#a-hotwinahkinternalipcprotocol) <a id="toc-hotwinahkinternalipcprotocol"></a> ^toc-hotwinahkinternalipcprotocol
   - [💻 Native OS Integration Details](#a-nativeosintegrationdetails) <a id="toc-nativeosintegrationdetails"></a> ^toc-nativeosintegrationdetails
     - [Registry / Configuration Mappings](#a-registryconfigurationmappings) <a id="toc-registryconfigurationmappings"></a> ^toc-registryconfigurationmappings
     - [File & Folder Attribute Masks](#a-filefolderattributemasks) <a id="toc-filefolderattributemasks"></a> ^toc-filefolderattributemasks
@@ -55,20 +53,6 @@ This document compiles the user requirements and instructions from [`AGENTS.md`]
     - [Data Models & State Layouts](#a-datamodelsstatelayouts) <a id="toc-datamodelsstatelayouts"></a> ^toc-datamodelsstatelayouts
   - [🚀 Go to...](#a-goto) <a id="toc-goto"></a> ^toc-goto
 ---
-## 🔗 External Application Protocols & URI Schemes
-<a id="a-externalapplicationprotocolsurischemes"></a>[TOC](#toc-externalapplicationprotocolsurischemes)
-### HotWinAHK Internal IPC Protocol
-<a id="a-hotwinahkinternalipcprotocol"></a>[TOC](#toc-hotwinahkinternalipcprotocol)
-- **Target Schema:** `hotwinahk://cmd/{ActionName}`
-- **Query String Map:**
-
-  | Parameter | Type | Required | Description / Constraints |
-  | :--- | :--- | :--- | :--- |
-  | `cmd` | `String` | Yes | Target command name matching a valid function in [`HotWinAHK.ini`](../HotWinAHK.ini). |
-  | `hwnd` | `Integer` | No | Target Win32 HWND window handle (hexadecimal or decimal). |
-
----
-
 ## 💻 Native OS Integration Details
 <a id="a-nativeosintegrationdetails"></a>[TOC](#toc-nativeosintegrationdetails)
 ### Registry / Configuration Mappings

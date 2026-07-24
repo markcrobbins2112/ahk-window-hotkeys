@@ -57,6 +57,7 @@ are received) and mark items completed ([x]) once verified.
 ---
 ## 💬 Incoming tasks from chat
 <a id="a-incomingtasksfromchat"></a>[TOC](#toc-incomingtasksfromchat)
+- [x] **Remove Internal IPC Protocol Specification**: Removed unneeded Internal IPC Protocol (`hotwinahk://cmd/`) section from [`SPEC.md`](SPEC.md).
 - [x] **Package Cleanup & Markdown Link Enforcement**: Removed server-related scripts (dev, build, preview) and dependencies/devDependencies from [`package.json`](../package.json), added a launch script running [`HotWinAHK.ahk`](../HotWinAHK.ahk), and updated all file references across Markdown documentation files to proper Markdown links.
 - [x] **Markdown Comment Cleaning Rule**: Strip hash (`#`) symbols from file header comments and `TEMPLATE:` single-line HTML comments across all Markdown documentation files.
 - [x] **Skill Rule Addition**: Update `skills/markdown-transform/SKILL.md` and `skills/system_skills/markdown-transform/SKILL.md` with the refined rule: "This rule applies strictly to the first multi-line HTML comment block (file header comment) and single-line comments that start with TEMPLATE:".

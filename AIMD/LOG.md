@@ -3,14 +3,14 @@ title: LOG
 ---
 
 <!-- TEMPLATE: LOG.template.md -->
-<!-- 
+<!--
 LOG
 Any text bounded by double curly braces like this is a placeholder for you to fill out.
 Replace those placeholders with real paths, rules, and project constraints.
 
 INSTRUCTIONS FOR THE AI AGENT:
-This file tracks chronological development progress. On every single session or 
-significant functional edit, register a new entry detailing goals, executed changes, 
+This file tracks chronological development progress. On every single session or
+significant functional edit, register a new entry detailing goals, executed changes,
 affected files, and upcoming pipelines.
 Keep the very latest entry at the top of the "Log Entries" section.
 -->
@@ -37,6 +37,21 @@ Keep the very latest entry at the top of the "Log Entries" section.
 - 🔹 [TESTING.md](TESTING.md)
 - 🔹 [VERSIONS.md](VERSIONS.md)
 
+
+---
+## 💾 Commit Message
+<a id="a-commitmessage"></a>[TOC](#toc-commitmessage)
+```text
+refactor(package): remove server scripts and dependencies, add launch script, enforce markdown links
+
+- Remove dev, build, and preview scripts from package.json
+- Remove react, react-dom, lucide-react, vite, and dev dependencies required by web server
+- Add launch script to run HotWinAHK.ahk via AutoHotkey.exe
+- Convert all file references across all Markdown documentation files to proper relative Markdown links
+```
+
+---
+
 <!-- TOC location -->
 ## 🔍 Table of Contents
 <!-- Maintained by script -->
@@ -44,6 +59,10 @@ Keep the very latest entry at the top of the "Log Entries" section.
   - [📑 AI Primary Files](#a-aiprimaryfiles) <a id="toc-aiprimaryfiles"></a> ^toc-aiprimaryfiles
   - [💾 Commit Message](#a-commitmessage) <a id="toc-commitmessage"></a> ^toc-commitmessage
   - [📝 Log Entries](#a-logentries) <a id="toc-logentries"></a> ^toc-logentries
+  - [[2026-07-23T23:51:00Z]](#a-20260723t235100z) <a id="toc-20260723t235100z"></a> ^toc-20260723t235100z
+    - [🎯 Primary Goals & Requirements](#a-primarygoalsrequirements20260723t235100z) <a id="toc-primarygoalsrequirements20260723t235100z"></a> ^toc-primarygoalsrequirements20260723t235100z
+    - [🛠️ Completed Changes in this Session](#a-completedchangesinthissession20260723t235100z) <a id="toc-completedchangesinthissession20260723t235100z"></a> ^toc-completedchangesinthissession20260723t235100z
+    - [🔸 Affected Files](#a-affectedfiles20260723t235100z) <a id="toc-affectedfiles20260723t235100z"></a> ^toc-affectedfiles20260723t235100z
   - [[2026-07-23T23:45:00Z]](#a-20260723t234500z) <a id="toc-20260723t234500z"></a> ^toc-20260723t234500z
     - [🎯 Primary Goals & Requirements](#a-primarygoalsrequirements20260723t234500z) <a id="toc-primarygoalsrequirements20260723t234500z"></a> ^toc-primarygoalsrequirements20260723t234500z
     - [🛠️ Completed Changes in this Session](#a-completedchangesinthissession20260723t234500z) <a id="toc-completedchangesinthissession20260723t234500z"></a> ^toc-completedchangesinthissession20260723t234500z
@@ -258,24 +277,16 @@ Keep the very latest entry at the top of the "Log Entries" section.
     - [🏷️ [ADR-001] - {{Architectural Decision Title / e.g., Choosing UTF-16 LE for System Configs}}](#a-adr001architecturaldecisiontitleegchoosingutf16leforsystemconfigs) <a id="toc-adr001architecturaldecisiontitleegchoosingutf16leforsystemconfigs"></a> ^toc-adr001architecturaldecisiontitleegchoosingutf16leforsystemconfigs
   - [🚀 Go to...](#a-goto) <a id="toc-goto"></a> ^toc-goto
 ---
-## 💾 Commit Message
-<a id="a-commitmessage"></a>[TOC](#toc-commitmessage)
-```text
-refactor(package): remove server scripts and dependencies, add launch script, enforce markdown links
 
-- Remove dev, build, and preview scripts from package.json
-- Remove react, react-dom, lucide-react, vite, and dev dependencies required by web server
-- Add launch script to run HotWinAHK.ahk via AutoHotkey.exe
-- Convert all file references across all Markdown documentation files to proper relative Markdown links
-```
+---
 
 ## 📝 Log Entries
 <a id="a-logentries"></a>[TOC](#toc-logentries)
-<!-- 
+<!--
   INSTRUCTION FOR NEW ENTRIES:
   Insert new entries directly AT THE TOP of this list, just below this comment.
   Use the template structure below:
-  
+
   📅 [YYYY-MM-DDTHH:MM:SSZ] (Use the current UTC timestamp) [v.0.0.0]
   🎯 Primary Goals & Requirements
   - {{Describe what the user asked for or what the backlog item required}}
@@ -284,7 +295,7 @@ refactor(package): remove server scripts and dependencies, add launch script, en
   🛠️ Completed Changes in this Session
   - {{Action Item 1}}: {{Detailed summary of file edits, additions, or configurations}}
   - {{Action Item 2}}: {{Explain why changes were made and how they interact}}
-  
+
   🔸 Affected Files
   - `{{/path/to/modified_file_1.ext}}`
   - `{{/path/to/modified_file_2.ext}}`
@@ -294,6 +305,23 @@ refactor(package): remove server scripts and dependencies, add launch script, en
   - {{Action Item 2}}: {{Detailed summary}}
 
 -->
+
+## [2026-07-23T23:51:00Z]
+<a id="a-20260723t235100z"></a>[TOC](#toc-20260723t235100z)
+### 🎯 Primary Goals & Requirements
+<a id="a-primarygoalsrequirements20260723t235100z"></a>[TOC](#toc-primarygoalsrequirements20260723t235100z)
+- **Remove Internal IPC Specification**: Remove the unneeded Internal IPC Protocol / URI Scheme (`hotwinahk://cmd/`) section from [`SPEC.md`](SPEC.md).
+
+### 🛠️ Completed Changes in this Session
+<a id="a-completedchangesinthissession20260723t235100z"></a>[TOC](#toc-completedchangesinthissession20260723t235100z)
+- **Cleaned SPEC.md**: Purged the `HotWinAHK Internal IPC Protocol` and `External Application Protocols & URI Schemes` sections from [`SPEC.md`](SPEC.md).
+- **Updated Task Backlog**: Marked the removal task as completed in [`TASKS.md`](TASKS.md).
+
+### 🔸 Affected Files
+<a id="a-affectedfiles20260723t235100z"></a>[TOC](#toc-affectedfiles20260723t235100z)
+- [`/AIMD/SPEC.md`](SPEC.md)
+- [`/AIMD/TASKS.md`](TASKS.md)
+- [`/AIMD/LOG.md`](LOG.md)
 
 ## [2026-07-23T23:45:00Z]
 <a id="a-20260723t234500z"></a>[TOC](#toc-20260723t234500z)
